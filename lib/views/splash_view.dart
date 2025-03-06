@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:finyx_mobile_app/widgets/finyx_widget.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -29,15 +30,7 @@ class SplashScreen extends StatelessWidget {
             children: [
               Image.asset('assets/images/logo_pic.png'),
               //SizedBox(height: 10),
-              RichText(
-                text: TextSpan(
-                  style: TextStyle(fontSize: 64, fontWeight: FontWeight.w700,fontFamily: "Rockwell"),
-                  children: [
-                    TextSpan(text: "Fin", style: TextStyle(color: Color(0xFFDA9220))),
-                    TextSpan(text: "yx", style: TextStyle(color: Color(0xFF3E0555))),
-                  ],
-                ),
-              ),
+              FinyxWidget(fontSize: 64),
             ],
           ),
         ),
