@@ -82,6 +82,9 @@ flutter:
     - family: REM
       fonts:
         - asset: assets/fonts/REM-VariableFont_wght.ttf
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Medium.ttf
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

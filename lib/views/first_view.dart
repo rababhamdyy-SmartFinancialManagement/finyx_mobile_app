@@ -4,6 +4,7 @@ import 'package:finyx_mobile_app/widgets/greeting_message_widget.dart';
 import 'package:finyx_mobile_app/widgets/skip_widget.dart';
 import 'package:finyx_mobile_app/widgets/indicator_widget.dart';
 import 'package:finyx_mobile_app/widgets/button_widget.dart';
+import 'package:finyx_mobile_app/widgets/register_text_widget.dart';
 
 class FirstScreen extends StatelessWidget {
   const FirstScreen({super.key});
@@ -29,6 +30,7 @@ class FirstScreen extends StatelessWidget {
             Indicator(selectedIndex: 0),
             SizedBox(height: 20),
             ButtonWidget(text: "Next", size: Size(165, 53)),
+            RegisterText(),
           ],
         ),
       ),
