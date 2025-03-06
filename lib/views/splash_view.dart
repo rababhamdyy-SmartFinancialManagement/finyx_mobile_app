@@ -27,8 +27,8 @@ class SplashScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/images/splash_pic.png'),
-              SizedBox(height: 20),
+              Image.asset('assets/images/logo_pic.png'),
+              //SizedBox(height: 10),
               RichText(
                 text: TextSpan(
                   style: TextStyle(fontSize: 64, fontWeight: FontWeight.w700,fontFamily: "Rockwell"),
