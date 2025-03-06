@@ -35,15 +35,13 @@ class SplashScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              //dynamic pic
               Image.asset(
                 'assets/images/logo_pic.png',
                 width: (screenWidth * 0.9),
                 height: (screenHeight * 0.5),
               ),
-              //SizedBox(height: screenHeight * 0.02),
 
-              //dynamic font size
+          
               FinyxWidget(fontSize: fontSize),
             ],
           ),
