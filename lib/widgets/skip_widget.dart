@@ -8,7 +8,7 @@ class SkipWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 8, 32, 0),
+      padding: const EdgeInsets.fromLTRB(0, 0, 32, 0),
       child: Align(
         alignment: Alignment.topRight,
         child: Text(

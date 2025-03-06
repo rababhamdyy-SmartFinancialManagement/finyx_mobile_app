@@ -9,7 +9,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     //Ensure the screen is still on before performing the navigation.
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(Duration(seconds: 10), () {
+      Future.delayed(Duration(seconds: 5), () {
         if (context.mounted) {
           Navigator.pushReplacementNamed(context, '/firstScreen');
         }
