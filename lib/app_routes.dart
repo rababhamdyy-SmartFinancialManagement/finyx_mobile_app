@@ -1,12 +1,14 @@
-import 'package:finyx_mobile_app/views/login_view.dart';
 import 'package:flutter/material.dart';
-import 'package:finyx_mobile_app/views/first_view.dart';
 import 'package:finyx_mobile_app/views/splash_view.dart';
+import 'package:finyx_mobile_app/views/first_view.dart';
+import 'package:finyx_mobile_app/views/second_view.dart';
+import 'package:finyx_mobile_app/views/login_view.dart';
 import 'package:finyx_mobile_app/views/sign_up_view.dart';
 
 class AppRoutes {
   static const String splash = '/';
   static const String firstScreen = '/firstScreen';
+  static const String secondScreen = '/secondScreen';
   static const String login = '/login';
   static const String signUp = '/sign_up';
 
@@ -14,6 +16,7 @@ class AppRoutes {
     return {
       splash: (context) => SplashScreen(),
       firstScreen: (context) => FirstScreen(),
+      secondScreen: (context) => SecondScreen(),
       login: (context) => LoginScreen(),
       signUp: (context) => SignUpScreen(),
     };

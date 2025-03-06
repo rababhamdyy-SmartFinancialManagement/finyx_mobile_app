@@ -4,12 +4,14 @@ class ButtonWidget extends StatelessWidget {
   final String text;
   final double width;
   final double height;
+  final VoidCallback onPressed;
 
   const ButtonWidget({
     super.key,
     required this.text,
     required this.width,
     required this.height,
+    required this.onPressed
   });
 
   @override
@@ -23,7 +25,7 @@ class ButtonWidget extends StatelessWidget {
     double fontSize = screenWidth > 600 ? 22 : 20;
 
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xFF3E0555),
         fixedSize: Size(buttonWidth, buttonHeight),

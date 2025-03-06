@@ -11,7 +11,7 @@ class GreetingMessageWidget extends StatelessWidget {
     double responsiveFontSize = screenWidth > 600 ? 18 : 16;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: Text(
         greetingMessage,
         style: TextStyle(
