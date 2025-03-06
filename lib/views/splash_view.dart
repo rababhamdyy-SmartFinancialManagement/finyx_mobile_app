@@ -16,6 +16,12 @@ class SplashScreen extends StatelessWidget {
       });
     });
 
+    // To get screen dimensions
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    double fontSize = (screenWidth * 0.15).clamp(32, 72);
+
     return GestureDetector(
       onTap: () {
         if (context.mounted) {
@@ -27,10 +33,18 @@ class SplashScreen extends StatelessWidget {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset('assets/images/logo_pic.png'),
-              //SizedBox(height: 10),
-              FinyxWidget(fontSize: 64),
+              //dynamic pic
+              Image.asset(
+                'assets/images/logo_pic.png',
+                width: (screenWidth * 0.9),
+                height: (screenHeight * 0.5),
+              ),
+              //SizedBox(height: screenHeight * 0.02),
+
+              //dynamic font size
+              FinyxWidget(fontSize: fontSize),
             ],
           ),
         ),
