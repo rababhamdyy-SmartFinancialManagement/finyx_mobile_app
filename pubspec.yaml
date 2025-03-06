@@ -76,6 +76,12 @@ flutter:
     - family: Rockwell
       fonts:
         - asset: assets/fonts/Rockwell-Bold.ttf
+    - family: Righteous
+      fonts:
+        - asset: assets/fonts/Righteous-Regular.ttf
+    - family: REM
+      fonts:
+        - asset: assets/fonts/REM-VariableFont_wght.ttf
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
