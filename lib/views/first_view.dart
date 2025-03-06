@@ -11,6 +11,9 @@ class FirstScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -20,16 +23,18 @@ class FirstScreen extends StatelessWidget {
             SkipWidget(),
             Image.asset(
               "assets/images/financial_planning_1.png",
-              fit: BoxFit.cover,
+              width: screenWidth * 0.8,
+              height: screenHeight * 0.4,
+              fit: BoxFit.contain,
             ),
-            GreetingWidget(greetingText: "Welcome to Finyx!", fontSize: 24),
+            GreetingWidget(greetingText: "Welcome to Finyx!", fontSize: 30),
             GreetingMessageWidget(
               greetingMessage:
                   "Take control of your finances effortlessly track, save, and grow with ease",
             ),
             Indicator(selectedIndex: 0),
             SizedBox(height: 20),
-            ButtonWidget(text: "Next", size: Size(165, 53)),
+            ButtonWidget(text: "Next", width: 165,height: 53,),
             RegisterText(),
           ],
         ),

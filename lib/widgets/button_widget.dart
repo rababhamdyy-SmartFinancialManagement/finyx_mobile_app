@@ -2,16 +2,31 @@ import 'package:flutter/material.dart';
 
 class ButtonWidget extends StatelessWidget {
   final String text;
-  final Size size;
-  const ButtonWidget({super.key, required this.text,required this.size});
+  final double width;
+  final double height;
+
+  const ButtonWidget({
+    super.key,
+    required this.text,
+    required this.width,
+    required this.height,
+  });
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    double buttonWidth = screenWidth > 600 ? width * 1.2 : width;
+    double buttonHeight = screenHeight > 600 ? height * 1.2 : height;
+
+    double fontSize = screenWidth > 600 ? 22 : 20;
+
     return ElevatedButton(
       onPressed: () {},
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xFF3E0555),
-        fixedSize: size,
+        fixedSize: Size(buttonWidth, buttonHeight),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         shadowColor: Color(0xFF000000).withAlpha(40),
         elevation: 10,
@@ -19,7 +34,7 @@ class ButtonWidget extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 20,
+          fontSize: fontSize,
           fontFamily: "Righteous",
           fontWeight: FontWeight.w400,
           color: Colors.white,

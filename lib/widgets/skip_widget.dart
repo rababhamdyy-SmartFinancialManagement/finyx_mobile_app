@@ -5,8 +5,11 @@ class SkipWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 32, 0),
+      padding: EdgeInsets.fromLTRB(0, 0, screenWidth * 0.05, 0), 
       child: Align(
         alignment: Alignment.topRight,
         child: GestureDetector(
@@ -16,7 +19,7 @@ class SkipWidget extends StatelessWidget {
           child: Text(
             "Skip",
             style: TextStyle(
-              fontSize: 24,
+              fontSize: screenWidth > 600 ? 28 : 24, 
               fontWeight: FontWeight.w400,
               fontFamily: "Righteous",
               color: Color(0xFF8D8D8D),

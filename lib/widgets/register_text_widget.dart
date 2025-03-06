@@ -6,10 +6,13 @@ class RegisterText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double fontSize = screenWidth > 600 ? 16 : 14;
+
     return RichText(
       text: TextSpan(
         style: TextStyle(
-          fontSize: 14,
+          fontSize: fontSize,
           fontFamily: "Poppins",
           color: Color(0xFF2F80ED),
         ),
@@ -22,15 +25,13 @@ class RegisterText extends StatelessWidget {
             text: "Register Now",
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              decoration: TextDecoration.underline, 
+              decoration: TextDecoration.underline,
             ),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                Navigator.pushNamed(
-                  context,
-                  '/sign_up', 
-                );
-              },
+            recognizer:
+                TapGestureRecognizer()
+                  ..onTap = () {
+                    Navigator.pushNamed(context, '/sign_up');
+                  },
           ),
         ],
       ),
