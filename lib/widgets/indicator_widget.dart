@@ -17,13 +17,18 @@ class Indicator extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         3,
-        (index) => Container(
-          margin: EdgeInsets.symmetric(horizontal: margin),
-          width: indicatorWidth,
-          height: indicatorHeight,
-          decoration: BoxDecoration(
-            color: index == selectedIndex ? Colors.black : Color(0xFFD9D9D9),
-            borderRadius: BorderRadius.circular(2.0),
+        (index) => GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, '/onboardingScreen', arguments: index);
+          },
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: margin),
+            width: indicatorWidth,
+            height: indicatorHeight,
+            decoration: BoxDecoration(
+              color: index == selectedIndex ? Colors.black : Color(0xFFD9D9D9),
+              borderRadius: BorderRadius.circular(2.0),
+            ),
           ),
         ),
       ),
