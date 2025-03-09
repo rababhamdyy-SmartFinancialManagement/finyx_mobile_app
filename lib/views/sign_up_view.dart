@@ -7,7 +7,7 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Text("Welcome to the Registration Page"),
+        child: Text("Welcome To the Registration Page"),
       ),
     );
   }
