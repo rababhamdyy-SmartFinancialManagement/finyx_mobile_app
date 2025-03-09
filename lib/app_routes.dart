@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/views/forgetPassword_view.dart';
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/views/splash_view.dart';
 import 'package:finyx_mobile_app/views/first_view.dart';
@@ -13,6 +14,9 @@ class AppRoutes {
   static const String thirdScreen = '/thirdScreen';
   static const String login = '/login';
   static const String signUp = '/sign_up';
+  static const String forgetPassword = '/forget_password';
+  static const String home = '/home';
+  static const String profile = '/profile';
 
   static Map<String, WidgetBuilder> get routes {
     return {
@@ -22,6 +26,7 @@ class AppRoutes {
       thirdScreen: (context) => ThirdScreen(),
       login: (context) => LoginScreen(),
       signUp: (context) => SignUpScreen(),
+      forgetPassword: (context) => ForgetPasswordScreen(),
     };
   }
 }
