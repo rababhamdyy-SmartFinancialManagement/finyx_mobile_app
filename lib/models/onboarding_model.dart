@@ -15,12 +15,12 @@ class OnboardingPageModel {
     required this.nextRoute,
   });
 
-  /// تحديد الصفحة التالية بناءً على الفهرس الحالي
+
   static OnboardingPageModel getNextPage(int currentIndex) {
     if (currentIndex < pages.length - 1) {
-      return pages[currentIndex + 1]; // الصفحة التالية
+      return pages[currentIndex + 1]; 
     } else {
-      return pages.last; // آخر صفحة (توجيه إلى صفحة تسجيل الدخول)
+      return pages.last; 
     }
   }
 

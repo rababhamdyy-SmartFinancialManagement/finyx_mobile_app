@@ -41,12 +41,11 @@ class OnboardingScreen extends StatelessWidget {
               height: 53,
               onPressed: () {
                 if (!isLastPage) {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder:
-                          (context) =>
-                              OnboardingScreen(currentIndex: currentIndex + 1),
+                      builder: (context) =>
+                          OnboardingScreen(currentIndex: currentIndex + 1),
                     ),
                   );
                 } else {
