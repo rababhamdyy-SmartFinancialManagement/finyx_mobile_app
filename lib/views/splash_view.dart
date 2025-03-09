@@ -11,7 +11,7 @@ class SplashScreen extends StatelessWidget {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       Future.delayed(Duration(seconds: 3), () {
         if (context.mounted) {
-          Navigator.pushReplacementNamed(context, '/firstScreen');
+          Navigator.pushReplacementNamed(context, '/onboardingScreen');
         }
       });
     });
@@ -25,7 +25,7 @@ class SplashScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (context.mounted) {
-          Navigator.pushReplacementNamed(context, '/firstScreen');
+          Navigator.pushReplacementNamed(context, '/onboardingScreen');
         }
       },
       child: Scaffold(
