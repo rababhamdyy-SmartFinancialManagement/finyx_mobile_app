@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/models/onboarding_model.dart';
-import 'package:finyx_mobile_app/widgets/button_widget.dart';
-import 'package:finyx_mobile_app/widgets/greeting_message_widget.dart';
-import 'package:finyx_mobile_app/widgets/greeting_widget.dart';
+import 'package:finyx_mobile_app/widgets/shared/button_widget.dart';
+import 'package:finyx_mobile_app/widgets/shared/greeting_message_widget.dart';
+import 'package:finyx_mobile_app/widgets/shared/greeting_widget.dart';
 import 'package:finyx_mobile_app/widgets/indicator_widget.dart';
-import 'package:finyx_mobile_app/widgets/register_text_widget.dart';
+import 'package:finyx_mobile_app/widgets/shared/register_text_widget.dart';
 import 'package:finyx_mobile_app/widgets/skip_widget.dart';
 
 class OnboardingScreen extends StatelessWidget {

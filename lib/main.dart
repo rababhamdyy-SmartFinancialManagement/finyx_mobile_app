@@ -1,4 +1,4 @@
-import 'package:finyx_mobile_app/app_routes.dart';
+import 'package:finyx_mobile_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:finyx_mobile_app/views/splash_view.dart';
-import 'package:finyx_mobile_app/views/onboarding_view.dart'; 
-import 'package:finyx_mobile_app/views/login_view.dart';
-import 'package:finyx_mobile_app/views/sign_up_view.dart';
+import 'package:finyx_mobile_app/views/intro/splash_view.dart';
+import 'package:finyx_mobile_app/views/intro/onboarding_view.dart'; 
+import 'package:finyx_mobile_app/views/auth/login_view.dart';
+import 'package:finyx_mobile_app/views/auth/sign_up_view.dart';
 
 class AppRoutes {
   static const String splash = '/';
