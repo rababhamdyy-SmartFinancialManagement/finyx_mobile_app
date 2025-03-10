@@ -47,7 +47,7 @@ class SocialAuthButtons extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: screenWidth * 0.02),
+        SizedBox(height: screenWidth * 0.03),
         Wrap(
           alignment: WrapAlignment.center,
           spacing: screenWidth * 0.05,
