@@ -20,7 +20,7 @@ class AuthFooterText extends StatelessWidget {
           fontSize: screenWidth * 0.04,
           fontWeight: FontWeight.w500,
           fontFamily: "Poppins",
-          color: isSignup ? Color.fromARGB(122, 0, 0, 0) : Color(0xFF2F80ED),
+          color:Color.fromARGB(122, 0, 0, 0),
         ),
         children: [
           TextSpan(
@@ -32,7 +32,7 @@ class AuthFooterText extends StatelessWidget {
               fontSize: screenWidth * 0.04,
               fontWeight: FontWeight.bold,
               fontFamily: "Poppins",
-              color: isSignup ? Colors.black : const Color(0xFF2F80ED),
+              color: const Color(0xFF2F80ED),
             ),
             recognizer:
                 TapGestureRecognizer()
