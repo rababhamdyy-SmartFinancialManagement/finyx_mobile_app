@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:finyx_mobile_app/widgets/finyx_widget.dart';
+import 'package:finyx_mobile_app/widgets/intro/finyx_widget.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -11,7 +11,7 @@ class SplashScreen extends StatelessWidget {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       Future.delayed(Duration(seconds: 3), () {
         if (context.mounted) {
-          Navigator.pushReplacementNamed(context, '/onboardingScreen');
+          Navigator.pushReplacementNamed(context, '/onboarding');
         }
       });
     });
@@ -25,7 +25,7 @@ class SplashScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (context.mounted) {
-          Navigator.pushReplacementNamed(context, '/onboardingScreen');
+          Navigator.pushReplacementNamed(context, '/onboarding');
         }
       },
       child: Scaffold(
