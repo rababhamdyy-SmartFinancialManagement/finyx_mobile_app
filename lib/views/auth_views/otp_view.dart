@@ -1,13 +1,13 @@
+import 'package:finyx_mobile_app/widgets/auth_widgets/otp_widget.dart';
+import 'package:finyx_mobile_app/widgets/auth_widgets/resend_otp_widget.dart';
 import 'package:finyx_mobile_app/widgets/buttons_widgets/button_widget.dart';
+import 'package:finyx_mobile_app/widgets/custom_widgets/custom_appbar.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_background.dart';
-import 'package:finyx_mobile_app/widgets/custom_widgets/custom_textfield_widget.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_title_section.dart';
 import 'package:flutter/material.dart';
 
-import '../../widgets/custom_widgets/custom_appbar.dart';
-
-class ForgetPasswordScreen extends StatelessWidget {
-  const ForgetPasswordScreen({super.key});
+class OtpView extends StatelessWidget {
+  const OtpView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class ForgetPasswordScreen extends StatelessWidget {
       builder: (context, constraints) {
         final double screenWidth = constraints.maxWidth;
         final double screenHeight = constraints.maxHeight;
-        final TextEditingController emailController = TextEditingController();
+
 
         return Scaffold(
           resizeToAvoidBottomInset: true,
@@ -37,31 +37,43 @@ class ForgetPasswordScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CustomTitleSection(
-                        title: "Forgot Password",
+                        title: "OTP Verification",
                         subtitle:
-                            "Don’t worry! It happens. Please enter the email associated with your account.",
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Non nisi, mi, ornare aliquet. ",
                         screenWidth: screenWidth,
                         screenHeight: screenHeight,
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       Image.asset(
-                        "assets/images/forget_pass.png",
+                        "assets/images/otp.png",
                         width: screenWidth * 0.9,
                       ),
-                      SizedBox(height: screenHeight * 0.05),
-                      CustomTextField(
-                        label: "Email address",
-                        hint: "example123@gmail.com",
-                        controller: emailController,
+
+                      Text(
+                        " We will send you one time password this email address. ",
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.04,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Poppins",
+                          color: Color(0xB2575555),
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: screenHeight * 0.04),
+                      SizedBox(height: screenHeight * 0.02),
+
+                      OtpWidget(),
+
+
+                      ResendOtp(),
+                      SizedBox(height: screenHeight * 0.02),
+
                       Center(
                         child: ButtonWidget(
                           text: "Send OTP",
                           width: screenWidth * 0.7,
                           height: screenHeight * 0.06,
                           onPressed: () {
-                            Navigator.pushNamed(context, '/otp_view');
+                            Navigator.pushNamed(context, '/reset_password_view');
                           },
                         ),
                       ),
@@ -76,3 +88,4 @@ class ForgetPasswordScreen extends StatelessWidget {
     );
   }
 }
+
