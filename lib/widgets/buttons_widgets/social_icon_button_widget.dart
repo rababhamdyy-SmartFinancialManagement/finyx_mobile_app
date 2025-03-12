@@ -16,10 +16,29 @@ class SocialIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: CircleAvatar(
-        radius: screenWidth * 0.06,
-        // backgroundColor: Colors.grey[200],
-        child: Image.asset(asset),
+      child: Container(
+        width: screenWidth * 0.12,
+        height: screenWidth * 0.12,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle, 
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6,
+              spreadRadius: 2,
+              offset: Offset(0, 3), 
+            ),
+          ],
+        ),
+        child: Center(
+          child: Image.asset(
+            asset,
+            width: screenWidth * 0.07,
+            height: screenWidth * 0.07,
+            fit: BoxFit.contain,
+          ),
+        ),
       ),
     );
   }

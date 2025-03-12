@@ -16,7 +16,6 @@ class OtpView extends StatelessWidget {
         final double screenWidth = constraints.maxWidth;
         final double screenHeight = constraints.maxHeight;
 
-
         return Scaffold(
           resizeToAvoidBottomInset: true,
           extendBodyBehindAppBar: true,
@@ -39,7 +38,7 @@ class OtpView extends StatelessWidget {
                       CustomTitleSection(
                         title: "OTP Verification",
                         subtitle:
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Non nisi, mi, ornare aliquet. ",
+                            "Enter the verification code sent to your email to complete login securely.",
                         screenWidth: screenWidth,
                         screenHeight: screenHeight,
                       ),
@@ -63,7 +62,6 @@ class OtpView extends StatelessWidget {
 
                       OtpWidget(),
 
-
                       ResendOtp(),
                       SizedBox(height: screenHeight * 0.02),
 
@@ -73,7 +71,10 @@ class OtpView extends StatelessWidget {
                           width: screenWidth * 0.7,
                           height: screenHeight * 0.06,
                           onPressed: () {
-                            Navigator.pushNamed(context, '/reset_password_view');
+                            Navigator.pushNamed(
+                              context,
+                              '/reset_password_view',
+                            );
                           },
                         ),
                       ),
@@ -88,4 +89,3 @@ class OtpView extends StatelessWidget {
     );
   }
 }
-

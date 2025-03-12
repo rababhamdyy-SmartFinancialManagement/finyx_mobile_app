@@ -47,7 +47,7 @@ class SocialAuthButtons extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: screenWidth * 0.03),
+        SizedBox(height: screenWidth * 0.05),
         Wrap(
           alignment: WrapAlignment.center,
           spacing: screenWidth * 0.05,
@@ -70,7 +70,7 @@ class SocialAuthButtons extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: screenWidth * 0.04),
+        SizedBox(height: screenWidth * 0.07),
         AuthFooterText(isSignup: isSignup, screenWidth: screenWidth),
       ],
     );
