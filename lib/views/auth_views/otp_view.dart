@@ -1,10 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:finyx_mobile_app/models/otp_model.dart';
 import 'package:finyx_mobile_app/widgets/auth_widgets/otp_widget.dart';
 import 'package:finyx_mobile_app/widgets/auth_widgets/resend_otp_widget.dart';
 import 'package:finyx_mobile_app/widgets/buttons_widgets/button_widget.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_appbar.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_background.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_title_section.dart';
-import 'package:flutter/material.dart';
 
 class OtpView extends StatelessWidget {
   const OtpView({super.key});
@@ -15,6 +16,7 @@ class OtpView extends StatelessWidget {
       builder: (context, constraints) {
         final double screenWidth = constraints.maxWidth;
         final double screenHeight = constraints.maxHeight;
+        final OtpModel otpModel = OtpModel();
 
         return Scaffold(
           resizeToAvoidBottomInset: true,
@@ -38,7 +40,7 @@ class OtpView extends StatelessWidget {
                       CustomTitleSection(
                         title: "OTP Verification",
                         subtitle:
-                            "Enter the verification code sent to your email to complete login securely.",
+                        "Enter the verification code sent to your email to complete login securely.",
                         screenWidth: screenWidth,
                         screenHeight: screenHeight,
                       ),
@@ -47,9 +49,8 @@ class OtpView extends StatelessWidget {
                         "assets/images/otp.png",
                         width: screenWidth * 0.9,
                       ),
-
                       Text(
-                        " We will send you one time password this email address. ",
+                        "We will send you a one-time password to this email address.",
                         style: TextStyle(
                           fontSize: screenWidth * 0.04,
                           fontWeight: FontWeight.w500,
@@ -59,12 +60,9 @@ class OtpView extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: screenHeight * 0.02),
-
                       OtpWidget(),
-
                       ResendOtp(),
                       SizedBox(height: screenHeight * 0.02),
-
                       Center(
                         child: ButtonWidget(
                           text: "Send OTP",

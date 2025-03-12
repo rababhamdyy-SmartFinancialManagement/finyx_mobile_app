@@ -1,7 +1,8 @@
-import 'package:finyx_mobile_app/widgets/auth_widgets/auth_options_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:finyx_mobile_app/widgets/custom_widgets/custom_textfield_widget.dart';
+import '../../models/login_model.dart';
+import '../../widgets/auth_widgets/auth_options_widget.dart';
 import '../../widgets/buttons_widgets/button_widget.dart';
+import '../../widgets/custom_widgets/custom_textfield_widget.dart';
 import '../../widgets/custom_widgets/finyx_widget.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -12,9 +13,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool isChecked = false;
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final LoginModel loginModel = LoginModel();
+
+  @override
+  void dispose() {
+    loginModel.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +44,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 CustomTextField(
                   label: "Email",
                   hint: "Enter your email",
-                  controller: emailController,
+                  controller: loginModel.emailController,
                   keyboardType: TextInputType.emailAddress,
                 ),
                 SizedBox(height: screenHeight * 0.02),
                 CustomTextField(
                   label: "Password",
                   hint: "Enter your password",
-                  controller: passwordController,
+                  controller: loginModel.passwordController,
                   obscureText: true,
                 ),
                 SizedBox(height: screenHeight * 0.001),
@@ -56,10 +61,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     Row(
                       children: [
                         Checkbox(
-                          value: isChecked,
+                          value: loginModel.isChecked,
                           onChanged: (bool? value) {
                             setState(() {
-                              isChecked = value ?? false;
+                              loginModel.toggleRememberMe(value);
                             });
                           },
                           activeColor: const Color(0xFF3E0555),
@@ -70,7 +75,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(width: screenWidth * 0.02),
                     GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(context, '/forget_password');

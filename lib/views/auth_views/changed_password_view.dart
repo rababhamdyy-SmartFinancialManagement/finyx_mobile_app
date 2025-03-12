@@ -1,9 +1,12 @@
+import 'package:flutter/material.dart';
+import '../../models/password_changed_model.dart';
 import 'package:finyx_mobile_app/widgets/buttons_widgets/button_widget.dart';
 import 'package:finyx_mobile_app/widgets/greetings_widgets/greeting_widget.dart';
-import 'package:flutter/material.dart';
 
 class PasswordChangedScreen extends StatelessWidget {
-  const PasswordChangedScreen({super.key});
+  PasswordChangedScreen({super.key});
+
+  final PasswordChangedModel model = PasswordChangedModel();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,7 @@ class PasswordChangedScreen extends StatelessWidget {
             GreetingWidget(greetingText: "Password Changed", fontSize: 45),
             SizedBox(height: screenHeight * 0.01),
             Text(
-              "Your password has been changed successfully",
+              model.successMessage,
               style: TextStyle(
                 fontSize: screenWidth * 0.045,
                 fontWeight: FontWeight.w500,

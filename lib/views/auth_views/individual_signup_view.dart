@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../../models/individual_signup_model.dart';
 import '../../widgets/auth_widgets/auth_options_widget.dart';
 import '../../widgets/buttons_widgets/button_widget.dart';
 import '../../widgets/custom_widgets/custom_textfield_widget.dart';
@@ -13,11 +13,13 @@ class IndividualSignupView extends StatefulWidget {
 }
 
 class _IndividualSignupViewState extends State<IndividualSignupView> {
-  final TextEditingController fullNameController = TextEditingController();
-  final TextEditingController dobController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController incomeController = TextEditingController();
-  final TextEditingController nationalIdController = TextEditingController();
+  final IndividualSignupModel signupModel = IndividualSignupModel();
+
+  @override
+  void dispose() {
+    signupModel.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,35 +44,35 @@ class _IndividualSignupViewState extends State<IndividualSignupView> {
                 CustomTextField(
                   label: "Full Name",
                   hint: "Enter your full name",
-                  controller: fullNameController,
+                  controller: signupModel.fullNameController,
                   keyboardType: TextInputType.name,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
                   label: "Date of Birth",
                   hint: "DD/MM/YYYY",
-                  controller: dobController,
+                  controller: signupModel.dobController,
                   keyboardType: TextInputType.datetime,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
                   label: "Address",
                   hint: "Enter your address",
-                  controller: addressController,
+                  controller: signupModel.addressController,
                   keyboardType: TextInputType.streetAddress,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
                   label: "Monthly Income",
                   hint: "Enter your monthly salary",
-                  controller: incomeController,
+                  controller: signupModel.incomeController,
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
                   label: "National ID",
                   hint: "Enter your national ID",
-                  controller: nationalIdController,
+                  controller: signupModel.nationalIdController,
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: screenHeight * 0.03),

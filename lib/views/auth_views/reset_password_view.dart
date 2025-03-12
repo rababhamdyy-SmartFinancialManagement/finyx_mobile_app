@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:finyx_mobile_app/models/reset_password_model.dart';
 import 'package:finyx_mobile_app/widgets/buttons_widgets/button_widget.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_appbar.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_background.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_textfield_widget.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_title_section.dart';
-import 'package:flutter/material.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   const ResetPasswordScreen({super.key});
@@ -14,7 +15,7 @@ class ResetPasswordScreen extends StatelessWidget {
       builder: (context, constraints) {
         final double screenWidth = constraints.maxWidth;
         final double screenHeight = constraints.maxHeight;
-        final TextEditingController passwordController = TextEditingController();
+        final ResetPasswordModel resetPasswordModel = ResetPasswordModel();
 
         return Scaffold(
           resizeToAvoidBottomInset: true,
@@ -53,14 +54,14 @@ class ResetPasswordScreen extends StatelessWidget {
                             CustomTextField(
                               label: "New password",
                               hint: "must be 8 characters",
-                              controller: passwordController,
+                              controller: resetPasswordModel.passwordController,
                               obscureText: true,
                             ),
                             SizedBox(height: screenHeight * 0.02),
                             CustomTextField(
                               label: "Confirm new password",
                               hint: "repeat password",
-                              controller: passwordController,
+                              controller: resetPasswordModel.passwordController,
                               obscureText: true,
                             ),
                             SizedBox(height: screenHeight * 0.04),

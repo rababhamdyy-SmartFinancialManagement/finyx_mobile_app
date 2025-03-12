@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../../models/business_signup_model.dart';
 import '../../widgets/auth_widgets/auth_options_widget.dart';
 import '../../widgets/buttons_widgets/button_widget.dart';
 import '../../widgets/custom_widgets/custom_textfield_widget.dart';
@@ -13,11 +13,13 @@ class BusinessSignUpView extends StatefulWidget {
 }
 
 class _BusinessSignUpViewState extends State<BusinessSignUpView> {
-  final TextEditingController fullNameController = TextEditingController();
-  final TextEditingController companyNameController = TextEditingController();
-  final TextEditingController companyLocationController = TextEditingController();
-  final TextEditingController budgetController = TextEditingController();
-  final TextEditingController numberOfEmployeesController = TextEditingController();
+  final BusinessSignUpModel signUpModel = BusinessSignUpModel();
+
+  @override
+  void dispose() {
+    signUpModel.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,35 +44,35 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
                 CustomTextField(
                   label: "Full Name",
                   hint: "Enter your full name",
-                  controller: fullNameController,
+                  controller: signUpModel.fullNameController,
                   keyboardType: TextInputType.name,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
                   label: "Company Name",
                   hint: "com.example.company",
-                  controller: companyNameController,
+                  controller: signUpModel.companyNameController,
                   keyboardType: TextInputType.name,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
                   label: "Company Location",
                   hint: "Egypt",
-                  controller: companyLocationController,
+                  controller: signUpModel.companyLocationController,
                   keyboardType: TextInputType.streetAddress,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
                   label: "Budget",
                   hint: "Enter your monthly salary",
-                  controller: budgetController,
+                  controller: signUpModel.budgetController,
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
                   label: "Number of Employees",
                   hint: "Enter the number of employees",
-                  controller: numberOfEmployeesController,
+                  controller: signUpModel.numberOfEmployeesController,
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: screenHeight * 0.03),
