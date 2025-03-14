@@ -9,9 +9,9 @@ class SkipWidget extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, 0, screenWidth * 0.05, 0), 
+      padding: EdgeInsets.fromLTRB(8, 32, 0, 0), 
       child: Align(
-        alignment: Alignment.topRight,
+        alignment: Alignment.topLeft,
         child: GestureDetector(
           onTap: () {
             Navigator.pushNamed(context, '/login');
@@ -19,7 +19,7 @@ class SkipWidget extends StatelessWidget {
           child: Text(
             "Skip",
             style: TextStyle(
-              fontSize: screenWidth > 600 ? 28 : 24, 
+              fontSize: screenWidth > 600 ? 24 : 28, 
               fontWeight: FontWeight.w400,
               fontFamily: "Righteous",
               color: Color(0xFF8D8D8D),

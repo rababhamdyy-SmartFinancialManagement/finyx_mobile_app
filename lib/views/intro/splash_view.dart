@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:finyx_mobile_app/widgets/intro/finyx_widget.dart';
+import 'package:finyx_mobile_app/widgets/splash/finyx_widget.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
