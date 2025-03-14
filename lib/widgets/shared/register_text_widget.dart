@@ -11,21 +11,17 @@ class RegisterText extends StatelessWidget {
 
     return RichText(
       text: TextSpan(
-        style: TextStyle(
-          fontSize: fontSize,
-          fontFamily: "Poppins",
-          color: Color(0xFF2F80ED),
-        ),
+        style: TextStyle(fontSize: fontSize, fontFamily: "Poppins"),
         children: [
           TextSpan(
             text: "New to Finyx ? ",
-            style: TextStyle(fontWeight: FontWeight.w500),
+            style: TextStyle(fontWeight: FontWeight.w500, color: Color(0xFF8D8D8D)),
           ),
           TextSpan(
             text: "Register Now",
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              decoration: TextDecoration.underline,
+              color: Color(0xFF2F80ED),
             ),
             recognizer:
                 TapGestureRecognizer()

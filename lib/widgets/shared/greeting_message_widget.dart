@@ -7,22 +7,14 @@ class GreetingMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double responsiveFontSize = screenWidth > 600 ? 18 : 16;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40.0),
-      child: Text(
-        greetingMessage,
-        style: TextStyle(
-          fontSize: responsiveFontSize,
-          fontWeight: FontWeight.w500,
-          fontFamily: "REM",
-        ),
-        textAlign: TextAlign.start,
-        softWrap: true,
-        strutStyle: StrutStyle(forceStrutHeight: true, height: 1.5),
+    return Text(
+      greetingMessage,
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w500,
+        fontFamily: "REM",
       ),
+      textAlign: TextAlign.center,
     );
   }
 }
