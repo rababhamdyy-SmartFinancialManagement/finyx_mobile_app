@@ -1,4 +1,5 @@
 import 'package:finyx_mobile_app/views/forgetPassword_view.dart';
+import 'package:finyx_mobile_app/views/homePage_view.dart';
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/views/splash_view.dart';
 import 'package:finyx_mobile_app/views/first_view.dart';
@@ -6,6 +7,8 @@ import 'package:finyx_mobile_app/views/second_view.dart';
 import 'package:finyx_mobile_app/views/third_view.dart';
 import 'package:finyx_mobile_app/views/login_view.dart';
 import 'package:finyx_mobile_app/views/sign_up_view.dart';
+
+import 'models/user_type.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -27,6 +30,10 @@ class AppRoutes {
       login: (context) => LoginScreen(),
       signUp: (context) => SignUpScreen(),
       forgetPassword: (context) => ForgetPasswordScreen(),
+      home: (context) {
+        final userType = ModalRoute.of(context)?.settings.arguments as UserType? ?? UserType.individual;
+        return HomepageView(userType: userType);
+      },
     };
   }
 }
