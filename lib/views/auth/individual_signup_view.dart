@@ -1,3 +1,5 @@
+import 'package:finyx_mobile_app/models/user_type.dart';
+import 'package:finyx_mobile_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import '../../models/individual_signup_model.dart';
 import '../../widgets/auth_widgets/auth_options_widget.dart';
@@ -79,7 +81,11 @@ class _IndividualSignupViewState extends State<IndividualSignupView> {
                 ButtonWidget(
                   text: "Sign Up",
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/home');
+                    Navigator.pushNamed(
+                      context,
+                      '/homepage',
+                      arguments: UserType.individual,
+                    );
                   },
                   width: screenWidth * 0.7,
                   height: screenHeight * 0.06,

@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:flutter/material.dart';
 import '../../models/business_signup_model.dart';
 import '../../widgets/auth_widgets/auth_options_widget.dart';
@@ -79,7 +80,11 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
                 ButtonWidget(
                   text: "Sign Up",
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/home');
+                    Navigator.pushNamed(
+                      context,
+                      '/homepage',
+                      arguments: UserType.business,
+                    );
                   },
                   width: screenWidth * 0.7,
                   height: screenHeight * 0.06,
