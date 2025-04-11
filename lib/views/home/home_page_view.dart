@@ -48,8 +48,8 @@ class HomePageView extends StatelessWidget {
               ),
               child: Image.asset(
                 currentIndex == 1
-                    ? 'assets/images/wallet/plus.png' // إذا كنا في صفحة المحفظة
-                    : 'assets/images/home/chatAI.png', // في باقي الصفحات
+                    ? 'assets/images/wallet/plus.png' 
+                    : 'assets/images/home/chatAI.png', 
               ),
             ),
           ),
