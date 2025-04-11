@@ -27,13 +27,15 @@ class AppRoutes {
   };
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    // Assuming UserType is passed as an argument when navigating to the homepage
     if (settings.name == '/homepage') {
-      final userType = settings.arguments as UserType? ?? UserType.individual;
-      return MaterialPageRoute(
-        builder: (_) => HomepageView(userType: userType),
-      );
-    }
+   
+    final userType = settings.arguments is UserType
+        ? settings.arguments as UserType
+        : UserType.individual; 
+    return MaterialPageRoute(
+      builder: (_) => HomePageView(userType: userType),
+    );
+  }
 
     final builder = routes[settings.name];
     return MaterialPageRoute(

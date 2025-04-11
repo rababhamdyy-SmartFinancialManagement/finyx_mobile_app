@@ -1,8 +1,12 @@
-abstract class NavigationState {}
+abstract class NavigationState {
+  final int index;
+  const NavigationState(this.index);
+}
 
-class NavigationInitial extends NavigationState {}
+class NavigationInitial extends NavigationState {
+  const NavigationInitial() : super(0);
+}
 
 class NavigationChanged extends NavigationState {
-  final int index;
-  NavigationChanged(this.index);
+  const NavigationChanged(int index) : super(index);
 }

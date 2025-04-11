@@ -1,10 +1,9 @@
-import 'package:finyx_mobile_app/cubits/home/chart_cubit.dart';
-import 'package:finyx_mobile_app/cubits/home/chart_state.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:finyx_mobile_app/cubits/home/chart_cubit.dart';
+import 'package:finyx_mobile_app/cubits/home/chart_state.dart';
 
 class PieChartWidget extends StatelessWidget {
   final double chartSize;
@@ -16,6 +15,8 @@ class PieChartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ChartCubit, ChartState>(
       builder: (context, state) {
+        print("Chart Sections: ${state.sections}");
+        
         return SizedBox(
           height: chartSize,
           width: chartSize,
@@ -26,7 +27,9 @@ class PieChartWidget extends StatelessWidget {
               sections: state.sections.map((section) {
                 return PieChartSectionData(
                   value: section.value,
-                  title: userType == UserType.individual ? "" : "${section.title} - ${section.value.toInt()}%",
+                  title: userType == UserType.individual 
+                      ? "" 
+                      : "${section.title} - ${section.value.toInt()}%",
                   color: section.color,
                   radius: chartSize * 0.25,
                   titleStyle: const TextStyle(color: Colors.white, fontSize: 12),
