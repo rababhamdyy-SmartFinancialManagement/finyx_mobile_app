@@ -11,8 +11,6 @@ import 'package:finyx_mobile_app/widgets/homepage/pie_chart_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
-
 class HomePageView extends StatelessWidget {
   final UserType userType;
   const HomePageView({super.key, required this.userType});
@@ -29,12 +27,27 @@ class HomePageView extends StatelessWidget {
           body: IndexedStack(
             index: currentIndex,
             children: [
-              HomepageBody(userType: userType),  // Screen content is handled here
+              HomepageBody(userType: userType),
               WalletScreen(),
               ProfileScreen(),
               SettingScreen(),
             ],
           ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              // action for FAB
+            },
+            backgroundColor: Colors.yellow[700],
+            child: Padding(
+              padding: EdgeInsets.all(
+                MediaQuery.of(context).size.width * 0.025,
+              ),
+              child: Image.asset('assets/images/home/chatAI.png'),
+            ),
+            shape: const CircleBorder(),
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: const CustomBottomNavbar(),
         );
       },
