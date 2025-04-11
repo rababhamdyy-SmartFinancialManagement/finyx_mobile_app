@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/widgets/shared/curved_background_widget.dart';
 import 'package:flutter/material.dart';
 import '../../models/forget_password_model.dart';
 import 'package:finyx_mobile_app/widgets/shared/button_widget.dart';
@@ -38,7 +39,10 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
           ),
           body: Stack(
             children: [
-              const CustomBackground(),
+              CustomPaint(
+                size: Size(MediaQuery.of(context).size.width, 300),
+                painter: CurvedBackgroundPainter(context),
+              ),
               SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.symmetric(
@@ -51,7 +55,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       CustomTitleSection(
                         title: "Forgot Password",
                         subtitle:
-                        "Don’t worry! It happens. Please enter the email associated with your account.",
+                            "Don’t worry! It happens. Please enter the email associated with your account.",
                         screenWidth: screenWidth,
                         screenHeight: screenHeight,
                       ),

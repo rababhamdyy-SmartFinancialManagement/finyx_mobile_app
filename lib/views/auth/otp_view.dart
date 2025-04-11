@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/widgets/shared/curved_background_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/widgets/auth_widgets/otp_widget.dart';
 import 'package:finyx_mobile_app/widgets/auth_widgets/resend_otp_widget.dart';
@@ -26,7 +27,9 @@ class OtpView extends StatelessWidget {
           ),
           body: Stack(
             children: [
-              const CustomBackground(),
+               CustomPaint(
+            size: Size(MediaQuery.of(context).size.width, 300),
+            painter: CurvedBackgroundPainter(context),),
               SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.symmetric(
