@@ -6,6 +6,7 @@ import 'package:finyx_mobile_app/views/profile/profile_view.dart';
 import 'package:finyx_mobile_app/views/setting/setting_view.dart';
 import 'package:finyx_mobile_app/views/wallet/wallet_view.dart';
 import 'package:finyx_mobile_app/widgets/homepage/custom_bottom_navbar.dart';
+import 'package:finyx_mobile_app/widgets/wallet/add_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -33,7 +34,7 @@ class HomePageView extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (currentIndex == 1) {
-                // إذا كنا في صفحة "المحفظة"، نقوم بإضافة الوظيفة
+                showAddItemDialog(context);
               
               } else {
                 // في باقي الصفحات، نقوم بعرض الدردشة AI

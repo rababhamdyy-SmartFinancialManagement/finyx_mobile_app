@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/views/wallet/wallet_body.dart';
 import 'package:flutter/material.dart';
 
 class WalletScreen extends StatelessWidget {
@@ -5,6 +6,14 @@ class WalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'View Bill',
+          style: TextStyle(fontFamily: 'Righteous', fontSize: 25),
+        ),
+      ),
+      body: WalletBody(),
+    );
   }
 }
