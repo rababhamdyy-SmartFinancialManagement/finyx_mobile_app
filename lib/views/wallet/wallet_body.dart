@@ -1,4 +1,5 @@
 import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
+import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/widgets/wallet/price_dialog.dart';
 import 'package:finyx_mobile_app/widgets/wallet/wallet_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +7,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 
 class WalletBody extends StatelessWidget {
-  WalletBody({super.key});
+  final UserType userType; // إضافة userType كمُعامل
 
-  final List<Map<String, dynamic>> defaultItems = [
+  WalletBody({
+    super.key,
+    required this.userType,
+  }); // تأكيد استقبال userType عند الإنشاء
+
+  final List<Map<String, dynamic>> defaultItemsIndividual = [
     {'icon': Icons.flash_on, 'label': 'Electricity'},
     {'icon': Icons.wifi, 'label': 'Internet'},
     {'icon': Icons.fastfood_outlined, 'label': 'Food'},
@@ -16,6 +22,16 @@ class WalletBody extends StatelessWidget {
     {'icon': Icons.shopping_cart, 'label': 'Shopping'},
     {'icon': Icons.local_gas_station, 'label': 'Gas'},
     {'icon': Icons.water_drop, 'label': 'WaterBill'},
+  ];
+
+  final List<Map<String, dynamic>> defaultItemsBusiness = [
+    {'icon': Icons.bar_chart, 'label': 'T Revenue'},
+    {'icon': Icons.stacked_line_chart, 'label': 'T Expenses'},
+    {'icon': Icons.trending_up, 'label': 'Profits'},
+    {'icon': Icons.trending_down, 'label': 'Losses'},
+    {'icon': Icons.multiple_stop_rounded, 'label': 'Transfer'},
+    {'icon': Icons.monetization_on_rounded, 'label': 'E salaries'},
+    {'icon': Icons.account_balance_wallet, 'label': 'Loan'},
   ];
 
   final List<Color> iconColors = [
@@ -27,6 +43,12 @@ class WalletBody extends StatelessWidget {
     Colors.teal,
     Colors.indigo,
   ];
+
+  List<Map<String, dynamic>> get defaultItems {
+    return userType == UserType.individual
+        ? defaultItemsIndividual
+        : defaultItemsBusiness;
+  }
 
   void _showModal(BuildContext context, String label, IconData icon) async {
     TextEditingController priceController = TextEditingController();

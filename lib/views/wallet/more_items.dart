@@ -3,14 +3,15 @@ import 'package:finyx_mobile_app/widgets/wallet/price_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
+import 'package:finyx_mobile_app/models/user_type.dart';
 
-Future<void> moreItems(BuildContext context) async {
+Future<void> moreItems(BuildContext context, UserType userType) async {
   await showDialog(
     context: context,
     builder: (BuildContext context) {
       return BlocBuilder<PriceCubit, PriceState>(
         builder: (context, state) {
-          return MoreItems(state: state);
+          return MoreItems(state: state, userType: userType); // تمرير userType
         },
       );
     },
@@ -19,7 +20,8 @@ Future<void> moreItems(BuildContext context) async {
 
 class MoreItems extends StatelessWidget {
   final PriceState state;
-  const MoreItems({super.key, required this.state});
+  final UserType userType;
+  const MoreItems({super.key, required this.state, required this.userType});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,8 @@ class MoreItems extends StatelessWidget {
       Colors.grey,
     ];
 
-    List<IconData> icons = [
+    // الأيقونات للفرد
+    List<IconData> individualIcons = [
       Icons.sports_tennis_rounded,
       Icons.phone_iphone,
       Icons.car_repair,
@@ -47,7 +50,20 @@ class MoreItems extends StatelessWidget {
       Icons.now_widgets_outlined,
     ];
 
-    List<String> itemNames = [
+    // الأيقونات للبزنس
+    List<IconData> businessIcons = [
+      Icons.assignment, // Licenses
+      Icons.money_off, // Accrued interest
+      Icons.account_balance_wallet, // Administrative expenses
+      Icons.flash_on, // Electricity
+      Icons.wifi, // Internet
+      Icons.local_shipping,
+      Icons.monetization_on, // Zakat
+      Icons.now_widgets_outlined, // More
+    ];
+
+    // الأسماء للفرد
+    List<String> individualNames = [
       'Club',
       'Mobile Credit',
       'Car',
@@ -57,6 +73,24 @@ class MoreItems extends StatelessWidget {
       'Association',
       'More',
     ];
+
+    // الأسماء للبزنس
+    List<String> businessNames = [
+      'Licenses',
+      'Accrued Interest',
+      'Admin Expenses',
+      'Electricity',
+      'Internet',
+      'Shipping',
+      'Zakat',
+      'More',
+    ];
+
+    // استخدام الأيقونات والأسماء بناءً على نوع المستخدم
+    List<IconData> icons =
+        userType == UserType.business ? businessIcons : individualIcons;
+    List<String> itemNames =
+        userType == UserType.business ? businessNames : individualNames;
 
     return AlertDialog(
       backgroundColor: Colors.white,
@@ -86,7 +120,7 @@ class MoreItems extends StatelessWidget {
             return GestureDetector(
               onTap: () async {
                 Navigator.of(context).pop(); // close this dialog first
-                if (label == 'More') {
+                if (label == 'More' || label == 'More Business') {
                   await showDialog(
                     context: context,
                     builder:

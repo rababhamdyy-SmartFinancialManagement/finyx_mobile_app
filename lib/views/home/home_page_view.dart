@@ -26,7 +26,7 @@ class HomePageView extends StatelessWidget {
             index: currentIndex,
             children: [
               HomepageBody(userType: userType),
-              WalletScreen(),
+              WalletScreen(userType: userType,),
               ProfileScreen(),
               SettingScreen(),
             ],
@@ -34,7 +34,7 @@ class HomePageView extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (currentIndex == 1) {
-                moreItems(context);
+                moreItems(context,userType);
               } else {
                 // في باقي الصفحات، نقوم بعرض الدردشة AI
               }
