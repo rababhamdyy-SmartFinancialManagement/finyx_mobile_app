@@ -40,7 +40,7 @@ class MoreItems extends StatelessWidget {
       Icons.sports_tennis_rounded,
       Icons.phone_iphone,
       Icons.car_repair,
-      Icons.shopping_cart,
+      Icons.wallet,
       Icons.medical_services_outlined,
       Icons.movie_filter_outlined,
       Icons.groups_outlined,
@@ -89,26 +89,24 @@ class MoreItems extends StatelessWidget {
                 if (label == 'More') {
                   await showDialog(
                     context: context,
-                    builder:
-                        (_) => AddDialog(
-                          nameController: TextEditingController(),
-                          priceController: TextEditingController(),
-                          cubit: cubit,
-                          state: state,
-                        ),
+                    builder: (_) => AddDialog(
+                      nameController: TextEditingController(),
+                      priceController: TextEditingController(),
+                      cubit: cubit,
+                      state: state,
+                    ),
                   );
                 } else {
                   await showDialog(
                     context: context,
-                    builder:
-                        (_) => PriceDialog(
-                          priceController: TextEditingController(),
-                          cubit: cubit,
-                          state: state,
-                          label: label,
-                          icon: icon,
-                          iconColor: color,
-                        ),
+                    builder: (_) => PriceDialog(
+                      priceController: TextEditingController(),
+                      cubit: cubit,
+                      state: state,
+                      label: label,
+                      icon: icon,
+                      iconColor: color,
+                    ),
                   );
                 }
               },

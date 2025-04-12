@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PriceDialog extends StatelessWidget {
   final TextEditingController priceController;
@@ -10,7 +11,8 @@ class PriceDialog extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
 
-  const PriceDialog({super.key, 
+  const PriceDialog({
+    super.key,
     required this.priceController,
     required this.cubit,
     required this.state,
@@ -21,12 +23,16 @@ class PriceDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      title: _buildTitle(),
-      content: _buildContent(),
-      actions: _buildActions(context),
+    return BlocBuilder<PriceCubit, PriceState>(
+      builder: (context, state) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: _buildTitle(),
+          content: _buildContent(state),
+          actions: _buildActions(context, state),
+        );
+      },
     );
   }
 
@@ -57,7 +63,7 @@ class PriceDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(PriceState state) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -78,7 +84,7 @@ class PriceDialog extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildActions(BuildContext context) {
+  List<Widget> _buildActions(BuildContext context, PriceState state) {
     return [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -88,21 +94,22 @@ class PriceDialog extends StatelessWidget {
               cubit.setShowError(false);
               Navigator.of(context).pop();
             },
-            child: Text('Cancel', style: TextStyle(color: iconColor,fontFamily: "Poppins")),
+            child: Text('Cancel', style: TextStyle(color: iconColor, fontFamily: "Poppins")),
           ),
           const SizedBox(width: 10),
           TextButton(
             onPressed: () async {
               double? price = double.tryParse(priceController.text);
               if (price == null || price <= 0) {
-                cubit.setShowError(true);
+                cubit.setShowError(true); // عرض رسالة الخطأ
                 return;
               }
               cubit.updatePrice(label, price);
               await SharedPrefsHelper.setDialogShown(label, true);
+              cubit.setShowError(false); // إخفاء رسالة الخطأ بعد الحفظ
               Navigator.of(context).pop();
             },
-            child: Text('Save', style: TextStyle(color: iconColor,fontFamily: "Poppins")),
+            child: Text('Save', style: TextStyle(color: iconColor, fontFamily: "Poppins")),
           ),
         ],
       ),
