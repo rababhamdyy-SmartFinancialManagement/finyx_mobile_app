@@ -6,4 +6,9 @@ class ChartSection {
   final Color color;
 
   ChartSection(this.title, this.value, this.color);
+
+  @override
+  String toString() {
+    return 'ChartSection{title: $title, value: $value}';
+  }
 }
