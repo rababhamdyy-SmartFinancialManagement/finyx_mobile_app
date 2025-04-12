@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
 
-class CustomDialog extends StatelessWidget {
+class AddDialog extends StatelessWidget {
   final TextEditingController nameController;
   final TextEditingController priceController;
   final PriceCubit cubit;
   final PriceState state;
 
-  const CustomDialog({
+  const AddDialog({
+    super.key,
     required this.nameController,
     required this.priceController,
     required this.cubit,
@@ -21,9 +22,7 @@ class CustomDialog extends StatelessWidget {
 
     return AlertDialog(
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -34,11 +33,7 @@ class CustomDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: iconColor),
             ),
-            child: Icon(
-              Icons.add,
-              size: 40,
-              color: iconColor,
-            ),
+            child: Icon(Icons.add, size: 40, color: iconColor),
           ),
           const SizedBox(width: 16),
           Text(
@@ -46,6 +41,7 @@ class CustomDialog extends StatelessWidget {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
+              fontFamily: "Poppins",
               color: iconColor,
             ),
           ),
@@ -89,10 +85,7 @@ class CustomDialog extends StatelessWidget {
                 cubit.setShowError(false);
                 Navigator.of(context).pop();
               },
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: iconColor),
-              ),
+              child: Text('Cancel', style: TextStyle(color: iconColor,fontFamily: 'Poppins')),
             ),
             const SizedBox(width: 10),
             TextButton(
@@ -110,10 +103,7 @@ class CustomDialog extends StatelessWidget {
                 cubit.setShowError(false);
                 Navigator.of(context).pop();
               },
-              child: Text(
-                'Save',
-                style: TextStyle(color: iconColor),
-              ),
+              child: Text('Save', style: TextStyle(color: iconColor,fontFamily: "Poppins")),
             ),
           ],
         ),
