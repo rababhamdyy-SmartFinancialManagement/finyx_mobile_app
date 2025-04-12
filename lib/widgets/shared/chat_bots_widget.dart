@@ -14,66 +14,98 @@ class _ChatDialogState extends State<ChatDialog> {
 
   @override
   Widget build(BuildContext context) {
+    // استخدام MediaQuery للحصول على الأبعاد
+    double dialogHeight = MediaQuery.of(context).size.height * 0.6;  // 60% من ارتفاع الشاشة
+    double dialogWidth = MediaQuery.of(context).size.width * 0.8;   // 80% من عرض الشاشة
+
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),  // جعل الزوايا أكثر نعومة
       ),
       child: Container(
-        height: 400, // Default height for the Dialog
+        height: dialogHeight, // تحديد ارتفاع الـ Dialog بناءً على حجم الشاشة
+        width: dialogWidth,   // تحديد عرض الـ Dialog بناءً على حجم الشاشة
         padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 222, 206, 240),  // لون بنفسجي شفاف خفيف
+          borderRadius: BorderRadius.circular(16),  // زوايا دائرية
+        ),
         child: Column(
           children: [
-            // Title of the chat
-            Text(
-              'Chat Bot',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            Expanded(
-              child: Column(
-                children: [
-                  // Chat content (here you can integrate the chat bot or any other content)
-                  Container(
-                    height: 300,
-                    color: Colors.grey[200],
-                    child: Center(child: Text("Chat content will appear here")),
-                  ),
-                  // Chat input section
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _controller,
-                            decoration: InputDecoration(
-                              hintText: 'Type a message...',
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.send),
-                          onPressed: () {
-                            // Handle send action (you can send the message here)
-                            String message = _controller.text;
-                            if (message.isNotEmpty) {
-                              // Process the message or send it
-                              print('Message sent: $message');
-                              _controller.clear();  // Clear the text field after sending
-                            }
-                          },
-                        ),
-                      ],
+            // الجزء العلوي مع الأيقونة
+            Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                padding: EdgeInsets.all(6),  // حجم padding حول الأيقونة
+                decoration: BoxDecoration(
+                  color: Colors.white,  // خلفية بيضاء للأيقونة
+                  shape: BoxShape.circle,  // جعل الأيقونة داخل دائرة
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 5,
+                      offset: Offset(0, 3), // ظل بسيط تحت الأيقونة
                     ),
-                  ),
-                ],
+                  ],
+                ),
+                child: IconButton(
+                  icon: Icon(Icons.close, color: Colors.red),  // أيقونة إغلاق بلون أحمر
+                  onPressed: widget.onPressed,  // إغلاق الـ Dialog عند الضغط
+                ),
               ),
             ),
-            // Close button
-            ElevatedButton(
-              onPressed: widget.onPressed,  // Using the passed block to close the Dialog
-              child: Text('Close'),
+            // عنوان الشات
+            Text(
+              'Chat Bot',
+              style: TextStyle(
+                fontSize: 18, 
+                fontWeight: FontWeight.bold, 
+                color: Colors.deepPurple,  // لون بنفسجي للنص
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // محتوى الشات (يمكن دمج الشات بوت هنا أو أي محتوى آخر)
+                    Container(
+                      height: dialogHeight * 0.6, // 60% من ارتفاع الـ Dialog
+                      color: Colors.grey[200],
+                      child: Center(child: Text("Chat content will appear here")),
+                    ),
+                    // قسم إدخال الرسائل
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _controller,
+                              decoration: InputDecoration(
+                                hintText: 'Type a message...',
+                                border: OutlineInputBorder(),
+                                contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.send, color: Colors.purple),  // أيقونة إرسال بنفسجي
+                            onPressed: () {
+                              // التعامل مع إرسال الرسالة (يمكنك إرسال الرسالة هنا)
+                              String message = _controller.text;
+                              if (message.isNotEmpty) {
+                                // معالجة الرسالة أو إرسالها
+                                print('Message sent: $message');
+                                _controller.clear();  // مسح الحقل النصي بعد الإرسال
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
