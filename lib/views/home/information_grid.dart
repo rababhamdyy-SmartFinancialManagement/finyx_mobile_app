@@ -1,5 +1,5 @@
 import 'package:finyx_mobile_app/models/user_type.dart';
-import 'package:finyx_mobile_app/widgets/wallet/add_dialog.dart.dart';
+import 'package:finyx_mobile_app/widgets/wallet/add_dialog.dart';
 import 'package:finyx_mobile_app/widgets/wallet/price_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

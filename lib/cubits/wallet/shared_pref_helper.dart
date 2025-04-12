@@ -41,4 +41,12 @@ class SharedPrefsHelper {
       shown,
     ); // Save dialog visibility status
   }
+  static Future<void> saveUserType(String userType) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('user_type', userType); 
+  }
+  static Future<String?> getUserType() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_type'); 
+  }
 }
