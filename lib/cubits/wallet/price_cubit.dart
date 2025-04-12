@@ -5,9 +5,10 @@ class PriceState {
   final Map<String, double> prices;
   final bool showError;
 
+  // Constructor to initialize the state with prices and error flag
   PriceState({required this.prices, this.showError = false});
 
-  // دالة لنسخ الحالة مع التغييرات المطلوبة
+  // Method to copy the current state with optional changes
   PriceState copyWith({Map<String, double>? prices, bool? showError}) {
     return PriceState(
       prices: prices ?? this.prices,
@@ -18,46 +19,46 @@ class PriceState {
 
 class PriceCubit extends Cubit<PriceState> {
   PriceCubit() : super(PriceState(prices: {})) {
-    _loadPrices();
+    _loadPrices(); // Load prices from SharedPreferences on initialization
   }
 
-  // تحميل الأسعار من SharedPreferences عند بداية التشغيل
+  // Loads the prices from SharedPreferences at the start of the app
   Future<void> _loadPrices() async {
     final prices = await SharedPrefsHelper.loadPrices();
     emit(state.copyWith(prices: prices));
   }
 
-  // دالة لتحديث السعر
+  // Updates the price for a given label if the price is valid
   void updatePrice(String label, double price) {
     if (price <= 0) {
-      setShowError(true);
+      setShowError(true); // Show error if the price is invalid
       return;
     }
 
     final newPrices = Map<String, double>.from(state.prices);
     newPrices[label] = price;
 
-    // حفظ الأسعار في SharedPreferences
+    // Save the updated prices in SharedPreferences
     SharedPrefsHelper.savePrices(newPrices);
 
-    // التأكد من أنه يوجد تغيير فعلي
+    // Emit the new state only if the prices have actually changed
     if (newPrices.toString() != state.prices.toString()) {
       emit(state.copyWith(prices: newPrices));
     }
   }
 
-  // دالة لتغيير حالة الخطأ
+  // Sets the error flag to indicate an error state
   void setShowError(bool showError) {
     emit(state.copyWith(showError: showError));
   }
 
-  // دالة لإزالة السعر
+  // Removes a price for a given label and saves the updated prices
   void removePrice(String label) {
     if (state.prices.containsKey(label)) {
       final newPrices = Map<String, double>.from(state.prices);
       newPrices.remove(label);
 
-      // حفظ الأسعار بعد الإزالة
+      // Save the prices after removal in SharedPreferences
       SharedPrefsHelper.savePrices(newPrices);
 
       emit(state.copyWith(prices: newPrices));

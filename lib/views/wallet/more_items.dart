@@ -1,32 +1,39 @@
-import 'package:finyx_mobile_app/widgets/wallet/add_dialog.dart.dart';
+import 'package:finyx_mobile_app/widgets/wallet/add_dialog.dart';
 import 'package:finyx_mobile_app/widgets/wallet/price_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
 
+// Displays the "More Items" dialog, with content varying based on user type
 Future<void> moreItems(BuildContext context, UserType userType) async {
   await showDialog(
     context: context,
     builder: (BuildContext context) {
       return BlocBuilder<PriceCubit, PriceState>(
         builder: (context, state) {
-          return MoreItems(state: state, userType: userType); // تمرير userType
+          return MoreItems(
+            state: state,
+            userType: userType,
+          ); // Pass userType to MoreItems widget
         },
       );
     },
   );
 }
 
+// Widget to display the "More Items" dialog with different options based on user type
 class MoreItems extends StatelessWidget {
   final PriceState state;
   final UserType userType;
+
   const MoreItems({super.key, required this.state, required this.userType});
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<PriceCubit>();
+    final cubit = context.read<PriceCubit>(); // Access the PriceCubit
 
+    // List of icon colors for the items
     List<Color> iconColors = [
       Colors.orange,
       Colors.blue,
@@ -38,7 +45,7 @@ class MoreItems extends StatelessWidget {
       Colors.grey,
     ];
 
-    // الأيقونات للفرد
+    // Icons for individual users
     List<IconData> individualIcons = [
       Icons.sports_tennis_rounded,
       Icons.phone_iphone,
@@ -50,7 +57,7 @@ class MoreItems extends StatelessWidget {
       Icons.now_widgets_outlined,
     ];
 
-    // الأيقونات للبزنس
+    // Icons for business users
     List<IconData> businessIcons = [
       Icons.assignment, // Licenses
       Icons.money_off, // Accrued interest
@@ -62,7 +69,7 @@ class MoreItems extends StatelessWidget {
       Icons.now_widgets_outlined, // More
     ];
 
-    // الأسماء للفرد
+    // Names for individual users
     List<String> individualNames = [
       'Club',
       'Mobile Credit',
@@ -74,7 +81,7 @@ class MoreItems extends StatelessWidget {
       'More',
     ];
 
-    // الأسماء للبزنس
+    // Names for business users
     List<String> businessNames = [
       'Licenses',
       'Accrued Interest',
@@ -86,7 +93,7 @@ class MoreItems extends StatelessWidget {
       'More',
     ];
 
-    // استخدام الأيقونات والأسماء بناءً على نوع المستخدم
+    // Choose the appropriate icons and names based on the user type
     List<IconData> icons =
         userType == UserType.business ? businessIcons : individualIcons;
     List<String> itemNames =
@@ -119,7 +126,9 @@ class MoreItems extends StatelessWidget {
 
             return GestureDetector(
               onTap: () async {
-                Navigator.of(context).pop(); // close this dialog first
+                Navigator.of(context).pop(); // Close the dialog first
+
+                // Show the appropriate dialog based on the selected item
                 if (label == 'More' || label == 'More Business') {
                   await showDialog(
                     context: context,

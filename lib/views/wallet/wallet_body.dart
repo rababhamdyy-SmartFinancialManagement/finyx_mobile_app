@@ -7,13 +7,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 
 class WalletBody extends StatelessWidget {
-  final UserType userType; // إضافة userType كمُعامل
+  final UserType userType; // The type of user (individual or business)
 
   WalletBody({
     super.key,
     required this.userType,
-  }); // تأكيد استقبال userType عند الإنشاء
+  }); // Ensure userType is passed when creating the widget
 
+  // Default items for individual users
   final List<Map<String, dynamic>> defaultItemsIndividual = [
     {'icon': Icons.flash_on, 'label': 'Electricity'},
     {'icon': Icons.wifi, 'label': 'Internet'},
@@ -24,6 +25,7 @@ class WalletBody extends StatelessWidget {
     {'icon': Icons.water_drop, 'label': 'WaterBill'},
   ];
 
+  // Default items for business users
   final List<Map<String, dynamic>> defaultItemsBusiness = [
     {'icon': Icons.bar_chart, 'label': 'T Revenue'},
     {'icon': Icons.stacked_line_chart, 'label': 'T Expenses'},
@@ -34,6 +36,7 @@ class WalletBody extends StatelessWidget {
     {'icon': Icons.account_balance_wallet, 'label': 'Loan'},
   ];
 
+  // List of colors for icons
   final List<Color> iconColors = [
     Colors.orange,
     Colors.blue,
@@ -44,28 +47,36 @@ class WalletBody extends StatelessWidget {
     Colors.indigo,
   ];
 
+  // Determines the default items based on the user type
   List<Map<String, dynamic>> get defaultItems {
     return userType == UserType.individual
         ? defaultItemsIndividual
         : defaultItemsBusiness;
   }
 
+  // Shows the modal dialog to update the price of an item
   void _showModal(BuildContext context, String label, IconData icon) async {
     TextEditingController priceController = TextEditingController();
     final cubit = context.read<PriceCubit>();
 
+    // Check if there is a saved price for the item
     double? currentPrice = cubit.state.prices[label];
     if (currentPrice != null) {
       priceController.text = currentPrice.toString();
     }
 
-    Color iconColor = _getIconColor(label, cubit, icon);
+    Color iconColor = _getIconColor(
+      label,
+      cubit,
+      icon,
+    ); // Get the appropriate icon color
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return BlocBuilder<PriceCubit, PriceState>(
           builder: (context, state) {
+            // Return the price dialog
             return PriceDialog(
               priceController: priceController,
               cubit: cubit,
@@ -80,10 +91,12 @@ class WalletBody extends StatelessWidget {
     );
   }
 
+  // Checks if the label is a default item
   bool _isDefaultItem(String label) {
     return defaultItems.any((item) => item['label'] == label);
   }
 
+  // Determines the icon color based on the item label
   Color _getIconColor(String label, PriceCubit cubit, IconData icon) {
     int index = defaultItems.indexWhere((item) => item['label'] == label);
     if (index != -1) {
@@ -105,6 +118,7 @@ class WalletBody extends StatelessWidget {
           return ListView.builder(
             itemCount: defaultItems.length + entries.length,
             itemBuilder: (context, index) {
+              // Display default items first
               if (index < defaultItems.length) {
                 final item = defaultItems[index];
                 final label = item['label'];
@@ -120,11 +134,12 @@ class WalletBody extends StatelessWidget {
                   price: price,
                   context: context,
                   onTap: () => _showModal(context, label, icon),
-                  isDeletable: false,
+                  isDeletable: false, // Default items are not deletable
                   backgroundColor: bgColor,
                   iconColor: iconColor,
                 );
               } else {
+                // Display added items with swipe-to-delete functionality
                 final entry = entries[index - defaultItems.length];
                 final label = entry.key;
                 final price = entry.value;
@@ -147,16 +162,16 @@ class WalletBody extends StatelessWidget {
                   ),
                   onDismissed: (_) {
                     context.read<PriceCubit>().removePrice(label);
-                    // Don't forget to remove from SharedPreferences
+                    // Remove the item from SharedPreferences
                     SharedPrefsHelper.savePrices(state.prices);
                   },
                   child: WalletListTile(
-                    icon: Icons.add,
+                    icon: Icons.add, // Use an "add" icon for added items
                     label: label,
                     price: price,
                     context: context,
                     onTap: () => _showModal(context, label, Icons.add),
-                    isDeletable: true,
+                    isDeletable: true, // Items added by the user are deletable
                     backgroundColor: bgColor,
                     iconColor: iconColor,
                   ),
