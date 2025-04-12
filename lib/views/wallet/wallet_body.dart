@@ -7,30 +7,23 @@ class WalletBody extends StatelessWidget {
   WalletBody({super.key});
 
   final List<Map<String, dynamic>> defaultItems = [
-    {'label': 'House Rent', 'icon': Icons.home},
-    {'label': 'Dining', 'icon': Icons.local_dining},
-    {'label': 'Groceries', 'icon': Icons.shopping_cart},
-    {'label': 'Services', 'icon': Icons.gesture},
-    {'label': 'Transport', 'icon': Icons.car_rental},
-    {'label': 'Wallet', 'icon': Icons.account_balance_wallet},
-  ];
-
-  final List<Color> backgroundColors = [
-    Colors.blue.shade50,
-    Colors.green.shade50,
-    Colors.orange.shade50,
-    Colors.purple.shade50,
-    Colors.teal.shade50,
-    Colors.red.shade50,
+    {'icon': Icons.flash_on, 'label': 'Electricity'},
+    {'icon': Icons.wifi, 'label': 'Internet'},
+    {'icon': Icons.fastfood_outlined, 'label': 'Food'},
+    {'icon': Icons.money, 'label': 'Zakat'},
+    {'icon': Icons.shopping_cart, 'label': 'Shopping'},
+    {'icon': Icons.local_gas_station, 'label': 'Gas'},
+    {'icon': Icons.water_drop, 'label': 'WaterBill'},
   ];
 
   final List<Color> iconColors = [
+    Colors.orange,
     Colors.blue,
     Colors.green,
-    Colors.orange,
     Colors.purple,
+    Colors.pink,
     Colors.teal,
-    Colors.red,
+    Colors.indigo,
   ];
 
   void _showModal(BuildContext context, String label, IconData icon) async {
@@ -42,21 +35,21 @@ class WalletBody extends StatelessWidget {
       priceController.text = currentPrice.toString();
     }
 
-    // تحديد اللون للعناصر الجديدة بناءً على القائمة المتعرفة
     int index = defaultItems.indexWhere((item) => item['label'] == label);
-
-    // إذا كان العنصر موجودًا في العناصر المتعرفة، نستخدم الألوان المتعرفة
-    Color bgColor;
     Color iconColor;
 
     if (index != -1) {
-      bgColor = backgroundColors[index % backgroundColors.length];
       iconColor = iconColors[index % iconColors.length];
     } else {
-      // إذا كان العنصر جديدًا، نستخدم نفس الآلية للتعيين باستخدام فهرس العنصر
-      final newItemIndex = context.read<PriceCubit>().state.prices.keys.toList().indexOf(label);
-      bgColor = backgroundColors[(newItemIndex + defaultItems.length) % backgroundColors.length];
-      iconColor = iconColors[(newItemIndex + defaultItems.length) % iconColors.length];
+      final newItemIndex = context
+          .read<PriceCubit>()
+          .state
+          .prices
+          .keys
+          .toList()
+          .indexOf(label);
+      iconColor =
+          iconColors[(newItemIndex + defaultItems.length) % iconColors.length];
     }
 
     showDialog(
@@ -79,11 +72,7 @@ class WalletBody extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(color: iconColor),
                     ),
-                    child: Icon(
-                      icon,
-                      size: 40,
-                      color: iconColor,
-                    ),
+                    child: Icon(icon, size: 40, color: iconColor),
                   ),
                   const SizedBox(width: 16),
                   Text(
@@ -91,7 +80,7 @@ class WalletBody extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: iconColor, // التأكد من استخدام اللون الصحيح هنا
+                      color: iconColor,
                     ),
                   ),
                 ],
@@ -104,9 +93,10 @@ class WalletBody extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: 'Enter Price',
                       border: OutlineInputBorder(),
-                      errorText: showError ? 'Please enter a valid price' : null,
+                      errorText:
+                          showError ? 'Please enter a valid price' : null,
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: iconColor), // التأكد من تحديد اللون بشكل صحيح هنا
+                        borderSide: BorderSide(color: iconColor),
                       ),
                     ),
                     keyboardType: TextInputType.number,
@@ -120,12 +110,7 @@ class WalletBody extends StatelessWidget {
                   children: [
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
-                          color: iconColor, // التأكد من تطبيق اللون بشكل صحيح هنا
-                        ),
-                      ),
+                      child: Text('Cancel', style: TextStyle(color: iconColor)),
                     ),
                     const SizedBox(width: 10),
                     TextButton(
@@ -139,12 +124,7 @@ class WalletBody extends StatelessWidget {
                         await SharedPrefsHelper.setDialogShown(label, true);
                         Navigator.of(context).pop();
                       },
-                      child: Text(
-                        'Submit',
-                        style: TextStyle(
-                          color: iconColor, // التأكد من تطبيق اللون بشكل صحيح هنا
-                        ),
-                      ),
+                      child: Text('Submit', style: TextStyle(color: iconColor)),
                     ),
                   ],
                 ),
@@ -175,8 +155,10 @@ class WalletBody extends StatelessWidget {
                 final label = item['label'];
                 final icon = item['icon'];
                 final price = state.prices[label];
-                final bgColor = backgroundColors[index % backgroundColors.length];
                 final iconColor = iconColors[index % iconColors.length];
+
+                // تحديد الخلفية بناءً على لون الأيقونة مع تخفيفها
+                Color bgColor = iconColor.withOpacity(0.1);
 
                 return _buildListTile(
                   icon: icon,
@@ -195,9 +177,12 @@ class WalletBody extends StatelessWidget {
 
                 if (_isDefaultItem(label)) return const SizedBox.shrink();
 
-                // تخصيص الألوان للعناصر الجديدة بناءً على القيم المتعرفة
-                final bgColor = backgroundColors[(defaultItems.length + index) % backgroundColors.length];
-                final iconColor = iconColors[(defaultItems.length + index) % iconColors.length];
+                final iconColor =
+                    iconColors[(defaultItems.length + index) %
+                        iconColors.length];
+
+                // تحديد الخلفية بناءً على لون الأيقونة مع تخفيفها
+                Color bgColor = iconColor.withOpacity(0.1);
 
                 return Dismissible(
                   key: Key(label),
