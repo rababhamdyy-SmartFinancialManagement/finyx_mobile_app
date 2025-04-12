@@ -5,13 +5,15 @@ class ButtonWidget extends StatelessWidget {
   final double width;
   final double height;
   final VoidCallback onPressed;
+  final Color? backgroundColor;  // خاصية جديدة لتحديد اللون الخلفي
 
   const ButtonWidget({
     super.key,
     required this.text,
     required this.width,
     required this.height,
-    required this.onPressed
+    required this.onPressed,
+    this.backgroundColor,  
   });
 
   @override
@@ -27,7 +29,7 @@ class ButtonWidget extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF3E0555),
+        backgroundColor: backgroundColor ?? Color(0xFF3E0555),  
         fixedSize: Size(buttonWidth, buttonHeight),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         shadowColor: Color(0xFF000000).withAlpha(40),

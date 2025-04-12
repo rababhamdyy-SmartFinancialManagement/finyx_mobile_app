@@ -37,17 +37,24 @@ class _SettingScreenState extends State<SettingScreen> {
                   SizedBox(height: MediaQuery.of(context).size.height * 0.2),
                   CustomContainerButton(
                     text: "About us",
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/AboutUs');
+                    },
                     icon: Icons.arrow_forward_ios_outlined,
                   ),
                   CustomContainerButton(
                     text: "Pivacy policy",
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/PrivacyPolicy');
+                    },
                     icon: Icons.arrow_forward_ios_outlined,
                   ),
                   CustomContainerButton(
                     text: "Terms and conditions",
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/TermsAndConditions');
+                    },
+
                     icon: Icons.arrow_forward_ios_outlined,
                   ),
                   CustomContainerButton(
@@ -65,7 +72,9 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                   CustomContainerButton(
                     text: "Help & Support",
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/HelpSupport');
+                    },
                     icon: Icons.help_outline_outlined,
                     iconSize: 0.03,
                   ),

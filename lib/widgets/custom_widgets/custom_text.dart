@@ -7,12 +7,14 @@ class CustomText extends StatelessWidget {
     required this.color,
     required this.text,
     this.isBold = false,
+    this.isCentered = false,
   });
 
   final double fontSize;
   final Color color;
   final String text;
   final bool isBold;
+  final bool isCentered;  
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class CustomText extends StatelessWidget {
         color: color,
         fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
       ),
+      textAlign: isCentered ? TextAlign.center : TextAlign.start,  
     );
   }
 }
