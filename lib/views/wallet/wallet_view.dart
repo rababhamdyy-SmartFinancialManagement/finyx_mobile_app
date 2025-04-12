@@ -1,6 +1,4 @@
-import 'package:finyx_mobile_app/views/wallet/wallet_body_view.dart';
-import 'package:finyx_mobile_app/widgets/homepage/custom_floating_action_button.dart';
-import 'package:finyx_mobile_app/widgets/homepage/custom_bottom_navbar.dart';
+import 'package:finyx_mobile_app/views/wallet/wallet_body.dart';
 import 'package:flutter/material.dart';
 
 class WalletScreen extends StatelessWidget {
@@ -10,10 +8,12 @@ class WalletScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Wallet'),
-        centerTitle: true,
-        backgroundColor: Colors.yellow[700],
+        title: const Text(
+          'View Bill',
+          style: TextStyle(fontFamily: 'Righteous', fontSize: 25),
+        ),
       ),
-      body: const WalletBody());
+      body: WalletBody(),
+    );
   }
 }

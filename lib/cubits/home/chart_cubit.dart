@@ -10,16 +10,21 @@ class ChartCubit extends Cubit<ChartState> {
   ChartCubit({required this.userType})
       : super(ChartState(userType == UserType.individual
             ? [
-                ChartSection("Food", 40, Colors.red),
+                ChartSection("Food", 30, Colors.red),
                 ChartSection("Internet", 25, Colors.orange),
-                ChartSection("WaterBill", 20, Colors.blue),
-                ChartSection("Others", 15, Colors.green),
+                ChartSection("WaterBill", 15, Colors.blue),
+                ChartSection("Electricity", 10, Colors.purple),
+                ChartSection("Gas", 8, Colors.pink),
+                ChartSection("Others", 12, Colors.green),
               ]
             : [
-                ChartSection("T Revenue", 50, Colors.red),
+                ChartSection("T Revenue", 30, Colors.red),
+                ChartSection("E salaries", 10, Colors.teal),
                 ChartSection("T Expenses", 20, Colors.orange),
-                ChartSection("Profits", 20, Colors.blue),
-                ChartSection("Losses", 10, Colors.green),
+                ChartSection("Profits", 10, Colors.blue),
+                ChartSection("Losses", 15, Colors.green),
+                ChartSection("Transfer", 15, Colors.purple),
+                
               ])) {
     print("ChartCubit created with userType: $userType");
     print("Initial state: ${state.sections}");

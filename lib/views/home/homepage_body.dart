@@ -65,7 +65,7 @@ class HomepageBody extends StatelessWidget {
               create: (_) => ChartCubit(userType: userType),
               child: PieChartWidget(userType: userType),
             ),
-            SizedBox(height: screenWidth * 0.02),
+           // SizedBox(height: screenWidth * 0.02),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -74,15 +74,15 @@ class HomepageBody extends StatelessWidget {
                   style: TextStyle(
                     fontSize: screenWidth * 0.05,
                     fontWeight: FontWeight.bold,
-                    fontFamily: 'Rockwell',
+                    fontFamily: 'Righteous',
                   ),
                 ),
                 Text(
                   "View",
                   style: TextStyle(
-                    color: Colors.deepPurple,
+                    color: Colors.grey,
                     fontSize: screenWidth * 0.04,
-                    fontFamily: 'Poppins',
+                    fontFamily: 'REM',
                   ),
                 ),
               ],

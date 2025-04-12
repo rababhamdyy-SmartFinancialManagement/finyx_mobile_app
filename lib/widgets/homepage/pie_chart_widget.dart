@@ -16,51 +16,54 @@ class PieChartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final chartSize = screenWidth * 0.58; // النسبة الخاصة بحجم الشارت
+    final chartSize = screenWidth * 0.58;
 
     return BlocBuilder<ChartCubit, ChartState>(
       builder: (context, state) {
-        double totalPercentage =
-            state.sections.fold(0, (sum, section) => sum + section.value);
-        double totalBudget =
-            userType == UserType.individual ? 1800.00 : 5000.00;
+        double totalPercentage = state.sections.fold(0, (sum, section) => sum + section.value);
+        double totalBudget = userType == UserType.individual ? 1800.00 : 5000.00;
         double availableBudget = (totalPercentage / 100) * totalBudget;
 
         return Center(
           child: SizedBox(
             width: screenWidth * 0.95,
-            height: chartSize + 170, // زيادة المسافة أسفل الشارت
+            height: chartSize + 230,
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // Pie Chart with Animation and Section Space
+                // Pie chart section
                 Positioned(
-                  top: screenHeight * 0.05, // رفع الشارت قليلاً لتناسب مختلف الشاشات
+                  top: screenHeight * 0.05,
                   child: SizedBox(
                     width: chartSize,
                     height: chartSize,
-                    child: PieChart(
-                      PieChartData(
-                        //animationDuration: Duration(milliseconds: 800), // إضافة الأنيميشن
-                        centerSpaceRadius: chartSize * 0.3, // زيادة المسافة في المركز
-                        sectionsSpace: 6, // فاصل بين الألوان
-                        startDegreeOffset: -90, // مهم جداً لمزامنة الألوان والـ labels
-                        sections: state.sections.map((section) {
-                          return PieChartSectionData(
-                            value: section.value,
-                            title: "",
-                            color: section.color,
-                            radius: chartSize * 0.25,
-                          );
-                        }).toList(),
-                      ),
+                    child: TweenAnimationBuilder(
+                      tween: Tween<double>(begin: 0, end: 1),
+                      duration: Duration(seconds: 1),
+                      builder: (context, value, child) {
+                        return PieChart(
+                          PieChartData(
+                            centerSpaceRadius: chartSize * 0.3,
+                            sectionsSpace: 6,
+                            startDegreeOffset: -70,
+                            sections: state.sections.map((section) {
+                              return PieChartSectionData(
+                                value: section.value * value,
+                                title: "",
+                                color: section.color,
+                                radius: chartSize * 0.25,
+                              );
+                            }).toList(),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
 
-                // Center Data inside the pie chart's white section
+                // Budget text section
                 Positioned(
-                  top: chartSize * 0.55, // رفع النص والصورة ليكونوا في منتصف الشارت
+                  top: chartSize * 0.55,
                   child: Align(
                     alignment: Alignment.center,
                     child: Column(
@@ -69,7 +72,10 @@ class PieChartWidget extends StatelessWidget {
                         Image.asset('assets/images/home/Icons.png'),
                         Text(
                           "${availableBudget.toStringAsFixed(2)}",
-                          style: TextStyle(fontSize: screenWidth * 0.045),
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.045,
+                            fontFamily: 'Righteous',
+                          ),
                         ),
                         SizedBox(height: 4),
                         Text(
@@ -77,7 +83,7 @@ class PieChartWidget extends StatelessWidget {
                           style: TextStyle(
                             fontSize: screenWidth * 0.035,
                             color: Colors.grey,
-                            fontFamily: 'Poppins',
+                            fontFamily: 'REM',
                           ),
                         ),
                       ],
@@ -85,60 +91,79 @@ class PieChartWidget extends StatelessWidget {
                   ),
                 ),
 
-                // External Labels Positioned Below the Chart with Padding
+                // Section labels section
                 Positioned(
-                  bottom: 10, // زيادة المسافة بين الشارت والـ labels
+                  bottom: 30,
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 20.0), // البادينغ من الأسفل فقط
+                    padding: EdgeInsets.only(bottom: 10.0),
                     child: SizedBox(
                       width: screenWidth * 0.9,
-                      child: Wrap(
-                        spacing: 16.0,
-                        runSpacing: 8.0,
-                        children: state.sections.asMap().entries.map((entry) {
-                          final index = entry.key;
-                          final section = entry.value;
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.04,
+                          vertical: screenWidth * 0.02,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Wrap(
+                          spacing: 20.0,
+                          runSpacing: 8.0,
+                          children: state.sections.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final section = entry.value;
 
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // Circle Indicator (container)
-                              Container(
-                                width: 10,
-                                height: 10,
-                                decoration: BoxDecoration(
-                                  color: section.color,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              // Label
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: section.color.withOpacity(0.18),
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: section.color, width: 1.3),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: section.color.withOpacity(0.2),
-                                      blurRadius: 6,
-                                      offset: const Offset(2, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Text(
-                                  "${section.title} - ${section.value.toInt()}%",
-                                  style: TextStyle(
-                                    fontSize: screenWidth * 0.034,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black87,
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: screenWidth * 0.025,
+                                  height: screenWidth * 0.025,
+                                  decoration: BoxDecoration(
+                                    color: section.color,
+                                    shape: BoxShape.circle,
                                   ),
                                 ),
-                              ),
-                            ],
-                          );
-                        }).toList(),
+                                SizedBox(width: 8),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: screenWidth * 0.03,
+                                    vertical: screenWidth * 0.015,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.8),
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: section.color, width: 1.3),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: section.color.withOpacity(0.2),
+                                        blurRadius: 6,
+                                        offset: const Offset(2, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Text(
+                                    "${section.title} - ${section.value.toInt()}%",
+                                    style: TextStyle(
+                                      fontSize: screenWidth * 0.034,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }).toList(),
+                        ),
                       ),
                     ),
                   ),
@@ -151,21 +176,18 @@ class PieChartWidget extends StatelessWidget {
     );
   }
 
-  /// لحساب زاوية منتصف كل جزء من الشارت مع مراعاة البداية من -90 درجة
   double calculateMiddleAngle(List<ChartSection> sections, int index) {
     double total = sections.fold(0, (sum, section) => sum + section.value);
-    double startAngle = -90.0; // بالبدايه من الأعلى
+    double startAngle = -70.0;
 
-    // نحسب الزاوية الابتدائية لكل قسم
     for (int i = 0; i < index; i++) {
       startAngle += (sections[i].value / total) * 360;
     }
 
-    // منتصف الزاوية للقسم الحالي
     double sweepAngle = (sections[index].value / total) * 360;
     double midAngle = startAngle + sweepAngle / 2;
 
-    // نحول من درجة إلى راديان
     return midAngle * math.pi / 180;
   }
 }
+
