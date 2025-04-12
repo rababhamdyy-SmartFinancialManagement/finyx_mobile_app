@@ -4,9 +4,10 @@ import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/views/home/homepage_body.dart';
 import 'package:finyx_mobile_app/views/profile/profile_view.dart';
 import 'package:finyx_mobile_app/views/setting/setting_view.dart';
+import 'package:finyx_mobile_app/views/wallet/add_item_view.dart';
 import 'package:finyx_mobile_app/views/wallet/wallet_view.dart';
 import 'package:finyx_mobile_app/widgets/homepage/custom_bottom_navbar.dart';
-import 'package:finyx_mobile_app/widgets/wallet/add_item.dart';
+import 'package:finyx_mobile_app/widgets/wallet/custom_dialog.dart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

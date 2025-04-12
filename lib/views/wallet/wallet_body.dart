@@ -28,9 +28,9 @@ class WalletBody extends StatelessWidget {
 
   void _showModal(BuildContext context, String label, IconData icon) async {
     TextEditingController priceController = TextEditingController();
-    bool showError = false;
+    final cubit = context.read<PriceCubit>();
 
-    double? currentPrice = context.read<PriceCubit>().state.prices[label];
+    double? currentPrice = cubit.state.prices[label];
     if (currentPrice != null) {
       priceController.text = currentPrice.toString();
     }
@@ -41,22 +41,15 @@ class WalletBody extends StatelessWidget {
     if (index != -1) {
       iconColor = iconColors[index % iconColors.length];
     } else {
-      final newItemIndex = context
-          .read<PriceCubit>()
-          .state
-          .prices
-          .keys
-          .toList()
-          .indexOf(label);
-      iconColor =
-          iconColors[(newItemIndex + defaultItems.length) % iconColors.length];
+      final newItemIndex = cubit.state.prices.keys.toList().indexOf(label);
+      iconColor = iconColors[(newItemIndex + defaultItems.length) % iconColors.length];
     }
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
+        return BlocBuilder<PriceCubit, PriceState>(
+          builder: (context, state) {
             return AlertDialog(
               backgroundColor: Colors.white,
               shape: RoundedRectangleBorder(
@@ -93,8 +86,7 @@ class WalletBody extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: 'Enter Price',
                       border: OutlineInputBorder(),
-                      errorText:
-                          showError ? 'Please enter a valid price' : null,
+                      errorText: state.showError ? 'Please enter a valid price' : null,
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: iconColor),
                       ),
@@ -109,7 +101,11 @@ class WalletBody extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () {
+                        // عند إغلاق الحوار نلغي رسالة الخطأ
+                        cubit.setShowError(false); 
+                        Navigator.of(context).pop();
+                      },
                       child: Text('Cancel', style: TextStyle(color: iconColor)),
                     ),
                     const SizedBox(width: 10),
@@ -117,14 +113,14 @@ class WalletBody extends StatelessWidget {
                       onPressed: () async {
                         double? price = double.tryParse(priceController.text);
                         if (price == null || price <= 0) {
-                          setState(() => showError = true);
+                          cubit.setShowError(true);  // تفعيل الرسالة عند إدخال قيمة غير صحيحة
                           return;
                         }
-                        context.read<PriceCubit>().updatePrice(label, price);
+                        cubit.updatePrice(label, price);
                         await SharedPrefsHelper.setDialogShown(label, true);
-                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();  // إغلاق الحوار بعد التصحيح
                       },
-                      child: Text('Submit', style: TextStyle(color: iconColor)),
+                      child: Text('Save', style: TextStyle(color: iconColor)),
                     ),
                   ],
                 ),
@@ -158,7 +154,7 @@ class WalletBody extends StatelessWidget {
                 final iconColor = iconColors[index % iconColors.length];
 
                 // تحديد الخلفية بناءً على لون الأيقونة مع تخفيفها
-                Color bgColor = iconColor.withOpacity(0.1);
+                Color bgColor = iconColor.withAlpha(15);
 
                 return _buildListTile(
                   icon: icon,
@@ -178,11 +174,10 @@ class WalletBody extends StatelessWidget {
                 if (_isDefaultItem(label)) return const SizedBox.shrink();
 
                 final iconColor =
-                    iconColors[(defaultItems.length + index) %
-                        iconColors.length];
+                    iconColors[(defaultItems.length + index) % iconColors.length];
 
                 // تحديد الخلفية بناءً على لون الأيقونة مع تخفيفها
-                Color bgColor = iconColor.withOpacity(0.1);
+                Color bgColor = iconColor.withAlpha(15);
 
                 return Dismissible(
                   key: Key(label),
@@ -197,7 +192,7 @@ class WalletBody extends StatelessWidget {
                     context.read<PriceCubit>().removePrice(label);
                   },
                   child: _buildListTile(
-                    icon: Icons.star,
+                    icon: Icons.add,
                     label: label,
                     price: price,
                     context: context,

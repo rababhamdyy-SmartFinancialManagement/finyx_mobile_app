@@ -1,32 +1,45 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'shared_pref_helper.dart';
 
 class PriceState {
   final Map<String, double> prices;
-  PriceState({required this.prices});
+  final bool showError;
+
+  PriceState({
+    required this.prices,
+    this.showError = false,  // إضافة خاصية الخطأ
+  });
+
+  // دالة لنسخ الحالة مع التغييرات المطلوبة
+  PriceState copyWith({
+    Map<String, double>? prices,
+    bool? showError,
+  }) {
+    return PriceState(
+      prices: prices ?? this.prices,
+      showError: showError ?? this.showError,
+    );
+  }
 }
 
 class PriceCubit extends Cubit<PriceState> {
-  PriceCubit() : super(PriceState(prices: {})) {
-    _loadPrices();
-  }
+  PriceCubit() : super(PriceState(prices: {}));
 
-  void _loadPrices() async {
-    final prices = await SharedPrefsHelper.loadPrices();
-    emit(PriceState(prices: prices));
-  }
-
-  void updatePrice(String label, double price) async {
+  // دالة لتحديث السعر
+  void updatePrice(String label, double price) {
     final newPrices = Map<String, double>.from(state.prices);
     newPrices[label] = price;
-    emit(PriceState(prices: newPrices));
-    await SharedPrefsHelper.savePrices(newPrices);
+    emit(state.copyWith(prices: newPrices));
   }
 
-  void removePrice(String label) async {
+  // دالة لتغيير حالة الخطأ
+  void setShowError(bool showError) {
+    emit(state.copyWith(showError: showError));
+  }
+
+  // دالة لإزالة السعر
+  void removePrice(String label) {
     final newPrices = Map<String, double>.from(state.prices);
     newPrices.remove(label);
-    emit(PriceState(prices: newPrices));
-    await SharedPrefsHelper.savePrices(newPrices);
+    emit(state.copyWith(prices: newPrices));
   }
 }
