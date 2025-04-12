@@ -1,9 +1,12 @@
+import 'package:finyx_mobile_app/widgets/shared/custom_snack_bar_widget.dart';
 import 'package:flutter/material.dart';
 import '../../models/login_model.dart';
 import '../../widgets/auth_widgets/auth_options_widget.dart';
 import '../../widgets/shared/button_widget.dart';
 import '../../widgets/custom_widgets/custom_textfield_widget.dart';
 import '../../widgets/splash/finyx_widget.dart';
+import '../../cubits/wallet/shared_pref_helper.dart';
+//import '../../models/user_type.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -91,8 +94,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   text: "Login",
                   width: screenWidth * 0.9,
                   height: screenHeight * 0.06,
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/home');
+                  onPressed: () async {
+                    // Handle login
+                    final result = await loginModel.loginUser(context);
+                    if (result != null) {
+                      final userType = await SharedPrefsHelper.getUserType();
+                      print(userType); 
+                      if (userType != null) {
+                        Navigator.pushReplacementNamed(context, '/homepage', arguments: userType);
+                      } else {
+                        CustomSnackbar.show(context, 'Unknown user type', isError: true);
+                      }
+                    } else {
+                      CustomSnackbar.show(context, 'Login failed, please try again', isError: true);
+                    }
                   },
                 ),
                 SizedBox(height: screenHeight * 0.05),

@@ -27,4 +27,13 @@ class SharedPrefsHelper {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('dialog_shown_$label', shown);
   }
+  static Future<void> saveUserType(String userType) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('user_type', userType); 
+  }
+  static Future<String?> getUserType() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_type'); 
+  }
 }
+

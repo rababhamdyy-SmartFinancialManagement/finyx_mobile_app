@@ -81,7 +81,7 @@ class _IndividualSignupViewState extends State<IndividualSignupView> {
                 ButtonWidget(
                   text: "Sign Up",
                   onPressed: () {
-                    Navigator.pushNamed(
+                    Navigator.pushReplacementNamed(
                       context,
                       '/homepage',
                       arguments: UserType.individual,
