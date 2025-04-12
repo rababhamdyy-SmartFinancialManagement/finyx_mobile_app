@@ -89,24 +89,26 @@ class MoreItems extends StatelessWidget {
                 if (label == 'More') {
                   await showDialog(
                     context: context,
-                    builder: (_) => AddDialog(
-                      nameController: TextEditingController(),
-                      priceController: TextEditingController(),
-                      cubit: cubit,
-                      state: state,
-                    ),
+                    builder:
+                        (_) => AddDialog(
+                          nameController: TextEditingController(),
+                          priceController: TextEditingController(),
+                          cubit: cubit,
+                          state: state,
+                        ),
                   );
                 } else {
                   await showDialog(
                     context: context,
-                    builder: (_) => PriceDialog(
-                      priceController: TextEditingController(),
-                      cubit: cubit,
-                      state: state,
-                      label: label,
-                      icon: icon,
-                      iconColor: color,
-                    ),
+                    builder:
+                        (_) => PriceDialog(
+                          priceController: TextEditingController(),
+                          cubit: cubit,
+                          state: state,
+                          label: label,
+                          icon: icon,
+                          iconColor: color,
+                        ),
                   );
                 }
               },

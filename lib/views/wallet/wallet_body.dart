@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
 import 'package:finyx_mobile_app/widgets/wallet/price_dialog.dart';
 import 'package:finyx_mobile_app/widgets/wallet/wallet_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -124,6 +125,8 @@ class WalletBody extends StatelessWidget {
                   ),
                   onDismissed: (_) {
                     context.read<PriceCubit>().removePrice(label);
+                    // Don't forget to remove from SharedPreferences
+                    SharedPrefsHelper.savePrices(state.prices);
                   },
                   child: WalletListTile(
                     icon: Icons.add,

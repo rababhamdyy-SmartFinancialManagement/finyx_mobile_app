@@ -27,7 +27,9 @@ class PriceDialog extends StatelessWidget {
       builder: (context, state) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: _buildTitle(),
           content: _buildContent(state),
           actions: _buildActions(context, state),
@@ -94,7 +96,10 @@ class PriceDialog extends StatelessWidget {
               cubit.setShowError(false);
               Navigator.of(context).pop();
             },
-            child: Text('Cancel', style: TextStyle(color: iconColor, fontFamily: "Poppins")),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: iconColor, fontFamily: "Poppins"),
+            ),
           ),
           const SizedBox(width: 10),
           TextButton(
@@ -104,12 +109,22 @@ class PriceDialog extends StatelessWidget {
                 cubit.setShowError(true); // عرض رسالة الخطأ
                 return;
               }
+              // تحديث السعر في الـ Cubit
               cubit.updatePrice(label, price);
-              await SharedPrefsHelper.setDialogShown(label, true);
-              cubit.setShowError(false); // إخفاء رسالة الخطأ بعد الحفظ
+
+              // حفظ السعر في SharedPreferences
+              await SharedPrefsHelper.savePrices(cubit.state.prices);
+
+              // إخفاء رسالة الخطأ بعد الحفظ
+              cubit.setShowError(false);
+
+              // إغلاق الـ Dialog
               Navigator.of(context).pop();
             },
-            child: Text('Save', style: TextStyle(color: iconColor, fontFamily: "Poppins")),
+            child: Text(
+              'Save',
+              style: TextStyle(color: iconColor, fontFamily: "Poppins"),
+            ),
           ),
         ],
       ),
