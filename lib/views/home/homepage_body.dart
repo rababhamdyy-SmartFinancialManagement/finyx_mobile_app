@@ -77,14 +77,6 @@ class HomepageBody extends StatelessWidget {
                     fontFamily: 'Righteous',
                   ),
                 ),
-                Text(
-                  "View",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: screenWidth * 0.04,
-                    fontFamily: 'REM',
-                  ),
-                ),
               ],
             ),
             SizedBox(height: screenWidth * 0.04),
