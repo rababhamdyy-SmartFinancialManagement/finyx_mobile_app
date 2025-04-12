@@ -7,6 +7,7 @@ import 'package:finyx_mobile_app/views/setting/setting_view.dart';
 import 'package:finyx_mobile_app/views/wallet/more_items.dart';
 import 'package:finyx_mobile_app/views/wallet/wallet_view.dart';
 import 'package:finyx_mobile_app/widgets/homepage/custom_bottom_navbar.dart';
+import 'package:finyx_mobile_app/widgets/shared/chat_bots_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,7 +37,16 @@ class HomePageView extends StatelessWidget {
               if (currentIndex == 1) {
                 moreItems(context,userType);
               } else {
-                // في باقي الصفحات، نقوم بعرض الدردشة AI
+                showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return ChatDialog(
+                  onPressed: () {
+                    Navigator.of(context).pop();  // Close the Dialog when the button is pressed
+                  },
+                );
+                },
+              );
               }
             },
             backgroundColor: Colors.yellow[700],

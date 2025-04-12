@@ -8,7 +8,7 @@ class CustomFloatingActionButton extends StatelessWidget {
     return FloatingActionButton(
       onPressed: () {
         // action for FAB
-        print("Floating Action Button Pressed");
+        //print("Floating Action Button Pressed");
       },
       backgroundColor: Colors.yellow[700],
       child: Padding(
