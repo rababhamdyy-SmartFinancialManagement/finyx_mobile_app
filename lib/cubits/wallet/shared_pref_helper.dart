@@ -8,9 +8,10 @@ class SharedPrefsHelper {
 
     // Iterate through all keys in SharedPreferences and retrieve the corresponding price values
     prefs.getKeys().forEach((key) {
-      final value = prefs.getDouble(key);
-      if (value != null)
-        prices[key] = value; // Add to map if a valid value is found
+      final value = prefs.get(key);
+      if (value is double) {
+        prices[key] = value;
+      }
     });
 
     return prices;
@@ -41,10 +42,12 @@ class SharedPrefsHelper {
       shown,
     ); // Save dialog visibility status
   }
+
   static Future<void> saveUserType(String userType) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('user_type', userType); 
   }
+
   static Future<String?> getUserType() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('user_type'); 
