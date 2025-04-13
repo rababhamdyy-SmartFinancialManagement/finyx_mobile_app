@@ -15,7 +15,7 @@ class CustomBottomNavbar extends StatelessWidget {
     final currentIndex = context.watch<NavigationCubit>().state.index;
 
     return BottomAppBar(
-      color: const Color(0xFF261863),
+      color: const Color(0xFF3E0555),
       shape: const CircularNotchedRectangle(),
       notchMargin: screenWidth * 0.02,
       elevation: 10,
