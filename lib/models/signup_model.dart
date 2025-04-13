@@ -3,10 +3,12 @@ import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/widgets/shared/custom_snack_bar_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpModel {
-  bool isIndividual = true;
+  bool isIndividual = true; // أو يمكنك تحديد القيمة من خلال واجهة المستخدم
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
@@ -40,47 +42,47 @@ class SignUpModel {
     }
 
     try {
-      // Temporary API call is commented for now
-      /*
-      final response = await http.post(
-        Uri.parse("https://your.api/register"), // Replace with your API URL
-        body: {
-          "email": email,
-          "password": password,
-          "phone_number": phoneNumber,
-          "user_type": isIndividual ? "individual" : "business", // Send the user type
-        },
+      // Firebase Authentication for user registration
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
       );
-      */
 
-      // For now we simulate a successful response as if it was from an API
-      final response = {"status": "success", "user_type": isIndividual ? "individual" : "business"};
+      // Add user details to Firestore without storing password
+      final user = userCredential.user;
+      if (user != null) {
+        final userRef = FirebaseFirestore.instance.collection(isIndividual ? 'individuals' : 'businesses').doc(user.uid);
 
-      if (response['status'] == 'success') {
-        final userType = response["user_type"];
+        // Save user data in Firestore (excluding password)
+        await userRef.set({
+          'email': email,
+          'phoneNumber': phoneNumber,
+          'userType': isIndividual ? 'individual' : 'business',
+        });
 
-        if (userType == null) {
-          CustomSnackbar.show(context, "User type not found", isError: true);
-          return null;
-        }
+        // Save userType to SharedPreferences
+        await SharedPrefsHelper.saveUserType(isIndividual ? 'individual' : 'business');
 
-        // Handle user type and save it to SharedPreferences
-        if (userType == "individual") {
-          await SharedPrefsHelper.saveUserType("individual");
-          CustomSnackbar.show(context, "Registered as Individual", isError: false);
-          return UserType.individual;
-        } else if (userType == "business") {
-          await SharedPrefsHelper.saveUserType("business");
-          CustomSnackbar.show(context, "Registered as Business", isError: false);
-          return UserType.business;
+        // Show success message
+        CustomSnackbar.show(context, "Registration successful as ${isIndividual ? 'Individual' : 'Business'}", isError: false);
+        
+        // Navigate to the respective screen to complete additional information
+        if (isIndividual) {
+          Navigator.pushNamed(context, '/individualSignup'); // Navigate to Individual signup screen
         } else {
-          CustomSnackbar.show(context, "Unknown user type", isError: true);
-          return null;
+          Navigator.pushNamed(context, '/businessSignup'); // Navigate to Business signup screen
         }
+
+        // Return user type
+        return isIndividual ? UserType.individual : UserType.business;
       } else {
-        CustomSnackbar.show(context, "Registration failed: ${response['status']}", isError: true);
+        CustomSnackbar.show(context, "Error: User registration failed", isError: true);
       }
+    } on FirebaseAuthException catch (e) {
+      // Handle Firebase authentication error
+      CustomSnackbar.show(context, "Error during registration: ${e.message}", isError: true);
     } catch (e) {
+      // Handle any other errors
       CustomSnackbar.show(context, "Error during registration: $e", isError: true);
     }
 

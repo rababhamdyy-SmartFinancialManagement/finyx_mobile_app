@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'auth_footer_text_widget.dart';
 import '../buttons_widgets/social_icon_button_widget.dart';
+import '../../models/login_model.dart';
 
 class SocialAuthButtons extends StatelessWidget {
   final bool isSignup;
@@ -55,17 +56,27 @@ class SocialAuthButtons extends StatelessWidget {
           children: [
             SocialIconButton(
               asset: "assets/images/icons/facebook.png",
-              onTap: () {},
+              onTap: () {
+                // Placeholder for Facebook login
+              },
               screenWidth: screenWidth,
             ),
             SocialIconButton(
               asset: "assets/images/icons/google.png",
-              onTap: () {},
+              onTap: () async {
+                final loginModel = LoginModel();
+                final userType = await loginModel.signInWithGoogle(context);
+                if (userType != null) {
+                  Navigator.pushReplacementNamed(context, '/homepage', arguments: userType);
+                }
+              },
               screenWidth: screenWidth,
             ),
             SocialIconButton(
               asset: "assets/images/icons/apple.png",
-              onTap: () {},
+              onTap: () {
+                // Placeholder for Apple login
+              },
               screenWidth: screenWidth,
             ),
           ],
