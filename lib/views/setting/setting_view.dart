@@ -12,23 +12,37 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text(
-          'Settings', // Title displayed in the app bar
+        title: Text(
+          'Settings',
           style: TextStyle(
             fontFamily: 'Righteous',
-            fontSize: 25,
-          ), 
+            fontSize: MediaQuery.of(context).size.width * 0.06,
+          ),
         ),
         centerTitle: true,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
+        elevation: 0,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 32, 8, 0),
+            padding: const EdgeInsets.fromLTRB(16, 32, 16, 0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Section: General
+                Text(
+                  "General",
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[700],
+                      ),
+                ),
+                const SizedBox(height: 16),
                 CustomContainerButton(
                   text: "About us",
                   onPressed: () {
@@ -37,7 +51,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   icon: Icons.arrow_forward_ios_outlined,
                 ),
                 CustomContainerButton(
-                  text: "Pivacy policy",
+                  text: "Privacy policy",
                   onPressed: () {
                     Navigator.pushNamed(context, '/PrivacyPolicy');
                   },
@@ -48,22 +62,47 @@ class _SettingScreenState extends State<SettingScreen> {
                   onPressed: () {
                     Navigator.pushNamed(context, '/TermsAndConditions');
                   },
-
                   icon: Icons.arrow_forward_ios_outlined,
                 ),
+                const SizedBox(height: 24),
+                Divider(thickness: 1, color: Colors.grey.shade300),
+                const SizedBox(height: 24),
+
+                // Section: App Preferences
+                Text(
+                  "App Preferences",
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[700],
+                      ),
+                ),
+                const SizedBox(height: 16),
                 CustomContainerButton(
                   text: "Push notifications",
                   onPressed: () {},
-                  icon: Icons.arrow_forward_ios_outlined,
+                  icon: Icons.notifications_outlined,
                   isSwitch: true,
                   initialSelected: true,
                 ),
                 CustomContainerButton(
                   text: "Dark mode",
                   onPressed: () {},
-                  icon: Icons.arrow_forward_ios_outlined,
+                  icon: Icons.dark_mode_outlined,
                   isSwitch: true,
                 ),
+                const SizedBox(height: 24),
+                Divider(thickness: 1, color: Colors.grey.shade300),
+                const SizedBox(height: 24),
+
+                // Section: Support
+                Text(
+                  "Support",
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[700],
+                      ),
+                ),
+                const SizedBox(height: 16),
                 CustomContainerButton(
                   text: "Help & Support",
                   onPressed: () {
