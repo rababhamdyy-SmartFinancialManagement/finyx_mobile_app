@@ -49,7 +49,7 @@ class _ChatDialogState extends State<ChatDialog> {
                   ],
                 ),
                 child: IconButton(
-                  icon: Icon(Icons.close, color: Colors.red),  // أيقونة إغلاق بلون أحمر
+                  icon: Icon(Icons.close, color: Colors.purple),  // أيقونة إغلاق بلون أحمر
                   onPressed: widget.onPressed,  // إغلاق الـ Dialog عند الضغط
                 ),
               ),
