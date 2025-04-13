@@ -4,12 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../cubits/profile/profile_cubit.dart';
 import '../../cubits/profile/profile_state.dart';
-import '../../models/user_model.dart';
 
 class EditProfileHeader extends StatelessWidget {
-  final UserModel user;
+  final String name;
 
-  const EditProfileHeader({super.key, required this.user});
+  const EditProfileHeader({super.key, required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +43,6 @@ class EditProfileHeader extends StatelessWidget {
           builder: (context, state) {
             final image = state.imagePath.isNotEmpty
                 ? FileImage(File(state.imagePath))
-                : user.profileImage.isNotEmpty
-                ? NetworkImage(user.profileImage)
                 : const AssetImage('assets/images/profile/profile.png') as ImageProvider;
 
             return Stack(
@@ -87,13 +84,17 @@ class EditProfileHeader extends StatelessWidget {
             );
           },
         ),
-        Text(
-          user.name,
-          style: TextStyle(
-            fontSize: width * 0.045,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
-          ),
+        BlocBuilder<ProfileCubit, ProfileState>(
+          builder: (context, state) {
+            return Text(
+              state.name,
+              style: TextStyle(
+                fontSize: width * 0.045,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
+            );
+          },
         ),
       ],
     );

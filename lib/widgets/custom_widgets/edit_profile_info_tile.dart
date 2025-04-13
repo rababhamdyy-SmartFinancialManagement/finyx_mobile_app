@@ -3,8 +3,16 @@ import 'package:flutter/material.dart';
 class EditProfileInfoTile extends StatelessWidget {
   final String iconPath;
   final String text;
+  final String fieldName;
+  final VoidCallback onEdit;
 
-  const EditProfileInfoTile({super.key, required this.iconPath, required this.text});
+  const EditProfileInfoTile({
+    super.key,
+    required this.iconPath,
+    required this.text,
+    required this.fieldName,
+    required this.onEdit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +28,11 @@ class EditProfileInfoTile extends StatelessWidget {
           color: Colors.black87,
         ),
       ),
+      trailing: IconButton(
+        icon: Icon(Icons.edit, color: Colors.purple),
+        onPressed: onEdit,
+      ),
+      onTap: onEdit,
     );
   }
 }

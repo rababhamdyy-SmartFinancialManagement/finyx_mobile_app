@@ -33,7 +33,7 @@ class UserProfileCard extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             Text(
-              'Yennefer Doe',
+              state.name,
               style: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.w500,

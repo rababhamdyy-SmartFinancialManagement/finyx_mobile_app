@@ -39,6 +39,8 @@ dependencies:
   flutter_bloc: ^9.1.0
   fl_chart: ^0.70.2
   image_picker: ^1.0.4
+  shared_preferences: ^2.0.15
+
 
 
 dev_dependencies:
