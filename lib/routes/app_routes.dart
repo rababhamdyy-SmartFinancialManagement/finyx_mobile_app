@@ -1,5 +1,10 @@
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/views/home/home_page_view.dart';
+import 'package:finyx_mobile_app/views/setting/about_us_view.dart';
+import 'package:finyx_mobile_app/views/setting/help_support_view.dart';
+import 'package:finyx_mobile_app/views/setting/privacy_policy_view.dart';
+import 'package:finyx_mobile_app/views/setting/setting_view.dart';
+import 'package:finyx_mobile_app/views/setting/terms_and_conditions_view.dart';
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/views/intro/splash_view.dart';
 import 'package:finyx_mobile_app/views/intro/onboarding_view.dart';
@@ -24,6 +29,11 @@ class AppRoutes {
     '/reset_password_view' : (_) => ResetPasswordScreen(),
     '/individual_signup' : (_) => IndividualSignupView(),
     '/business_signup' : (_) => BusinessSignUpView(),
+    '/setting': (_) => SettingScreen(),
+    '/PrivacyPolicy': (_) => PrivacyPolicyView(),
+    '/TermsAndConditions': (_) => TermsAndConditionsView(),
+    '/AboutUs': (_) => AboutUsView(),
+    '/HelpSupport': (_) => HelpSupportView(),
   };
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
