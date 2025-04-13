@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_appbar.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_text.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_title_section.dart';
-import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:finyx_mobile_app/widgets/shared/custom_snack_bar_widget.dart';
 
 class HelpSupportView extends StatelessWidget {
   const HelpSupportView({super.key});
@@ -40,7 +42,7 @@ class HelpSupportView extends StatelessWidget {
                     color: Colors.black,
                     isCentered: true,
                     text:
-                        "At Finyx, we’re here to help you every step of the way. Whether you’re facing a technical issue, need guidance, or have questions about our services — our support team is ready to assist you.\n\n",
+                        "At Finyx, we're here to help you every step of the way. Whether you're facing a technical issue, need guidance, or have questions about our services — our support team is ready to assist you.\n\n",
                   ),
                   CustomText(
                     fontSize: 0.035,
@@ -53,7 +55,6 @@ class HelpSupportView extends StatelessWidget {
                         "• Questions about services and settings\n"
                         "• Feedback and suggestions\n\n",
                   ),
-
                   CustomText(
                     fontSize: 0.04,
                     color: const Color(0xFF2F80ED),
@@ -63,19 +64,43 @@ class HelpSupportView extends StatelessWidget {
                   ),
                   SizedBox(height: screenHeight * 0.01),
 
-                  // Email
+                  // Email tap
                   GestureDetector(
                     onTap: () async {
+                      final Uri emailUri = Uri(
+                        scheme: 'mailto',
+                        path: 'finyx.contact@gmail.com',
+                        queryParameters: {
+                          'subject': 'Finyx Support',
+                          'body': 'Hello Finyx Team,',
+                        },
+                      );
 
-                      final String emailUrl =
-                          'mailto:finyx.contact@gmail.com'
-                          '?subject=${Uri.encodeComponent('Finyx Support')}'
-                          '&body=${Uri.encodeComponent('Hello Finyx Team,')}';
-
-                      if (await canLaunchUrlString(emailUrl)) {
-                        await launchUrlString(emailUrl);
-                      } else {
-                        throw 'Could not launch $emailUrl';
+                      try {
+                        bool canOpen = await canLaunchUrl(emailUri);
+                        if (canOpen) {
+                          await launchUrl(
+                            emailUri,
+                            mode: LaunchMode.externalNonBrowserApplication,
+                          );
+                        } else {
+                          // Fallback: Copy email to clipboard
+                          await Clipboard.setData(
+                              const ClipboardData(text: 'finyx.contact@gmail.com'));
+                          CustomSnackbar.show(
+                            context,
+                            'No email app found. Email copied to clipboard.',
+                            isError: false,
+                          );
+                        }
+                      } catch (e) {
+                        await Clipboard.setData(
+                            const ClipboardData(text: 'finyx.contact@gmail.com'));
+                        CustomSnackbar.show(
+                          context,
+                          'Error: ${e.toString()}. Email copied to clipboard.',
+                          isError: true,
+                        );
                       }
                     },
                     child: Row(
@@ -95,8 +120,8 @@ class HelpSupportView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
 
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -113,13 +138,12 @@ class HelpSupportView extends StatelessWidget {
                   ),
                   SizedBox(height: screenHeight * 0.03),
 
-                  // Final message
                   CustomText(
                     fontSize: 0.035,
                     color: Colors.black,
                     isCentered: true,
                     text:
-                        "Your experience matters to us. We’re committed to providing fast, friendly, and helpful support — because your success is our priority.",
+                        "Your experience matters to us. We're committed to providing fast, friendly, and helpful support — because your success is our priority.",
                   ),
                   SizedBox(height: screenHeight * 0.03),
                 ],
