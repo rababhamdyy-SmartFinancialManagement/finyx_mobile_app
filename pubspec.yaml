@@ -38,6 +38,8 @@ dependencies:
   pin_code_fields: ^8.0.1
   flutter_bloc: ^9.1.0
   fl_chart: ^0.70.2
+  image_picker: ^1.0.4
+
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +69,8 @@ flutter:
     - assets/images/icons/
     - assets/images/otp/
     - assets/images/home/
+    - assets/images/profile/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -92,6 +96,11 @@ flutter:
     - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins-Medium.ttf
+    - family: Literata
+      fonts:
+          - asset: assets/fonts/Literata-VariableFont_opsz,wght.ttf
+            weight: 700
+
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

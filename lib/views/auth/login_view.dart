@@ -92,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: screenWidth * 0.9,
                   height: screenHeight * 0.06,
                   onPressed: () {
-                    Navigator.pushNamed(context, '/home');
+                    Navigator.pushNamed(context, '/profile_view');
                   },
                 ),
                 SizedBox(height: screenHeight * 0.05),

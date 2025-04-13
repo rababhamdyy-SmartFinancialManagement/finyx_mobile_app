@@ -12,6 +12,9 @@ import 'package:finyx_mobile_app/views/auth/individual_signup_view.dart';
 import 'package:finyx_mobile_app/views/auth/business_signup_view.dart';
 import 'package:finyx_mobile_app/views/auth/changed_password_view.dart';
 
+import '../views/profile/edit_profile_view.dart';
+import '../views/profile/profile_view.dart';
+
 class AppRoutes {
   static final Map<String, WidgetBuilder> routes = {
     '/': (_) => SplashScreen(),
@@ -24,6 +27,8 @@ class AppRoutes {
     '/reset_password_view' : (_) => ResetPasswordScreen(),
     '/individual_signup' : (_) => IndividualSignupView(),
     '/business_signup' : (_) => BusinessSignUpView(),
+    '/profile_view' : (_) => ProfileScreen(),
+    '/edit_profile_view' : (_) => EditProfileScreen(),
   };
 
   static Route<dynamic> generateRoute(RouteSettings settings) {

@@ -7,7 +7,7 @@ class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final bool obscureText;
   final TextInputType keyboardType;
-  final String? Function(String?)? validator; // للتحقق من الإدخال
+  final String? Function(String?)? validator;
 
   const CustomTextField({
     super.key,
@@ -17,7 +17,7 @@ class CustomTextField extends StatefulWidget {
     required this.controller,
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
-    this.validator, // للتحقق من الإدخال
+    this.validator,
   });
 
   @override
