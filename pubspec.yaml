@@ -73,6 +73,7 @@ flutter:
     - assets/images/otp/
     - assets/images/home/
     - assets/images/wallet/
+    - assets/images/setting/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
