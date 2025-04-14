@@ -122,6 +122,67 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  // Add this method to ProfileCubit class
+  Future<void> deleteAccount() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      // First get user type before deleting
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
+
+      if (userDoc.exists) {
+        final userType = userDoc.data()?['userType'] ?? 'individual';
+        final collectionName =
+            userType == 'individual' ? 'individuals' : 'businesses';
+
+        // Delete from Firestore collections
+        await FirebaseFirestore.instance
+            .collection(collectionName)
+            .doc(user.uid)
+            .delete();
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .delete();
+      }
+
+      // Delete from Firebase Auth
+      await user.delete();
+
+      // Clear any cached data
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+    } catch (e) {
+      print('Error deleting account: $e');
+      rethrow;
+    }
+  }
+
+  // Add this method to ProfileCubit
+  Future<bool> reauthenticate(String password) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null || user.email == null) return false;
+
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: password,
+      );
+
+      await user.reauthenticateWithCredential(credential);
+      return true;
+    } catch (e) {
+      print('Reauthentication failed: $e');
+      return false;
+    }
+  }
+
   Future<void> updateImagePath(String newPath) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
