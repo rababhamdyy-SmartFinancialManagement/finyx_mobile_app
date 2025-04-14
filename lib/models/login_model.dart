@@ -25,7 +25,11 @@ class LoginModel {
     final password = passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
-      CustomSnackbar.show(context, "Email or password cannot be empty", isError: true);
+      CustomSnackbar.show(
+        context,
+        "Email or password cannot be empty",
+        isError: true,
+      );
       return null;
     }
 
@@ -36,33 +40,29 @@ class LoginModel {
       final user = userCredential.user;
 
       if (user == null) {
-        CustomSnackbar.show(context, "Login failed. User not found.", isError: true);
+        CustomSnackbar.show(
+          context,
+          "Login failed. User not found.",
+          isError: true,
+        );
         return null;
       }
 
       // جلب نوع المستخدم من Firestore
-      final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
-      final userSnapshot = await userRef.get();
-      final userType = userSnapshot.data()?['userType']; // ✅ تم التعديل هنا
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
+      final userType = userDoc.data()?['userType'];
 
       if (userType == "individual") {
         await SharedPrefsHelper.saveUserType("individual");
         CustomSnackbar.show(context, "Logged in as Individual", isError: false);
-
-        if (isChecked) {
-          CustomSnackbar.show(context, "You will be remembered!", isError: false);
-        }
-
         return UserType.individual;
-
       } else if (userType == "business") {
         await SharedPrefsHelper.saveUserType("business");
         CustomSnackbar.show(context, "Logged in as Business", isError: false);
-
-        if (isChecked) {
-          CustomSnackbar.show(context, "You will be remembered!", isError: false);
-        }
-
         return UserType.business;
       } else {
         CustomSnackbar.show(context, "Unknown user type", isError: true);
@@ -86,14 +86,17 @@ class LoginModel {
         return null;
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
       final user = userCredential.user;
 
       if (user == null) {
@@ -102,17 +105,28 @@ class LoginModel {
       }
 
       // جلب نوع المستخدم من Firestore
-      final userRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+      final userRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid);
       final userSnapshot = await userRef.get();
-      final userType = userSnapshot.data()?['userType']; // ✅ تم التعديل هنا أيضًا
+      final userType =
+          userSnapshot.data()?['userType']; // ✅ تم التعديل هنا أيضًا
 
       if (userType == "individual") {
         await SharedPrefsHelper.saveUserType("individual");
-        CustomSnackbar.show(context, "Logged in with Google (Individual)", isError: false);
+        CustomSnackbar.show(
+          context,
+          "Logged in with Google (Individual)",
+          isError: false,
+        );
         return UserType.individual;
       } else if (userType == "business") {
         await SharedPrefsHelper.saveUserType("business");
-        CustomSnackbar.show(context, "Logged in with Google (Business)", isError: false);
+        CustomSnackbar.show(
+          context,
+          "Logged in with Google (Business)",
+          isError: false,
+        );
         return UserType.business;
       } else {
         CustomSnackbar.show(context, "Unknown user type", isError: true);

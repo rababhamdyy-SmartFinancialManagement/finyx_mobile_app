@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/widgets/shared/custom_snack_bar_widget.dart';
 import 'package:flutter/material.dart';
 import '../../models/login_model.dart';
@@ -95,18 +96,32 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: screenWidth * 0.9,
                   height: screenHeight * 0.06,
                   onPressed: () async {
-                    // Handle login
                     final result = await loginModel.loginUser(context);
                     if (result != null) {
                       final userType = await SharedPrefsHelper.getUserType();
-                      print(userType); 
+                      print(userType);
                       if (userType != null) {
-                        Navigator.pushReplacementNamed(context, '/homepage', arguments: userType);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          '/homepage',
+                          arguments:
+                              userType == 'individual'
+                                  ? UserType.individual
+                                  : UserType.business,
+                        );
                       } else {
-                        CustomSnackbar.show(context, 'Unknown user type', isError: true);
+                        CustomSnackbar.show(
+                          context,
+                          'Unknown user type',
+                          isError: true,
+                        );
                       }
                     } else {
-                      CustomSnackbar.show(context, 'Login failed, please try again', isError: true);
+                      CustomSnackbar.show(
+                        context,
+                        'Login failed, please try again',
+                        isError: true,
+                      );
                     }
                   },
                 ),
