@@ -5,46 +5,34 @@ import '../../cubits/profile/profile_cubit.dart';
 import '../../cubits/profile/profile_state.dart';
 
 class UserProfileCard extends StatelessWidget {
-  const UserProfileCard({super.key});
-
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final imageSize = screenWidth * 0.25;
-    final fontSize = 18 * (screenWidth / 375);
-
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
-        final image =
-            state.imagePath.isNotEmpty
-                ? FileImage(File(state.imagePath))
-                : const AssetImage('assets/images/profile/profile.png')
-                    as ImageProvider;
-
         return Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              padding: const EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(width: 2, color: const Color(0xFF3E0555)),
-              ),
-              child: CircleAvatar(
-                radius: imageSize / 1.5,
-                backgroundImage: image,
-                backgroundColor: Colors.grey.shade200,
-              ),
+            CircleAvatar(
+              radius: 50,
+              backgroundImage:
+                  state.imagePath != null
+                      ? FileImage(File(state.imagePath!))
+                      : null,
+              child:
+                  state.imagePath == null ? Icon(Icons.person, size: 50) : null,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 16),
             Text(
               state.name,
               style: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-                fontFamily: 'Poppins',
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Righteous',
               ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              state.email,
+              style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
         );

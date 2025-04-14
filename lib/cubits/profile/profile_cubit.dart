@@ -1,71 +1,175 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit() : super(ProfileState()) {
-    _loadSavedData();
+    _loadUserData();
   }
 
-  Future<void> _loadSavedData() async {
-    final prefs = await SharedPreferences.getInstance();
-    emit(state.copyWith(
-      imagePath: prefs.getString('imagePath') ?? state.imagePath,
-      name: prefs.getString('name') ?? state.name,
-      email: prefs.getString('email') ?? state.email,
-      birthDate: prefs.getString('birthDate') ?? state.birthDate,
-      location: prefs.getString('location') ?? state.location,
-      idNumber: prefs.getString('idNumber') ?? state.idNumber,
-      salary: prefs.getString('salary') ?? state.salary,
-    ));
-  }
+  Future<void> _loadUserData() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
 
-  Future<void> _saveData(String key, String value) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(key, value);
-  }
+      // Load from SharedPreferences first for quick display
+      final prefs = await SharedPreferences.getInstance();
+      final cachedImagePath = prefs.getString('imagePath');
 
-  void pickImage(ImageSource source) async {
-    final image = await ImagePicker().pickImage(source: source);
-    if (image != null) {
-      emit(state.copyWith(imagePath: image.path));
-      await _saveData('imagePath', image.path);
+      if (cachedImagePath != null) {
+        emit(state.copyWith(imagePath: cachedImagePath));
+      }
+
+      // Load from Firestore
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
+
+      if (userDoc.exists) {
+        final userType = userDoc.data()?['userType'] ?? 'individual';
+        final collectionName =
+            userType == 'individual' ? 'individuals' : 'businesses';
+
+        final detailsDoc =
+            await FirebaseFirestore.instance
+                .collection(collectionName)
+                .doc(user.uid)
+                .get();
+
+        if (detailsDoc.exists) {
+          final data = detailsDoc.data()!;
+          emit(
+            state.copyWith(
+              name: data['fullName'] ?? '',
+              email: userDoc.data()?['email'] ?? '',
+              birthDate: data['dob'] ?? data['budget'] ?? '',
+              location: data['address'] ?? data['companyLocation'] ?? '',
+              idNumber: data['nationalId'] ?? data['numberOfEmployees'] ?? '',
+              salary: data['income'] ?? data['budget'] ?? '',
+              imagePath: cachedImagePath, // Keep the cached image path
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      print('Error loading user data: $e');
     }
   }
 
-  void updateName(String newName) {
-    emit(state.copyWith(name: newName));
-    _saveData('name', newName);
+  Future<void> _saveData(String key, String value) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(key, value);
+    } catch (e) {
+      print('Error saving data: $e');
+    }
   }
 
-  void updateEmail(String newEmail) {
-    emit(state.copyWith(email: newEmail));
-    _saveData('email', newEmail);
+  Future<void> updateProfileField(String field, String value) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
+
+      if (userDoc.exists) {
+        final userType = userDoc.data()?['userType'] ?? 'individual';
+        final collectionName =
+            userType == 'individual' ? 'individuals' : 'businesses';
+
+        String firestoreField = _getFirestoreFieldName(field, userType);
+
+        await FirebaseFirestore.instance
+            .collection(collectionName)
+            .doc(user.uid)
+            .update({firestoreField: value});
+
+        // Update local state
+        switch (field) {
+          case 'Name':
+            emit(state.copyWith(name: value));
+            break;
+          case 'Email':
+            emit(state.copyWith(email: value));
+            break;
+          case 'Birth Date':
+            emit(state.copyWith(birthDate: value));
+            break;
+          case 'Location':
+            emit(state.copyWith(location: value));
+            break;
+          case 'ID Number':
+            emit(state.copyWith(idNumber: value));
+            break;
+          case 'Salary':
+            emit(state.copyWith(salary: value));
+            break;
+        }
+
+        await _saveData(field.toLowerCase(), value);
+      }
+    } catch (e) {
+      print('Error updating profile field: $e');
+      rethrow;
+    }
   }
 
-  void updateBirthDate(String newBirthDate) {
-    emit(state.copyWith(birthDate: newBirthDate));
-    _saveData('birthDate', newBirthDate);
+  Future<void> updateImagePath(String newPath) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      // Update in Firestore
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
+
+      if (userDoc.exists) {
+        final userType = userDoc.data()?['userType'] ?? 'individual';
+        final collectionName =
+            userType == 'individual' ? 'individuals' : 'businesses';
+
+        await FirebaseFirestore.instance
+            .collection(collectionName)
+            .doc(user.uid)
+            .update({'profileImage': newPath});
+      }
+
+      // Update local state and cache
+      emit(state.copyWith(imagePath: newPath));
+      await _saveData('imagePath', newPath);
+    } catch (e) {
+      print('Error updating image path: $e');
+      rethrow;
+    }
   }
 
-  void updateLocation(String newLocation) {
-    emit(state.copyWith(location: newLocation));
-    _saveData('location', newLocation);
-  }
-
-  void updateIdNumber(String newIdNumber) {
-    emit(state.copyWith(idNumber: newIdNumber));
-    _saveData('idNumber', newIdNumber);
-  }
-
-  void updateSalary(String newSalary) {
-    emit(state.copyWith(salary: newSalary));
-    _saveData('salary', newSalary);
-  }
-
-  void updateImagePath(String newPath) {
-    emit(state.copyWith(imagePath: newPath));
-    _saveData('imagePath', newPath);
+  String _getFirestoreFieldName(String field, String userType) {
+    switch (field) {
+      case 'Name':
+        return 'fullName';
+      case 'Email':
+        return 'email';
+      case 'Birth Date':
+        return userType == 'individual' ? 'dob' : 'budget';
+      case 'Location':
+        return userType == 'individual' ? 'address' : 'companyLocation';
+      case 'ID Number':
+        return userType == 'individual' ? 'nationalId' : 'numberOfEmployees';
+      case 'Salary':
+        return userType == 'individual' ? 'income' : 'budget';
+      default:
+        return field.toLowerCase();
+    }
   }
 }

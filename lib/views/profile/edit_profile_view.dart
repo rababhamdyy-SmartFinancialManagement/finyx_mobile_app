@@ -46,7 +46,10 @@ class EditProfileScreen extends StatelessWidget {
                           () => _showEditDialog(context, 'Name', state.name, (
                             value,
                           ) {
-                            context.read<ProfileCubit>().updateName(value);
+                            context.read<ProfileCubit>().updateProfileField(
+                              'Name',
+                              value,
+                            );
                           }),
                     ),
                     EditProfileInfoTile(
@@ -57,7 +60,10 @@ class EditProfileScreen extends StatelessWidget {
                           () => _showEditDialog(context, 'Email', state.email, (
                             value,
                           ) {
-                            context.read<ProfileCubit>().updateEmail(value);
+                            context.read<ProfileCubit>().updateProfileField(
+                              'Email',
+                              value,
+                            );
                           }),
                     ),
                     EditProfileInfoTile(
@@ -70,7 +76,8 @@ class EditProfileScreen extends StatelessWidget {
                             'Birth Date',
                             state.birthDate,
                             (value) {
-                              context.read<ProfileCubit>().updateBirthDate(
+                              context.read<ProfileCubit>().updateProfileField(
+                                'Birth Date',
                                 value,
                               );
                             },
@@ -86,7 +93,8 @@ class EditProfileScreen extends StatelessWidget {
                             'Location',
                             state.location,
                             (value) {
-                              context.read<ProfileCubit>().updateLocation(
+                              context.read<ProfileCubit>().updateProfileField(
+                                'Location',
                                 value,
                               );
                             },
@@ -102,7 +110,8 @@ class EditProfileScreen extends StatelessWidget {
                             'ID Number',
                             state.idNumber,
                             (value) {
-                              context.read<ProfileCubit>().updateIdNumber(
+                              context.read<ProfileCubit>().updateProfileField(
+                                'ID Number',
                                 value,
                               );
                             },
@@ -118,7 +127,10 @@ class EditProfileScreen extends StatelessWidget {
                             'Salary',
                             state.salary,
                             (value) {
-                              context.read<ProfileCubit>().updateSalary(value);
+                              context.read<ProfileCubit>().updateProfileField(
+                                'Salary',
+                                value,
+                              );
                             },
                           ),
                     ),
@@ -134,7 +146,7 @@ class EditProfileScreen extends StatelessWidget {
 
   void _showEditDialog(
     BuildContext context,
-    String fieldName,
+    String fieldName, // هنا نعرف fieldName كمعامل للدالة
     String currentValue,
     Function(String) onSave,
   ) {
