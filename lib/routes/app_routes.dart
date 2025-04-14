@@ -1,5 +1,7 @@
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/views/home/home_page_view.dart';
+import 'package:finyx_mobile_app/views/profile/edit_profile_view.dart';
+import 'package:finyx_mobile_app/views/profile/profile_view.dart';
 import 'package:finyx_mobile_app/views/setting/about_us_view.dart';
 import 'package:finyx_mobile_app/views/setting/help_support_view.dart';
 import 'package:finyx_mobile_app/views/setting/privacy_policy_view.dart';
@@ -34,6 +36,8 @@ class AppRoutes {
     '/TermsAndConditions': (_) => TermsAndConditionsView(),
     '/AboutUs': (_) => AboutUsView(),
     '/HelpSupport': (_) => HelpSupportView(),
+    '/profile_view' : (_) => ProfileScreen(),
+    '/edit_profile_view' : (_) => EditProfileScreen(),
   };
 
   static Route<dynamic> generateRoute(RouteSettings settings) {

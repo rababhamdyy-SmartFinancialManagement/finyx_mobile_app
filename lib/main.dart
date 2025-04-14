@@ -1,7 +1,8 @@
+import 'package:finyx_mobile_app/cubits/profile/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart'; // لازم تتأكدي إن الملف ده موجود في lib/
+import 'firebase_options.dart'; 
 
 import 'package:finyx_mobile_app/cubits/bottom%20nav/navigation_cubit.dart';
 import 'package:finyx_mobile_app/cubits/home/chart_cubit.dart';
@@ -10,7 +11,7 @@ import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/routes/app_routes.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // مهم عشان async و Firebase
+  WidgetsFlutterBinding.ensureInitialized(); 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => NavigationCubit()),
         BlocProvider(create: (_) => ChartCubit(userType: UserType.individual)),
-        BlocProvider(create: (_) => PriceCubit()), // بيحمل البيانات من الأول
+        BlocProvider(create: (_) => PriceCubit()), 
+        BlocProvider(create: (_) => ProfileCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
