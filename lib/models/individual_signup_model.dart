@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finyx_mobile_app/widgets/shared/custom_snack_bar_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,7 +27,7 @@ class IndividualSignupModel {
         nationalIdController.text.isNotEmpty;
   }
 
-  Future<void> saveIndividualData(BuildContext context) async {
+  Future<bool> saveIndividualData(BuildContext context) async {
     if (!areFieldsFilled()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -34,7 +35,7 @@ class IndividualSignupModel {
           backgroundColor: Colors.red,
         ),
       );
-      return;
+      return false;
     }
 
     try {
@@ -46,7 +47,7 @@ class IndividualSignupModel {
             backgroundColor: Colors.red,
           ),
         );
-        return;
+        return false;
       }
 
       await FirebaseFirestore.instance
@@ -61,13 +62,11 @@ class IndividualSignupModel {
             'userType': 'individual',
           });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Individual registration successful!')),
-      );
+      CustomSnackbar.show(context, 'Individual registration successful!');
+      return true;
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
-      );
+      CustomSnackbar.show(context, 'Error occurred: $e', isError: true);
+      return false;
     }
   }
 }

@@ -29,21 +29,21 @@ class BusinessSignUpModel {
         numberOfEmployeesController.text.isNotEmpty;
   }
 
-  Future<void> saveBusinessData(BuildContext context) async {
+  Future<bool> saveBusinessData(BuildContext context) async {
     if (!areFieldsFilled()) {
       CustomSnackbar.show(
         context,
         'Please fill all the fields!',
         isError: true,
       );
-      return;
+      return false;
     }
 
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         CustomSnackbar.show(context, 'User not authenticated', isError: true);
-        return;
+        return false;
       }
 
       await FirebaseFirestore.instance
@@ -59,8 +59,10 @@ class BusinessSignUpModel {
           });
 
       CustomSnackbar.show(context, 'Business registration successful!');
+      return true;
     } catch (e) {
       CustomSnackbar.show(context, 'Error occurred: $e', isError: true);
+      return false;
     }
   }
 }

@@ -80,12 +80,14 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
                 ButtonWidget(
                   text: "Sign Up",
                   onPressed: () async {
-                    await signUpModel.saveBusinessData(context);
-                    Navigator.pushReplacementNamed(
-                      context,
-                      '/homepage',
-                      arguments: UserType.business,
-                    );
+                    bool success = await signUpModel.saveBusinessData(context);
+                    if (success) {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        '/homepage',
+                        arguments: UserType.business,
+                      );
+                    }
                   },
                   width: screenWidth * 0.7,
                   height: screenHeight * 0.06,
