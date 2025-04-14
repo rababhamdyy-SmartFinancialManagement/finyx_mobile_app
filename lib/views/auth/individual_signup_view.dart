@@ -80,7 +80,8 @@ class _IndividualSignupViewState extends State<IndividualSignupView> {
                 SizedBox(height: screenHeight * 0.03),
                 ButtonWidget(
                   text: "Sign Up",
-                  onPressed: () {
+                  onPressed: () async {
+                    await signupModel.saveIndividualData(context);
                     Navigator.pushReplacementNamed(
                       context,
                       '/homepage',

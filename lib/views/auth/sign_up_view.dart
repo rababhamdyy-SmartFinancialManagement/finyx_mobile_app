@@ -40,7 +40,10 @@ class _SignUpScreen extends State<SignUpScreen> {
                   selectedColor: Colors.white,
                   fillColor: const Color(0xFF4B136F),
                   color: Colors.grey,
-                  isSelected: [signUpModel.isIndividual, !signUpModel.isIndividual],
+                  isSelected: [
+                    signUpModel.isIndividual,
+                    !signUpModel.isIndividual,
+                  ],
                   onPressed: (index) {
                     setState(() {
                       signUpModel.isIndividual = index == 0;
@@ -52,11 +55,17 @@ class _SignUpScreen extends State<SignUpScreen> {
                   ),
                   children: const [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 8,
+                      ),
                       child: Text("Individual"),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 8,
+                      ),
                       child: Text("Business"),
                     ),
                   ],
@@ -92,12 +101,12 @@ class _SignUpScreen extends State<SignUpScreen> {
                 SizedBox(height: screenHeight * 0.03),
                 ButtonWidget(
                   text: "Sign Up",
-                  onPressed: signUpModel.isIndividual
-                      ? () {
-                    Navigator.pushReplacementNamed(context, '/individual_signup');
-                  }
-                      : () {
-                    Navigator.pushReplacementNamed(context, '/business_signup');
+                  onPressed: () async {
+                    final result = await signUpModel.registerUser(context);
+                    if (result == null) {
+                      // Error handling is already done in registerUser
+                      return;
+                    }
                   },
                   width: screenWidth * 0.7,
                   height: screenHeight * 0.06,

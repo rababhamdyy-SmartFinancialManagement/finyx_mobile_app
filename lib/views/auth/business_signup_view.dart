@@ -79,8 +79,9 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
                 SizedBox(height: screenHeight * 0.03),
                 ButtonWidget(
                   text: "Sign Up",
-                  onPressed: () {
-                    Navigator.pushNamed(
+                  onPressed: () async {
+                    await signUpModel.saveBusinessData(context);
+                    Navigator.pushReplacementNamed(
                       context,
                       '/homepage',
                       arguments: UserType.business,
