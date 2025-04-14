@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finyx_mobile_app/widgets/shared/custom_snack_bar_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,54 +21,52 @@ class IndividualSignupModel {
 
   bool areFieldsFilled() {
     return fullNameController.text.isNotEmpty &&
-           dobController.text.isNotEmpty &&
-           addressController.text.isNotEmpty &&
-           incomeController.text.isNotEmpty &&
-           nationalIdController.text.isNotEmpty;
+        dobController.text.isNotEmpty &&
+        addressController.text.isNotEmpty &&
+        incomeController.text.isNotEmpty &&
+        nationalIdController.text.isNotEmpty;
   }
 
-  Future<void> saveIndividualData(BuildContext context) async {
+  Future<bool> saveIndividualData(BuildContext context) async {
     if (!areFieldsFilled()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill all the fields!'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text('Please fill all the fields!'),
+          backgroundColor: Colors.red,
+        ),
       );
-      return;
+      return false;
     }
 
     try {
-      final CollectionReference individuals = FirebaseFirestore.instance.collection('individuals');
-      final docRef = await individuals.add({
-        'fullName': fullNameController.text,
-        'dob': dobController.text,
-        'address': addressController.text,
-        'income': incomeController.text,
-        'nationalId': nationalIdController.text,
-        'userType': 'individual',
-      });
-
-      // Check if the document was successfully added
-      DocumentSnapshot documentSnapshot = await individuals.doc(docRef.id).get();
-
-      if (documentSnapshot.exists) {
-        print('Document exists: ${documentSnapshot.data()}');
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Individual registration successful!')),
+          SnackBar(
+            content: Text('User not authenticated'),
+            backgroundColor: Colors.red,
+          ),
         );
-      } else {
-        print('No document found');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save data'), backgroundColor: Colors.red),
-        );
+        return false;
       }
 
-      // Save userType to SharedPreferences
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('userType', 'individual'); 
+      await FirebaseFirestore.instance
+          .collection('individuals')
+          .doc(user.uid)
+          .set({
+            'fullName': fullNameController.text,
+            'dob': dobController.text,
+            'address': addressController.text,
+            'income': incomeController.text,
+            'nationalId': nationalIdController.text,
+            'userType': 'individual',
+          });
+
+      CustomSnackbar.show(context, 'Individual registration successful!');
+      return true;
     } catch (e) {
-      print('Error: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
-      );
+      CustomSnackbar.show(context, 'Error occurred: $e', isError: true);
+      return false;
     }
   }
 }
