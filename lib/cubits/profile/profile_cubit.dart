@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +15,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
 
-      // Load from SharedPreferences first for quick display
       final prefs = await SharedPreferences.getInstance();
       final cachedImagePath = prefs.getString('imagePath');
 
@@ -22,41 +22,146 @@ class ProfileCubit extends Cubit<ProfileState> {
         emit(state.copyWith(imagePath: cachedImagePath));
       }
 
-      // Load from Firestore
-      final userDoc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
 
       if (userDoc.exists) {
         final userType = userDoc.data()?['userType'] ?? 'individual';
         final collectionName =
-            userType == 'individual' ? 'individuals' : 'businesses';
+        userType == 'individual' ? 'individuals' : 'businesses';
 
-        final detailsDoc =
-            await FirebaseFirestore.instance
-                .collection(collectionName)
-                .doc(user.uid)
-                .get();
+        final detailsDoc = await FirebaseFirestore.instance
+            .collection(collectionName)
+            .doc(user.uid)
+            .get();
 
         if (detailsDoc.exists) {
           final data = detailsDoc.data()!;
-          emit(
-            state.copyWith(
-              name: data['fullName'] ?? '',
-              email: userDoc.data()?['email'] ?? '',
-              birthDate: data['dob'] ?? data['budget'] ?? '',
-              location: data['address'] ?? data['companyLocation'] ?? '',
-              idNumber: data['nationalId'] ?? data['numberOfEmployees'] ?? '',
-              salary: data['income'] ?? data['budget'] ?? '',
-              imagePath: cachedImagePath, // Keep the cached image path
-            ),
-          );
+          final firestoreImagePath = data['profileImage'] as String?;
+
+          final imagePath = firestoreImagePath ?? cachedImagePath;
+
+          emit(state.copyWith(
+            name: data['fullName'] ?? '',
+            email: userDoc.data()?['email'] ?? '',
+            birthDate: data['dob'] ?? data['budget'] ?? '',
+            location: data['address'] ?? data['companyLocation'] ?? '',
+            idNumber: data['nationalId'] ?? data['numberOfEmployees'] ?? '',
+            salary: data['income'] ?? data['budget'] ?? '',
+            imagePath: imagePath,
+          ));
+
+          if (firestoreImagePath != null &&
+              firestoreImagePath != cachedImagePath) {
+            await prefs.setString('imagePath', firestoreImagePath);
+          }
         }
       }
     } catch (e) {
       print('Error loading user data: $e');
+    }
+  }
+
+  Future<void> pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image != null) {
+        emit(state.copyWith(imagePath: image.path));
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('imagePath', image.path);
+
+        final user = FirebaseAuth.instance.currentUser;
+        if (user == null) return;
+
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        if (userDoc.exists) {
+          final userType = userDoc.data()?['userType'] ?? 'individual';
+          final collectionName =
+          userType == 'individual' ? 'individuals' : 'businesses';
+
+          await FirebaseFirestore.instance
+              .collection(collectionName)
+              .doc(user.uid)
+              .update({'profileImage': image.path});
+        }
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+    }
+  }
+
+  Future<void> updateImagePath(String newPath) async {
+    try {
+      emit(state.copyWith(imagePath: newPath));
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('imagePath', newPath);
+
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (userDoc.exists) {
+        final userType = userDoc.data()?['userType'] ?? 'individual';
+        final collectionName =
+        userType == 'individual' ? 'individuals' : 'businesses';
+
+        await FirebaseFirestore.instance
+            .collection(collectionName)
+            .doc(user.uid)
+            .update({'profileImage': newPath});
+      }
+    } catch (e) {
+      print('Error updating image path: $e');
+      final prefs = await SharedPreferences.getInstance();
+      final oldPath = prefs.getString('imagePath');
+      emit(state.copyWith(imagePath: oldPath));
+      rethrow;
+    }
+  }
+
+  Future<void> refreshProfileImage() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (userDoc.exists) {
+        final userType = userDoc.data()?['userType'] ?? 'individual';
+        final collectionName =
+        userType == 'individual' ? 'individuals' : 'businesses';
+
+        final detailsDoc = await FirebaseFirestore.instance
+            .collection(collectionName)
+            .doc(user.uid)
+            .get();
+
+        if (detailsDoc.exists) {
+          final imagePath = detailsDoc.data()?['profileImage'] as String?;
+          if (imagePath != null && imagePath != state.imagePath) {
+            emit(state.copyWith(imagePath: imagePath));
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString('imagePath', imagePath);
+          }
+        }
+      }
+    } catch (e) {
+      print('Error refreshing profile image: $e');
     }
   }
 
@@ -74,16 +179,15 @@ class ProfileCubit extends Cubit<ProfileState> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
 
-      final userDoc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
 
       if (userDoc.exists) {
         final userType = userDoc.data()?['userType'] ?? 'individual';
         final collectionName =
-            userType == 'individual' ? 'individuals' : 'businesses';
+        userType == 'individual' ? 'individuals' : 'businesses';
 
         String firestoreField = _getFirestoreFieldName(field, userType);
 
@@ -92,7 +196,6 @@ class ProfileCubit extends Cubit<ProfileState> {
             .doc(user.uid)
             .update({firestoreField: value});
 
-        // Update local state
         switch (field) {
           case 'Name':
             emit(state.copyWith(name: value));
@@ -122,25 +225,21 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  // Add this method to ProfileCubit class
   Future<void> deleteAccount() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
 
-      // First get user type before deleting
-      final userDoc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
 
       if (userDoc.exists) {
         final userType = userDoc.data()?['userType'] ?? 'individual';
         final collectionName =
-            userType == 'individual' ? 'individuals' : 'businesses';
+        userType == 'individual' ? 'individuals' : 'businesses';
 
-        // Delete from Firestore collections
         await FirebaseFirestore.instance
             .collection(collectionName)
             .doc(user.uid)
@@ -152,10 +251,8 @@ class ProfileCubit extends Cubit<ProfileState> {
             .delete();
       }
 
-      // Delete from Firebase Auth
       await user.delete();
 
-      // Clear any cached data
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
     } catch (e) {
@@ -164,7 +261,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  // Add this method to ProfileCubit
   Future<bool> reauthenticate(String password) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
@@ -180,38 +276,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     } catch (e) {
       print('Reauthentication failed: $e');
       return false;
-    }
-  }
-
-  Future<void> updateImagePath(String newPath) async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) return;
-
-      // Update in Firestore
-      final userDoc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
-
-      if (userDoc.exists) {
-        final userType = userDoc.data()?['userType'] ?? 'individual';
-        final collectionName =
-            userType == 'individual' ? 'individuals' : 'businesses';
-
-        await FirebaseFirestore.instance
-            .collection(collectionName)
-            .doc(user.uid)
-            .update({'profileImage': newPath});
-      }
-
-      // Update local state and cache
-      emit(state.copyWith(imagePath: newPath));
-      await _saveData('imagePath', newPath);
-    } catch (e) {
-      print('Error updating image path: $e');
-      rethrow;
     }
   }
 

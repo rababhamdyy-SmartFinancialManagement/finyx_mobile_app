@@ -5,38 +5,47 @@ import '../../cubits/profile/profile_cubit.dart';
 import '../../cubits/profile/profile_state.dart';
 
 class UserProfileCard extends StatelessWidget {
+  final String? name;
+  final String? imagePath;
+
+  const UserProfileCard({
+    super.key,
+    this.name,
+    this.imagePath,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProfileCubit, ProfileState>(
-      builder: (context, state) {
-        return Column(
-          children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundImage:
-                  state.imagePath != null
-                      ? FileImage(File(state.imagePath!))
-                      : null,
-              child:
-                  state.imagePath == null ? Icon(Icons.person, size: 50) : null,
-            ),
-            SizedBox(height: 16),
-            Text(
-              state.name,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Righteous',
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              state.email,
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          ],
-        );
-      },
+    final width = MediaQuery.of(context).size.width;
+    final image = imagePath != null && imagePath!.isNotEmpty
+        ? FileImage(File(imagePath!))
+        : const AssetImage('assets/images/profile/profile.png')
+    as ImageProvider;
+
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(1),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(width: 2, color: Color(0xFF3E0555)),
+          ),
+          child: CircleAvatar(
+            backgroundImage: image,
+            radius: width * 0.19,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          name ?? '',
+          style: TextStyle(
+            fontSize: width * 0.045,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+            fontFamily: 'Poppins',
+          ),
+        ),
+      ],
     );
   }
 }
