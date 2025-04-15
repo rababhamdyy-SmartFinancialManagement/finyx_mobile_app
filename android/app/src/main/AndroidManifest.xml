@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="finyx_mobile_app"
+        android:label="Finyx"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

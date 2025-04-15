@@ -1,57 +1,55 @@
-import 'package:flutter/material.dart';
-import '../../models/password_changed_model.dart';
-import 'package:finyx_mobile_app/widgets/shared/button_widget.dart';
 import 'package:finyx_mobile_app/widgets/shared/greeting_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:finyx_mobile_app/models/password_changed_model.dart';
+import 'package:finyx_mobile_app/widgets/shared/button_widget.dart';
 
-class PasswordChangedScreen extends StatelessWidget {
-  PasswordChangedScreen({super.key});
-
-  final PasswordChangedModel model = PasswordChangedModel();
+class PasswordChangedView extends StatelessWidget {
+  final PasswordChangedModel _model = PasswordChangedModel();
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.all(screenWidth * 0.08),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
               "assets/images/otp/sucess.png",
               width: screenWidth * 0.7,
               height: screenHeight * 0.3,
               fit: BoxFit.contain,
             ),
-            SizedBox(height: screenHeight * 0.02),
-            GreetingWidget(greetingText: "Password Changed"),
+             SizedBox(height: screenHeight * 0.02),
+             GreetingWidget(greetingText: "Password Changed"),
             SizedBox(height: screenHeight * 0.01),
-            Text(
-              model.successMessage,
-              style: TextStyle(
-                fontSize: screenWidth * 0.045,
-                fontWeight: FontWeight.w500,
-                fontFamily: "Poppins",
-                color: Theme.of(
-                  context,
-                ).textTheme.bodyMedium!.color!.withValues(alpha: 0.4),
+              Text(
+                _model.successMessage,
+                style: TextStyle(
+                  fontSize: screenWidth * 0.06,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: screenHeight * 0.03),
-            Center(
-              child: ButtonWidget(
-                text: "Back to login",
+              SizedBox(height: screenHeight * 0.05),
+              ButtonWidget(
+                text: _model.buttonText,
                 width: screenWidth * 0.7,
                 height: screenHeight * 0.06,
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/login');
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/login',
+                    (route) => false,
+                  );
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -8,6 +8,7 @@ class CustomTextField extends StatefulWidget {
   final bool obscureText;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
+  final Widget? suffixIcon;
 
   const CustomTextField({
     super.key,
@@ -18,11 +19,11 @@ class CustomTextField extends StatefulWidget {
     this.obscureText = false,
     this.keyboardType = TextInputType.text,
     this.validator,
+    this.suffixIcon,
   });
 
   @override
-  // ignore: library_private_types_in_public_api
-  _CustomTextFieldState createState() => _CustomTextFieldState();
+  State<CustomTextField> createState() => _CustomTextFieldState();
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
@@ -36,30 +37,29 @@ class _CustomTextFieldState extends State<CustomTextField> {
         controller: widget.controller,
         obscureText: widget.obscureText && !isPasswordVisible,
         keyboardType: widget.keyboardType,
-        validator: widget.validator, // للتحقق من الإدخال
+        validator: widget.validator,
         decoration: InputDecoration(
           labelText: widget.label,
           hintText: widget.hint,
           prefixIcon: widget.icon != null ? Icon(widget.icon) : null,
-          suffixIcon:
-              widget.obscureText
-                  ? GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isPasswordVisible = !isPasswordVisible;
-                      });
-                    },
-                    child: Icon(
-                      isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                  )
-                  : null,
+          suffixIcon: widget.obscureText
+              ? IconButton(
+                  icon: Icon(
+                    isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isPasswordVisible = !isPasswordVisible;
+                    });
+                  },
+                )
+              : widget.suffixIcon,
           hintStyle: const TextStyle(color: Colors.grey),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           filled: true,
-          fillColor: Colors.black.withAlpha(20),
+          fillColor: Colors.white,
         ),
       ),
     );
