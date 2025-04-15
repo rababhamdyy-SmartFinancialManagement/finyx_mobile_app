@@ -26,12 +26,12 @@ class ChartCubit extends Cubit<ChartState> {
                 ChartSection("Transfer", 15, Colors.purple),
                 
               ])) {
-    print("ChartCubit created with userType: $userType");
-    print("Initial state: ${state.sections}");
+    // print("ChartCubit created with userType: $userType");
+    // print("Initial state: ${state.sections}");
   }
 
   void updateSection(String title, double newValue) {
-    print("updateSection called: title=$title, newValue=$newValue");
+    // print("updateSection called: title=$title, newValue=$newValue");
     final updated = state.sections.map((section) {
       if (section.title == title) {
         return ChartSection(title, newValue, section.color);
@@ -39,6 +39,6 @@ class ChartCubit extends Cubit<ChartState> {
       return section;
     }).toList();
     emit(ChartState(updated));
-    print("New state emitted: ${state.sections}");
+    // print("New state emitted: ${state.sections}");
   }
 }

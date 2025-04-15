@@ -60,7 +60,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         }
       }
     } catch (e) {
-      print('Error loading user data: $e');
+      // print('Error loading user data: $e');
     }
   }
 
@@ -93,7 +93,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         }
       }
     } catch (e) {
-      print('Error picking image: $e');
+      // print('Error picking image: $e');
     }
   }
 
@@ -123,7 +123,7 @@ class ProfileCubit extends Cubit<ProfileState> {
             .update({'profileImage': newPath});
       }
     } catch (e) {
-      print('Error updating image path: $e');
+      // print('Error updating image path: $e');
       final prefs = await SharedPreferences.getInstance();
       final oldPath = prefs.getString('imagePath');
       emit(state.copyWith(imagePath: oldPath));
@@ -161,7 +161,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         }
       }
     } catch (e) {
-      print('Error refreshing profile image: $e');
+      // print('Error refreshing profile image: $e');
     }
   }
 
@@ -170,7 +170,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(key, value);
     } catch (e) {
-      print('Error saving data: $e');
+      // print('Error saving data: $e');
     }
   }
 
@@ -220,7 +220,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         await _saveData(field.toLowerCase(), value);
       }
     } catch (e) {
-      print('Error updating profile field: $e');
+      // print('Error updating profile field: $e');
       rethrow;
     }
   }
@@ -256,7 +256,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
     } catch (e) {
-      print('Error deleting account: $e');
+      // print('Error deleting account: $e');
       rethrow;
     }
   }
@@ -274,7 +274,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       await user.reauthenticateWithCredential(credential);
       return true;
     } catch (e) {
-      print('Reauthentication failed: $e');
+      // print('Reauthentication failed: $e');
       return false;
     }
   }

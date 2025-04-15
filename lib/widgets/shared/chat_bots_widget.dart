@@ -35,7 +35,7 @@ class _ChatDialogState extends State<ChatDialog> {
               alignment: Alignment.topRight,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.2),
+                  color: Colors.white,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
@@ -46,7 +46,7 @@ class _ChatDialogState extends State<ChatDialog> {
                   ],
                 ),
                 child: IconButton(
-                  icon: Icon(Icons.close, color: Colors.red),
+                  icon: Icon(Icons.close, color: Color(0xFF3E0555)),
                   onPressed: widget.onPressed,
                 ),
               ),

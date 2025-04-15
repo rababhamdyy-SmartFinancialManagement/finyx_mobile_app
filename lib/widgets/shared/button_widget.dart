@@ -28,7 +28,7 @@ class ButtonWidget extends StatelessWidget {
     final double fontSize = screenWidth > 600 ? 22.0 : 20.0;
 
     return ElevatedButton(
-      onPressed: isLoading ? null : onPressed, // null إذا كان isLoading أو onPressed هو null
+      onPressed: isLoading ? null : onPressed, 
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor ?? const Color(0xFF3E0555),
         fixedSize: Size(buttonWidth, buttonHeight),

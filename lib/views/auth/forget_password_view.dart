@@ -86,7 +86,7 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
                           "Don’t worry! It happens. Please enter the email associated with your account.",
                       screenWidth: screenWidth,
                       screenHeight: screenHeight,
-                      titleColor: Colors.white, // تحديد اللون الأبيض للعنوان
+                      titleColor: Colors.white, 
                       subtitleColor: Colors.white.withValues(alpha: 0.7),
                     ),
                     SizedBox(height: screenHeight * 0.05),

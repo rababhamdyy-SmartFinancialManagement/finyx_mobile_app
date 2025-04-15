@@ -4,8 +4,7 @@ import 'package:finyx_mobile_app/widgets/shared/curved_background_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/models/otp_model.dart';
 import 'package:finyx_mobile_app/widgets/shared/button_widget.dart';
-import 'package:finyx_mobile_app/widgets/shared/greeting_widget.dart';
-import 'package:finyx_mobile_app/widgets/custom_widgets/custom_textfield_widget.dart';
+
 
 class OtpView extends StatefulWidget {
   final String email;
@@ -96,7 +95,7 @@ class _OtpViewState extends State<OtpView> {
                       title: "OTP Verification",
                       screenWidth: screenWidth,
                       screenHeight: screenHeight,
-                      titleColor: Colors.white, // تحديد اللون الأبيض للعنوان
+                      titleColor: Colors.white,
                     ),
                     SizedBox(height: screenHeight * 0.02),
                     Image.asset(

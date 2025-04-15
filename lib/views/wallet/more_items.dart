@@ -101,7 +101,7 @@ class MoreItems extends StatelessWidget {
         userType == UserType.business ? businessNames : individualNames;
 
     return AlertDialog(
-      backgroundColor: theme.dialogBackgroundColor, // ← ياخد اللون من الثيم
+      backgroundColor: theme.dialogBackgroundColor, 
 
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Center(

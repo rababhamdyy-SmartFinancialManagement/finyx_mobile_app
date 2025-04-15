@@ -69,7 +69,7 @@ class EditProfileHeader extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.only(top: 12.0),
               child: Text(
-                state.name ?? '',
+                state.name,
                 style: TextStyle(
                   fontSize: width * 0.045,
                   fontWeight: FontWeight.w500,

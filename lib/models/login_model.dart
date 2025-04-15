@@ -48,7 +48,6 @@ class LoginModel {
         return null;
       }
 
-      // جلب نوع المستخدم من Firestore
       final userDoc =
           await FirebaseFirestore.instance
               .collection('users')
@@ -104,13 +103,12 @@ class LoginModel {
         return null;
       }
 
-      // جلب نوع المستخدم من Firestore
       final userRef = FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid);
       final userSnapshot = await userRef.get();
       final userType =
-          userSnapshot.data()?['userType']; // ✅ تم التعديل هنا أيضًا
+          userSnapshot.data()?['userType']; 
 
       if (userType == "individual") {
         await SharedPrefsHelper.saveUserType("individual");

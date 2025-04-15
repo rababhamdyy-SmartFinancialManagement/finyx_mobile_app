@@ -35,7 +35,7 @@ class CustomTitleSection extends StatelessWidget {
                 Theme.of(context)
                     .textTheme
                     .titleLarge
-                    ?.color, // اللون من الـ theme لو مفيش لون مخصص
+                    ?.color, 
           ),
           textAlign: TextAlign.center,
         ),
@@ -51,7 +51,7 @@ class CustomTitleSection extends StatelessWidget {
                   Theme.of(context)
                       .textTheme
                       .bodyMedium
-                      ?.color, // اللون من الـ theme لو مفيش لون مخصص
+                      ?.color, 
             ),
             textAlign: TextAlign.center,
           ),

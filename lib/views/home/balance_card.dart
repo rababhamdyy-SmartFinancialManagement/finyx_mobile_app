@@ -50,12 +50,11 @@ class BalanceCard extends StatelessWidget {
                         SizedBox(height: 6),
                         BlocBuilder<ProfileCubit, ProfileState>(
                           builder: (context, profileState) {
-                            // عرض السالري إذا كان موجودًا
                             final salary = profileState.salary.isNotEmpty
                                 ? profileState.salary
                                 : "\$0.00";
                             return Text(
-                              "\$$salary",  // عرض السالري هنا
+                              "\$$salary",  
                               style: TextStyle(
                                 fontSize: 26,
                                 color: Colors.white,

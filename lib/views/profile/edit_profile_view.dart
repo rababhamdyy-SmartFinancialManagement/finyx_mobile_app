@@ -146,7 +146,7 @@ class EditProfileScreen extends StatelessWidget {
 
   void _showEditDialog(
     BuildContext context,
-    String fieldName, // هنا نعرف fieldName كمعامل للدالة
+    String fieldName, 
     String currentValue,
     Function(String) onSave,
   ) {

@@ -11,13 +11,13 @@ class CustomFloatingActionButton extends StatelessWidget {
         //print("Floating Action Button Pressed");
       },
       backgroundColor: Colors.yellow[700],
+      shape: const CircleBorder(),
       child: Padding(
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.025),
         child: Image.asset(
           'assets/images/home/chatAI.png',
-        ), // تأكد من وجود الصورة في المسار الصحيح
+        ), 
       ),
-      shape: const CircleBorder(),
     );
   }
 }

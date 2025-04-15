@@ -1,4 +1,6 @@
 import 'package:finyx_mobile_app/cubits/home/chart_cubit.dart';
+import 'package:finyx_mobile_app/cubits/profile/profile_cubit.dart';
+import 'package:finyx_mobile_app/cubits/profile/profile_state.dart';
 import 'package:finyx_mobile_app/models/chart_section.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -24,153 +26,157 @@ class PieChartWidget extends StatelessWidget {
           0,
           (sum, section) => sum + section.value,
         );
-        double totalBudget =
-            userType == UserType.individual ? 1800.00 : 5000.00;
-        double availableBudget = (totalPercentage / 100) * totalBudget;
 
-        return Center(
-          child: SizedBox(
-            width: screenWidth * 0.95,
-            height: chartSize + 230,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // Pie chart section
-                Positioned(
-                  top: screenHeight * 0.05,
-                  child: SizedBox(
-                    width: chartSize,
-                    height: chartSize,
-                    child: TweenAnimationBuilder(
-                      tween: Tween<double>(begin: 0, end: 1),
-                      duration: Duration(seconds: 1),
-                      builder: (context, value, child) {
-                        return PieChart(
-                          PieChartData(
-                            centerSpaceRadius: chartSize * 0.3,
-                            sectionsSpace: 6,
-                            startDegreeOffset: -70,
-                            sections:
-                                state.sections.map((section) {
-                                  return PieChartSectionData(
-                                    value: section.value * value,
-                                    title: "",
-                                    color: section.color,
-                                    radius: chartSize * 0.25,
-                                  );
-                                }).toList(),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
+        return BlocBuilder<ProfileCubit, ProfileState>(
+          builder: (context, profileState) {
+            double totalSalary = double.tryParse(profileState.salary) ?? 0.00;
+            double availableBudget = (totalPercentage / 100) * totalSalary;
 
-                // Budget text section
-                Positioned(
-                  top: chartSize * 0.55,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset('assets/images/home/Icons.png'),
-                        Text(
-                          "${availableBudget.toStringAsFixed(2)}",
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.045,
-                            fontFamily: 'Righteous',
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          "Available Budget",
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.035,
-                            color: Colors.grey,
-                            fontFamily: 'REM',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Section labels section
-                Positioned(
-                  bottom: 30,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 10.0),
-                    child: SizedBox(
-                      width: screenWidth * 0.9,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: screenWidth * 0.04,
-                          vertical: screenWidth * 0.02,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Wrap(
-                          spacing: 20.0,
-                          runSpacing: 8.0,
-                          children:
-                              state.sections.asMap().entries.map((entry) {
-                                final index = entry.key;
-                                final section = entry.value;
-
-                                return Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      width: screenWidth * 0.025,
-                                      height: screenWidth * 0.025,
-                                      decoration: BoxDecoration(
+            return Center(
+              child: SizedBox(
+                width: screenWidth * 0.95,
+                height: chartSize + 230,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Pie chart section
+                    Positioned(
+                      top: screenHeight * 0.05,
+                      child: SizedBox(
+                        width: chartSize,
+                        height: chartSize,
+                        child: TweenAnimationBuilder(
+                          tween: Tween<double>(begin: 0, end: 1),
+                          duration: Duration(seconds: 1),
+                          builder: (context, value, child) {
+                            return PieChart(
+                              PieChartData(
+                                centerSpaceRadius: chartSize * 0.3,
+                                sectionsSpace: 6,
+                                startDegreeOffset: -70,
+                                sections:
+                                    state.sections.map((section) {
+                                      return PieChartSectionData(
+                                        value: section.value * value,
+                                        title: "",
                                         color: section.color,
-                                        shape: BoxShape.circle,
-                                      ),
-                                    ),
-                                    SizedBox(width: 8),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: screenWidth * 0.03,
-                                        vertical: screenWidth * 0.015,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                          color: section.color,
-                                          width: 1.3,
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: section.color.withOpacity(
-                                              0.2,
-                                            ),
-                                            blurRadius: 6,
-                                            offset: const Offset(2, 2),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Text(
-                                        "${section.title} - ${section.value.toInt()}%",
-                                        style: TextStyle(
-                                          fontSize: screenWidth * 0.034,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }).toList(),
+                                        radius: chartSize * 0.25,
+                                      );
+                                    }).toList(),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
-                  ),
+
+                    // Salary text section
+                    Positioned(
+                      top: chartSize * 0.55,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset('assets/images/home/Icons.png'),
+                            Text(
+                              "\$${availableBudget.toStringAsFixed(2)}",
+                              style: TextStyle(
+                                fontSize: screenWidth * 0.045,
+                                fontFamily: 'Righteous',
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              "Available Salary",
+                              style: TextStyle(
+                                fontSize: screenWidth * 0.035,
+                                color: Colors.grey,
+                                fontFamily: 'REM',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // Section labels section
+                    Positioned(
+                      bottom: 30,
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 10.0),
+                        child: SizedBox(
+                          width: screenWidth * 0.9,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * 0.04,
+                              vertical: screenWidth * 0.02,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Wrap(
+                              spacing: 20.0,
+                              runSpacing: 8.0,
+                              children:
+                                  state.sections.asMap().entries.map((entry) {
+                                    // final index = entry.key;
+                                    final section = entry.value;
+
+                                    return Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: screenWidth * 0.025,
+                                          height: screenWidth * 0.025,
+                                          decoration: BoxDecoration(
+                                            color: section.color,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: screenWidth * 0.03,
+                                            vertical: screenWidth * 0.015,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(
+                                              color: section.color,
+                                              width: 1.3,
+                                            ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: section.color.withOpacity(
+                                                  0.2,
+                                                ),
+                                                blurRadius: 6,
+                                                offset: const Offset(2, 2),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Text(
+                                            "${section.title} - ${section.value.toInt()}%",
+                                            style: TextStyle(
+                                              fontSize: screenWidth * 0.034,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }).toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
