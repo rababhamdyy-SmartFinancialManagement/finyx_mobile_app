@@ -41,25 +41,29 @@ class _CustomTextFieldState extends State<CustomTextField> {
         decoration: InputDecoration(
           labelText: widget.label,
           hintText: widget.hint,
-          prefixIcon: widget.icon != null ? Icon(widget.icon) : null,
-          suffixIcon: widget.obscureText
-              ? IconButton(
-                  icon: Icon(
-                    isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isPasswordVisible = !isPasswordVisible;
-                    });
-                  },
-                )
-              : widget.suffixIcon,
-          hintStyle: const TextStyle(color: Colors.grey),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+          labelStyle: TextStyle(
+            color: Theme.of(context).textTheme.bodyMedium?.color,
           ),
+          hintStyle: TextStyle(color: Theme.of(context).hintColor),
+          prefixIcon: widget.icon != null ? Icon(widget.icon) : null,
+          suffixIcon:
+              widget.obscureText
+                  ? IconButton(
+                    icon: Icon(
+                      isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isPasswordVisible = !isPasswordVisible;
+                      });
+                    },
+                  )
+                  : widget.suffixIcon,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: Colors.black.withAlpha(20),
         ),
       ),
     );

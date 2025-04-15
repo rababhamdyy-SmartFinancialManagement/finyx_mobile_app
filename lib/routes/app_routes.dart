@@ -54,7 +54,7 @@ class AppRoutes {
     final builder = routes[settings.name];
     return MaterialPageRoute(
       builder: builder ?? (_) => Scaffold(
-        body: Center(child: Text('Page Not Found')),
+        body: Center(child: PasswordChangedView()),
       ),
     );
   }
