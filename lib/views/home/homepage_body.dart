@@ -1,4 +1,6 @@
 import 'package:finyx_mobile_app/cubits/home/chart_cubit.dart';
+import 'package:finyx_mobile_app/cubits/profile/profile_cubit.dart';
+import 'package:finyx_mobile_app/cubits/profile/profile_state.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/views/home/balance_card.dart';
 import 'package:finyx_mobile_app/views/home/information_grid.dart';
@@ -26,25 +28,29 @@ class HomepageBody extends StatelessWidget {
           children: [
             Row(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Hello Yennefer Doe,",
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.06,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Rockwell',
-                      ),
-                    ),
-                    Text(
-                      "Your available balance",
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.04,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                  ],
+                BlocBuilder<ProfileCubit, ProfileState>(
+                  builder: (context, profileState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Hello ${profileState.name.isNotEmpty ? profileState.name : 'User'},",
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.06,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Rockwell',
+                          ),
+                        ),
+                        Text(
+                          "Your available balance",
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.04,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
                 Spacer(),
                 IconButton(
@@ -64,7 +70,6 @@ class HomepageBody extends StatelessWidget {
               create: (_) => ChartCubit(userType: userType),
               child: PieChartWidget(userType: userType),
             ),
-            // SizedBox(height: screenWidth * 0.02),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

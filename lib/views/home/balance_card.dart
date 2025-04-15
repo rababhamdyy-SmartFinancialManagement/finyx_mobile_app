@@ -1,4 +1,7 @@
+import 'package:finyx_mobile_app/cubits/profile/profile_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:finyx_mobile_app/cubits/profile/profile_cubit.dart';
 
 class BalanceCard extends StatelessWidget {
   @override
@@ -35,8 +38,8 @@ class BalanceCard extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           "2.70% Today",
                           style: TextStyle(
                             color: Colors.pinkAccent,
@@ -45,19 +48,26 @@ class BalanceCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 6),
-                        Text(
-                          "\$15,670.90",
-                          style: TextStyle(
-                            fontSize: 26,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Poppins',
-                          ),
+                        BlocBuilder<ProfileCubit, ProfileState>(
+                          builder: (context, profileState) {
+                            // عرض السالري إذا كان موجودًا
+                            final salary = profileState.salary.isNotEmpty
+                                ? profileState.salary
+                                : "\$0.00";
+                            return Text(
+                              "\$$salary",  // عرض السالري هنا
+                              style: TextStyle(
+                                fontSize: 26,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Poppins',
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
                   ),
-
                   SizedBox(width: screenWidth * 0.2),
                 ],
               ),
