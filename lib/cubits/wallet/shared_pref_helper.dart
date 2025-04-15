@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class SharedPrefsHelper {
   // Loads all prices stored in SharedPreferences and returns them as a Map
   static Future<Map<String, double>> loadPrices() async {

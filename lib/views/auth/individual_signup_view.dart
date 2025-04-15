@@ -1,5 +1,4 @@
 import 'package:finyx_mobile_app/models/user_type.dart';
-import 'package:finyx_mobile_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import '../../models/individual_signup_model.dart';
 import '../../widgets/auth_widgets/auth_options_widget.dart';
@@ -29,7 +28,6 @@ class _IndividualSignupViewState extends State<IndividualSignupView> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(

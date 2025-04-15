@@ -39,7 +39,7 @@ class EditProfileScreen extends StatelessWidget {
                     Divider(thickness: 1, color: Colors.grey.shade300),
                     const SizedBox(height: 24),
                     EditProfileInfoTile(
-                      iconPath: Icon(Icons.person),
+                      iconPath: "assets/images/profile/User(1).png",
                       text: state.name,
                       fieldName: 'Name',
                       onEdit:
@@ -53,7 +53,7 @@ class EditProfileScreen extends StatelessWidget {
                           }),
                     ),
                     EditProfileInfoTile(
-                      iconPath: Icon(Icons.mail),
+                      iconPath: "assets/images/profile/🦆 icon _mail_.png",
                       text: state.email,
                       fieldName: 'Email',
                       onEdit:
@@ -67,7 +67,7 @@ class EditProfileScreen extends StatelessWidget {
                           }),
                     ),
                     EditProfileInfoTile(
-                      iconPath: Icon(Icons.date_range),
+                      iconPath: "assets/images/profile/calendar 1.png",
                       text: state.birthDate,
                       fieldName: 'Birth Date',
                       onEdit:
@@ -84,7 +84,7 @@ class EditProfileScreen extends StatelessWidget {
                           ),
                     ),
                     EditProfileInfoTile(
-                      iconPath: Icon(Icons.location_on),
+                      iconPath: "assets/images/profile/location 1.png",
                       text: state.location,
                       fieldName: 'Location',
                       onEdit:
@@ -101,7 +101,7 @@ class EditProfileScreen extends StatelessWidget {
                           ),
                     ),
                     EditProfileInfoTile(
-                      iconPath: Icon(Icons.credit_card),
+                      iconPath: "assets/images/profile/id 1.png",
                       text: state.idNumber,
                       fieldName: 'ID Number',
                       onEdit:
@@ -118,7 +118,7 @@ class EditProfileScreen extends StatelessWidget {
                           ),
                     ),
                     EditProfileInfoTile(
-                      iconPath: Icon(Icons.money),
+                      iconPath: "assets/images/profile/wages 1.png",
                       text: state.salary,
                       fieldName: 'Salary',
                       onEdit:

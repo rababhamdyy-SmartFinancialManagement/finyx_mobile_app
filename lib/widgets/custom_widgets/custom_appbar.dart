@@ -3,19 +3,29 @@ import 'package:flutter/material.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double screenWidth;
   final double screenHeight;
-  final Color backgroundColor;
-  final Color iconColor;
+  final Color? iconColor;
+  final Color? backgroundColor;
 
   const CustomAppBar({
     super.key,
     required this.screenWidth,
     required this.screenHeight,
-    this.backgroundColor = const Color(0xFFFFFFFF),
-    this.iconColor = Colors.white,
+    this.iconColor,
+    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
+    final Color effectiveBackgroundColor =
+        backgroundColor ??
+        theme.textTheme.bodyMedium?.color?.withAlpha(20) ??
+        Color(0xFFFFFFFF);
+
+    final Color effectiveIconColor =
+        iconColor ?? theme.iconTheme.color ?? Colors.white;
+
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -33,12 +43,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             width: screenWidth * 0.1,
             height: screenWidth * 0.1,
             decoration: BoxDecoration(
-              color: backgroundColor.withValues(alpha: 0.2),
+              color: effectiveBackgroundColor.withAlpha(
+                35,
+              ),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.arrow_back_ios_new,
-              color: iconColor,
+              color: effectiveIconColor,
               size: screenWidth * 0.05,
             ),
           ),

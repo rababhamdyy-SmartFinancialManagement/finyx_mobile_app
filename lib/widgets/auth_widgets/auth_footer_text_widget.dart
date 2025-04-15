@@ -20,7 +20,9 @@ class AuthFooterText extends StatelessWidget {
           fontSize: screenWidth * 0.04,
           fontWeight: FontWeight.w500,
           fontFamily: "Poppins",
-          color:Color.fromARGB(122, 0, 0, 0),
+          color: Theme.of(
+            context,
+          ).textTheme.bodyMedium!.color!.withValues(alpha: 0.6),
         ),
         children: [
           TextSpan(

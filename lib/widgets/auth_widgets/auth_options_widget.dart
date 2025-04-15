@@ -25,7 +25,9 @@ class SocialAuthButtons extends StatelessWidget {
                 child: Divider(
                   height: 0.0,
                   thickness: 0.7,
-                  color: Color(0xB2000000),
+                  color: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium!.color!.withValues(alpha: 0.6),
                 ),
               ),
               Text(
@@ -34,7 +36,9 @@ class SocialAuthButtons extends StatelessWidget {
                   fontSize: screenWidth * 0.04,
                   fontWeight: FontWeight.w500,
                   fontFamily: "Poppins",
-                  color: Color(0xB2000000),
+                  color: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -42,7 +46,9 @@ class SocialAuthButtons extends StatelessWidget {
                 child: Divider(
                   height: 0.0,
                   thickness: 0.7,
-                  color: Color(0xB2000000),
+                  color: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium!.color!.withValues(alpha: 0.6),
                 ),
               ),
             ],
@@ -67,7 +73,11 @@ class SocialAuthButtons extends StatelessWidget {
                 final loginModel = LoginModel();
                 final userType = await loginModel.signInWithGoogle(context);
                 if (userType != null) {
-                  Navigator.pushReplacementNamed(context, '/homepage', arguments: userType);
+                  Navigator.pushReplacementNamed(
+                    context,
+                    '/homepage',
+                    arguments: userType,
+                  );
                 }
               },
               screenWidth: screenWidth,

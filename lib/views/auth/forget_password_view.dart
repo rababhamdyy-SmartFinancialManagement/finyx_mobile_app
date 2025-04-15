@@ -2,7 +2,6 @@ import 'package:finyx_mobile_app/widgets/shared/curved_background_widget.dart';
 import 'package:flutter/material.dart';
 import '../../models/forget_password_model.dart';
 import 'package:finyx_mobile_app/widgets/shared/button_widget.dart';
-import 'package:finyx_mobile_app/widgets/custom_widgets/custom_background.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_textfield_widget.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_title_section.dart';
 import '../../widgets/custom_widgets/custom_appbar.dart';
@@ -36,6 +35,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
           appBar: CustomAppBar(
             screenWidth: screenWidth,
             screenHeight: screenHeight,
+            iconColor: Colors.white, 
+            backgroundColor: Color(0xFFFFFFFF),
           ),
           body: Stack(
             children: [

@@ -118,7 +118,7 @@ class PieChartWidget extends StatelessWidget {
                           spacing: 20.0,
                           runSpacing: 8.0,
                           children: state.sections.asMap().entries.map((entry) {
-                            final index = entry.key;
+                            // final index = entry.key;
                             final section = entry.value;
 
                             return Row(

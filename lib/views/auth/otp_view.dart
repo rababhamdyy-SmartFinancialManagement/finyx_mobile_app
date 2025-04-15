@@ -4,7 +4,6 @@ import 'package:finyx_mobile_app/widgets/auth_widgets/otp_widget.dart';
 import 'package:finyx_mobile_app/widgets/auth_widgets/resend_otp_widget.dart';
 import 'package:finyx_mobile_app/widgets/shared/button_widget.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_appbar.dart';
-import 'package:finyx_mobile_app/widgets/custom_widgets/custom_background.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_title_section.dart';
 
 class OtpView extends StatelessWidget {

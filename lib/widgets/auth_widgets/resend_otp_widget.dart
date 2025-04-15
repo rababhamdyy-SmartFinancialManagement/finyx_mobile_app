@@ -15,10 +15,7 @@ class ResendOtp extends StatelessWidget {
           children: [
             Text(
               "Don't receive code? ",
-              style: TextStyle(
-                fontSize: screenWidth * 0.035,
-                color: Colors.black54,
-              ),
+              style: TextStyle(fontSize: screenWidth * 0.035),
             ),
             GestureDetector(
               onTap: () {
@@ -28,9 +25,7 @@ class ResendOtp extends StatelessWidget {
                 "Re-send",
                 style: TextStyle(
                   fontSize: screenWidth * 0.035,
-                  color: Colors.black,
                   fontWeight: FontWeight.bold,
-
                 ),
               ),
             ),

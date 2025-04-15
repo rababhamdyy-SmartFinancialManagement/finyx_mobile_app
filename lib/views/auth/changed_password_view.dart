@@ -14,7 +14,6 @@ class PasswordChangedScreen extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -35,7 +34,9 @@ class PasswordChangedScreen extends StatelessWidget {
                 fontSize: screenWidth * 0.045,
                 fontWeight: FontWeight.w500,
                 fontFamily: "Poppins",
-                color: Color(0xB2575555),
+                color: Theme.of(
+                  context,
+                ).textTheme.bodyMedium!.color!.withValues(alpha: 0.4),
               ),
               textAlign: TextAlign.center,
             ),

@@ -41,24 +41,25 @@ class _CustomTextFieldState extends State<CustomTextField> {
           labelText: widget.label,
           hintText: widget.hint,
           prefixIcon: widget.icon != null ? Icon(widget.icon) : null,
-          suffixIcon: widget.obscureText
-              ? GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isPasswordVisible = !isPasswordVisible;
-                    });
-                  },
-                  child: Icon(
-                    isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                  ),
-                )
-              : null,
+          suffixIcon:
+              widget.obscureText
+                  ? GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isPasswordVisible = !isPasswordVisible;
+                      });
+                    },
+                    child: Icon(
+                      isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                  )
+                  : null,
           hintStyle: const TextStyle(color: Colors.grey),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: Colors.black.withAlpha(20),
         ),
       ),
     );
