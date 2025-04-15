@@ -48,15 +48,16 @@ class _CustomContainerButtonState extends State<CustomContainerButton> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFFFAFAFA), Color(0xFFF5F5F5)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color:
+                  Theme.of(context).brightness == Brightness.dark
+                      ? Colors.black
+                      : Colors.white,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withAlpha(15),
+                  color: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium!.color!.withValues(alpha: 0.2),
                   blurRadius: 6,
                   spreadRadius: 1,
                   offset: const Offset(0, 3),
@@ -67,22 +68,19 @@ class _CustomContainerButtonState extends State<CustomContainerButton> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // Text
-                CustomText(
-                  text: widget.text,
-                  fontSize: 0.045,
-                  isBold: false,
-                  color:
-                      Theme.of(context).textTheme.bodyMedium?.color ??
-                      Colors.black,
-                ),
+                CustomText(text: widget.text, fontSize: 0.045, isBold: false),
 
                 // Icon or Switch
                 widget.isSwitch
                     ? Switch(
                       value: selected,
-                      activeColor: const Color(0xFF3E0555),
+                      activeColor:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFFDA9220)
+                              : const Color(0xFF3E0555),
+
                       inactiveThumbColor: Colors.white,
-                      inactiveTrackColor: Colors.grey.withAlpha(15),
+                      inactiveTrackColor: Colors.grey.withOpacity(0.3),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       onChanged: (bool value) {
                         setState(() {
@@ -95,10 +93,12 @@ class _CustomContainerButtonState extends State<CustomContainerButton> {
                     )
                     : CircleAvatar(
                       radius: 18,
-                      backgroundColor: Color(0xFF3E0555).withAlpha(120),
+                      backgroundColor:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFFDA9220)
+                              : const Color(0xFF3E0555).withAlpha(120),
                       child: Icon(
                         widget.icon,
-                        color: Colors.black87,
                         size:
                             MediaQuery.of(context).size.height *
                             widget.iconSize,

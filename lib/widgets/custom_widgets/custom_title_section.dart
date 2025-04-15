@@ -12,10 +12,10 @@ class CustomTitleSection extends StatelessWidget {
     super.key,
     required this.title,
     this.subtitle,
-    this.titleColor = Colors.white,
-    this.subtitleColor = Colors.white70,
     required this.screenWidth,
     required this.screenHeight,
+    this.titleColor,
+    this.subtitleColor,
   });
 
   @override
@@ -30,7 +30,12 @@ class CustomTitleSection extends StatelessWidget {
             fontSize: screenWidth * 0.08,
             fontFamily: "Rockwell",
             fontWeight: FontWeight.bold,
-            color: titleColor,
+            color:
+                titleColor ??
+                Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.color, // اللون من الـ theme لو مفيش لون مخصص
           ),
           textAlign: TextAlign.center,
         ),
@@ -39,9 +44,14 @@ class CustomTitleSection extends StatelessWidget {
           Text(
             subtitle!,
             style: TextStyle(
-              color: subtitleColor,
               fontFamily: "Poppins",
               fontSize: screenWidth * 0.04,
+              color:
+                  subtitleColor ??
+                  Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.color, // اللون من الـ theme لو مفيش لون مخصص
             ),
             textAlign: TextAlign.center,
           ),

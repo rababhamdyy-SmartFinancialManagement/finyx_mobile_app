@@ -41,16 +41,9 @@ class EditProfileInfoTile extends StatelessWidget {
           ),
           title: Text(
             text,
-            style: TextStyle(
-              fontSize: width * 0.045,
-              fontFamily: 'Poppins',
-              color: Colors.black,
-            ),
+            style: TextStyle(fontSize: width * 0.045, fontFamily: 'Poppins'),
           ),
-          trailing: IconButton(
-            icon: const Icon(Icons.edit, color: Color(0xFF3E0555)),
-            onPressed: onEdit,
-          ),
+          trailing: IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
         ),
       ),
     );

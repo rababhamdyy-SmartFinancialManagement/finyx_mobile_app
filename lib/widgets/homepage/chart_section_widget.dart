@@ -18,20 +18,13 @@ class ChartSectionWidget extends StatelessWidget {
         color: section.color.withOpacity(0.2),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(
-            color: Colors.white,
-            blurRadius: 6,
-            offset: Offset(0, 4),
-          ),
+          BoxShadow(color: Colors.white, blurRadius: 6, offset: Offset(0, 4)),
         ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            section.title,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          Text(section.title, style: TextStyle(fontWeight: FontWeight.bold)),
           Text("${section.value}%"),
         ],
       ),

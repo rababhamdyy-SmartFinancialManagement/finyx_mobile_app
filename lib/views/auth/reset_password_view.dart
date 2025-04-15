@@ -23,12 +23,15 @@ class ResetPasswordScreen extends StatelessWidget {
           appBar: CustomAppBar(
             screenWidth: screenWidth,
             screenHeight: screenHeight,
+            iconColor: Colors.white,
+            backgroundColor: Color(0xFFFFFFFF),
           ),
           body: Stack(
             children: [
-               CustomPaint(
-            size: Size(MediaQuery.of(context).size.width, 300),
-            painter: CurvedBackgroundPainter(context),),
+              CustomPaint(
+                size: Size(MediaQuery.of(context).size.width, 300),
+                painter: CurvedBackgroundPainter(context),
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -48,7 +51,9 @@ class ResetPasswordScreen extends StatelessWidget {
                   Expanded(
                     child: Center(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.08,
+                        ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +78,10 @@ class ResetPasswordScreen extends StatelessWidget {
                                 width: screenWidth * 0.7,
                                 height: screenHeight * 0.06,
                                 onPressed: () {
-                                  Navigator.pushReplacementNamed(context, '/password_changed_view');
+                                  Navigator.pushReplacementNamed(
+                                    context,
+                                    '/password_changed_view',
+                                  );
                                 },
                               ),
                             ),

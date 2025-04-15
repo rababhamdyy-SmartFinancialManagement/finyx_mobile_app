@@ -19,13 +19,20 @@ class AddDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color iconColor = Color(0xFF3E0555); // Color for the dialog icon and text
+    final ThemeData theme = Theme.of(context);
+    final bool isDark = theme.brightness == Brightness.dark;
+    final Color iconColor =
+        isDark
+            ? const Color.fromARGB(255, 219, 159, 243)
+            : const Color(0xFF3E0555);
 
     return BlocBuilder<PriceCubit, PriceState>(
       builder: (context, state) {
         return AlertDialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), // Rounded corners for the dialog
+          backgroundColor: theme.dialogBackgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -34,9 +41,9 @@ class AddDialog extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: iconColor), // Border color for the icon container
+                  border: Border.all(color: iconColor),
                 ),
-                child: Icon(Icons.add, size: 40, color: iconColor), // Add icon
+                child: Icon(Icons.add, size: 40, color: iconColor),
               ),
               const SizedBox(width: 16),
               Text(
@@ -45,7 +52,7 @@ class AddDialog extends StatelessWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   fontFamily: "Poppins",
-                  color: iconColor, // Text color for the title
+                  color: iconColor,
                 ),
               ),
             ],
@@ -55,26 +62,34 @@ class AddDialog extends StatelessWidget {
             children: [
               TextField(
                 controller: nameController,
+                style: TextStyle(color: iconColor),
                 decoration: InputDecoration(
                   hintText: 'Item Name',
-                  border: OutlineInputBorder(),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: iconColor), // Border color when focused
+                  hintStyle: TextStyle(color: iconColor.withOpacity(0.6)),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: iconColor),
                   ),
-                  errorText: state.showError ? 'Please enter a name' : null, // Display error message if needed
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: iconColor),
+                  ),
+                  errorText: state.showError ? 'Please enter a name' : null,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: priceController,
                 keyboardType: TextInputType.number,
+                style: TextStyle(color: iconColor),
                 decoration: InputDecoration(
                   hintText: 'Price',
-                  border: OutlineInputBorder(),
-                  errorText: state.showError ? 'Enter valid price' : null, // Display error message if needed
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: iconColor), // Border color when focused
+                  hintStyle: TextStyle(color: iconColor.withOpacity(0.6)),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: iconColor),
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: iconColor),
+                  ),
+                  errorText: state.showError ? 'Enter valid price' : null,
                 ),
               ),
             ],
@@ -85,29 +100,34 @@ class AddDialog extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () {
-                    cubit.setShowError(false); // Hide error state
-                    Navigator.of(context).pop(); // Close the dialog
+                    cubit.setShowError(false);
+                    Navigator.of(context).pop();
                   },
-                  child: Text('Cancel', style: TextStyle(color: iconColor, fontFamily: 'Poppins')),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: iconColor, fontFamily: 'Poppins'),
+                  ),
                 ),
                 const SizedBox(width: 10),
                 TextButton(
                   onPressed: () async {
-                    final name = nameController.text.trim(); // Get trimmed name input
-                    final price = double.tryParse(priceController.text.trim()); // Parse price input
+                    final name = nameController.text.trim();
+                    final price = double.tryParse(priceController.text.trim());
 
-                    // Validate inputs: name should not be empty, and price should be valid and greater than 0
                     if (name.isEmpty || price == null || price <= 0) {
-                      cubit.setShowError(true); // Set error state to true
+                      cubit.setShowError(true);
                       return;
                     }
 
-                    cubit.updatePrice(name, price); // Update the price using the cubit
-                    await SharedPrefsHelper.setDialogShown(name, true); // Mark that the dialog has been shown for the item
-                    cubit.setShowError(false); // Hide error state
-                    Navigator.of(context).pop(); // Close the dialog
+                    cubit.updatePrice(name, price);
+                    await SharedPrefsHelper.setDialogShown(name, true);
+                    cubit.setShowError(false);
+                    Navigator.of(context).pop();
                   },
-                  child: Text('Save', style: TextStyle(color: iconColor, fontFamily: "Poppins")),
+                  child: Text(
+                    'Save',
+                    style: TextStyle(color: iconColor, fontFamily: "Poppins"),
+                  ),
                 ),
               ],
             ),

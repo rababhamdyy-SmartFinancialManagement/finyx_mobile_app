@@ -16,10 +16,7 @@ class WalletScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: const Text(
           'View Bill', // Title displayed in the app bar
-          style: TextStyle(
-            fontFamily: 'Righteous',
-            fontSize: 25,
-          ), 
+          style: TextStyle(fontFamily: 'Righteous', fontSize: 25),
         ),
         centerTitle: true,
       ),

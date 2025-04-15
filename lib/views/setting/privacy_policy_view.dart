@@ -24,8 +24,6 @@ class _PrivacyPolicyViewState extends State<PrivacyPolicyView> {
           resizeToAvoidBottomInset: true,
           extendBodyBehindAppBar: true,
           appBar: CustomAppBar(
-            iconColor: Colors.black,
-            backgroundColor: Colors.black,
             screenWidth: screenWidth,
             screenHeight: screenHeight,
           ),
@@ -36,35 +34,30 @@ class _PrivacyPolicyViewState extends State<PrivacyPolicyView> {
                 children: [
                   CustomTitleSection(
                     title: "Privacy Policy",
-                    titleColor: Colors.black,
                     screenWidth: screenWidth,
                     screenHeight: screenHeight,
                   ),
                   SizedBox(height: screenHeight * 0.015),
                   CustomText(
                     fontSize: 0.035,
-                    color: Colors.black,
                     isCentered: true,
                     text:
                         "Your privacy is important to us. It is Brainstorming's policy to respect your privacy regarding any information we may collect from you across our app, and other sites we own and operate.\n\n",
                   ),
                   CustomText(
                     fontSize: 0.035,
-                    color: Colors.black,
                     isCentered: true,
                     text:
                         "We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we’re collecting it and how it will be used.\n\n",
                   ),
                   CustomText(
                     fontSize: 0.035,
-                    color: Colors.black,
                     isCentered: true,
                     text:
                         "We only retain collected information for as long as necessary to provide you with your requested service. What data we store, we’ll protect within commercially acceptable means to prevent loss and theft, as well as unauthorized access, disclosure, copying, use or modification.\n\n",
                   ),
                   CustomText(
                     fontSize: 0.035,
-                    color: Colors.black,
                     isCentered: true,
                     text:
                         "We don’t share any personally identifying information publicly or with third-parties, except when required to by law.",
@@ -82,12 +75,13 @@ class _PrivacyPolicyViewState extends State<PrivacyPolicyView> {
                         },
                         activeColor: const Color(0xFF2F80ED),
                       ),
-                      CustomText(
-                        fontSize: 0.035,
-                        color: const Color(0xFF2F80ED),
-                        isBold: true,
-                        isCentered: false,
-                        text: "I agree to the Privacy Policy",
+                      Text(
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.035,
+                          color: const Color(0xFF2F80ED),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        "I agree to the Privacy Policy",
                       ),
                     ],
                   ),
@@ -96,7 +90,6 @@ class _PrivacyPolicyViewState extends State<PrivacyPolicyView> {
                     text: "Ok",
                     width: screenWidth * 0.8,
                     height: screenHeight * 0.06,
-                    backgroundColor: Colors.black,
                     onPressed: () {
                       if (isChecked) {
                         Navigator.pop(context);

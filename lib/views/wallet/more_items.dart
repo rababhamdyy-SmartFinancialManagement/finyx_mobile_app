@@ -31,6 +31,7 @@ class MoreItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
     final cubit = context.read<PriceCubit>(); // Access the PriceCubit
 
     // List of icon colors for the items
@@ -100,7 +101,8 @@ class MoreItems extends StatelessWidget {
         userType == UserType.business ? businessNames : individualNames;
 
     return AlertDialog(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.dialogBackgroundColor, // ← ياخد اللون من الثيم
+
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Center(
         child: Text(
@@ -109,7 +111,6 @@ class MoreItems extends StatelessWidget {
             fontSize: 20,
             fontWeight: FontWeight.bold,
             fontFamily: "Poppins",
-            color: Colors.black,
           ),
         ),
       ),
@@ -175,7 +176,6 @@ class MoreItems extends StatelessWidget {
                       label,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.black,
                         fontSize: 14.0,
                         fontWeight: FontWeight.w500,
                         fontFamily: "Poppins",

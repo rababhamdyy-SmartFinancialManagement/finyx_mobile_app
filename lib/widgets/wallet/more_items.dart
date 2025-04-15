@@ -5,25 +5,25 @@ class MoreItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color iconColor = Color(0xFF3E0555); // Define the primary icon color
+    final ThemeData theme = Theme.of(context);
+    final bool isDark = theme.brightness == Brightness.dark;
+    final Color iconColor = const Color(0xFF3E0555);
+    final Color textColor = isDark ? Colors.white : iconColor;
 
     return AlertDialog(
-      backgroundColor: Colors.white, // Set background color of the dialog
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ), // Apply rounded corners to the dialog
+      backgroundColor: theme.dialogBackgroundColor, // ← ياخد اللون من الثيم
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Center(
         child: Text(
-          'Add New Bill', // Title of the dialog
+          'Add New Bill',
           style: TextStyle(
-            fontSize: 20, // Set font size
-            fontWeight: FontWeight.bold, // Set font weight to bold
-            fontFamily: "Poppins", // Set custom font
-            color: iconColor, // Set title color
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            fontFamily: "Poppins",
+            color: textColor, // ← يتغير حسب المود
           ),
         ),
       ),
-      // Content section can be expanded later to add more widgets or information as needed
     );
   }
 }

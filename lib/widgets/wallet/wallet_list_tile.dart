@@ -24,50 +24,55 @@ class WalletListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final Color trailingBackgroundColor =
+        theme.brightness == Brightness.dark
+            ? theme
+                .cardColor // Get the background color from the theme for dark mode
+            : Colors.white; // Use white for light mode
+
     return Padding(
-      padding: const EdgeInsets.all(8.0), // Padding around the ListTile
+      padding: const EdgeInsets.all(8.0),
       child: ListTile(
         tileColor: backgroundColor, // Set the background color of the tile
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), // Rounded corners for the tile
-        leading: _buildLeadingIcon(), // Widget for leading icon
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        leading: _buildLeadingIcon(),
         title: Text(
-          label, // Display the label of the item
+          label,
           style: const TextStyle(fontSize: 16, fontFamily: "Poppins"),
         ),
-        trailing: _buildTrailingButton(), // Widget for the trailing button (price or 'Enter Price')
+        trailing: _buildTrailingButton(trailingBackgroundColor),
       ),
     );
   }
 
-  // Method to build the leading icon (on the left side of the tile)
   Widget _buildLeadingIcon() {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.transparent, // Transparent background for the icon
-        borderRadius: BorderRadius.circular(16), // Rounded corners
-        border: Border.all(color: iconColor), // Border color for the icon
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: iconColor),
       ),
-      child: Icon(icon, size: 30, color: iconColor), // Display the icon with specified size and color
+      child: Icon(icon, size: 30, color: iconColor),
     );
   }
 
-  // Method to build the trailing button (on the right side of the tile)
-  Widget _buildTrailingButton() {
+  Widget _buildTrailingButton(Color trailingBackgroundColor) {
     return GestureDetector(
-      onTap: onTap, // Execute the onTap callback when the button is tapped
+      onTap: onTap,
       child: Container(
-        width: 140, // Set a fixed width for the button
+        width: 140,
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          color: Colors.white, // White background for the button
-          border: Border.all(color: iconColor), // Border color for the button
-          borderRadius: BorderRadius.circular(8), // Rounded corners for the button
+          color: trailingBackgroundColor, // Use background color based on theme
+          border: Border.all(color: iconColor),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
-          price != null ? 'EGP $price/month' : 'Enter Price', // Display price if available, otherwise prompt to enter price
+          price != null ? 'EGP $price/month' : 'Enter Price',
           style: const TextStyle(fontSize: 14, fontFamily: "Poppins"),
-          textAlign: TextAlign.center, // Center the text within the button
+          textAlign: TextAlign.center,
         ),
       ),
     );

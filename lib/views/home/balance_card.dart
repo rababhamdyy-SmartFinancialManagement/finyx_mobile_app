@@ -6,9 +6,8 @@ class BalanceCard extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    
-    final cardWidth = screenWidth * 0.98; 
-    final cardHeight = screenHeight * 0.16; 
+    final cardWidth = screenWidth * 0.98;
+    final cardHeight = screenHeight * 0.16;
 
     return Center(
       child: SizedBox(
@@ -16,7 +15,7 @@ class BalanceCard extends StatelessWidget {
         height: cardHeight,
         child: Container(
           padding: EdgeInsets.symmetric(
-            horizontal: screenWidth * 0.04,  
+            horizontal: screenWidth * 0.04,
             vertical: screenHeight * 0.015,
           ),
           decoration: BoxDecoration(
@@ -59,15 +58,15 @@ class BalanceCard extends StatelessWidget {
                     ),
                   ),
 
-                  SizedBox(width: screenWidth * 0.2), 
+                  SizedBox(width: screenWidth * 0.2),
                 ],
               ),
               Positioned(
-                right: -screenWidth * 0.1,  
-                top: -screenHeight * 0.08,  
+                right: -screenWidth * 0.1,
+                top: -screenHeight * 0.08,
                 child: Image.asset(
                   'assets/images/home/money.png',
-                  width: screenWidth * 0.38, 
+                  width: screenWidth * 0.38,
                 ),
               ),
             ],

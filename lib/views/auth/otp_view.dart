@@ -23,12 +23,15 @@ class OtpView extends StatelessWidget {
           appBar: CustomAppBar(
             screenWidth: screenWidth,
             screenHeight: screenHeight,
+            iconColor: Colors.white,
+            backgroundColor: Color(0xFFFFFFFF),
           ),
           body: Stack(
             children: [
-               CustomPaint(
-            size: Size(MediaQuery.of(context).size.width, 300),
-            painter: CurvedBackgroundPainter(context),),
+              CustomPaint(
+                size: Size(MediaQuery.of(context).size.width, 300),
+                painter: CurvedBackgroundPainter(context),
+              ),
               SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.symmetric(
@@ -41,7 +44,7 @@ class OtpView extends StatelessWidget {
                       CustomTitleSection(
                         title: "OTP Verification",
                         subtitle:
-                        "Enter the verification code sent to your email to complete login securely.",
+                            "Enter the verification code sent to your email to complete login securely.",
                         screenWidth: screenWidth,
                         screenHeight: screenHeight,
                       ),
@@ -56,7 +59,9 @@ class OtpView extends StatelessWidget {
                           fontSize: screenWidth * 0.04,
                           fontWeight: FontWeight.w500,
                           fontFamily: "Poppins",
-                          color: Color(0xB2575555),
+                          color: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium!.color!.withValues(alpha: 0.5),
                         ),
                         textAlign: TextAlign.center,
                       ),

@@ -15,6 +15,7 @@ class EditProfileScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
           title: Text(
             'Edit Profile',
             style: TextStyle(
@@ -23,7 +24,6 @@ class EditProfileScreen extends StatelessWidget {
             ),
           ),
           centerTitle: true,
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
           elevation: 0,
         ),
@@ -159,7 +159,13 @@ class EditProfileScreen extends StatelessWidget {
           title: Center(
             child: Text(
               'Edit $fieldName',
-              style: TextStyle(fontFamily: "Poppins", color: Color(0xFF3E0555)),
+              style: TextStyle(
+                fontFamily: "Poppins",
+                color:
+                    Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Color(0xFF3E0555),
+              ),
             ),
           ),
           content: TextField(
@@ -177,7 +183,10 @@ class EditProfileScreen extends StatelessWidget {
                     'Cancel',
                     style: TextStyle(
                       fontFamily: "Poppins",
-                      color: Color(0xFF3E0555),
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Color(0xFF3E0555),
                     ),
                   ),
                 ),
@@ -191,7 +200,10 @@ class EditProfileScreen extends StatelessWidget {
                     'Save',
                     style: TextStyle(
                       fontFamily: "Poppins",
-                      color: Color(0xFF3E0555),
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Color(0xFF3E0555),
                     ),
                   ),
                 ),

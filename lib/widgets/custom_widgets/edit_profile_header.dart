@@ -18,10 +18,11 @@ class EditProfileHeader extends StatelessWidget {
       children: [
         BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
-            final image = state.imagePath != null && state.imagePath!.isNotEmpty
-                ? FileImage(File(state.imagePath!))
-                : const AssetImage('assets/images/profile/profile.png')
-                    as ImageProvider;
+            final image =
+                state.imagePath != null && state.imagePath!.isNotEmpty
+                    ? FileImage(File(state.imagePath!))
+                    : const AssetImage('assets/images/profile/profile.png')
+                        as ImageProvider;
 
             return Stack(
               alignment: Alignment.bottomRight,
@@ -44,11 +45,11 @@ class EditProfileHeader extends StatelessWidget {
                     onTap: () {
                       showModalBottomSheet(
                         context: context,
-                        builder: (context) => _imagePickerBottomSheetWidget(context),
+                        builder:
+                            (context) => _imagePickerBottomSheetWidget(context),
                       );
                     },
                     child: CircleAvatar(
-                      backgroundColor: Colors.white,
                       radius: 20,
                       child: const Icon(
                         Icons.photo_camera,
@@ -67,11 +68,10 @@ class EditProfileHeader extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.only(top: 12.0),
               child: Text(
-                state.name ,// التعامل مع القيمة null
+                state.name, // التعامل مع القيمة null
                 style: TextStyle(
                   fontSize: width * 0.045,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black,
                   fontFamily: 'Poppins',
                 ),
               ),
@@ -95,12 +95,14 @@ class EditProfileHeader extends StatelessWidget {
             child: IconButton(
               onPressed: () async {
                 Navigator.pop(context);
-                final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                final image = await ImagePicker().pickImage(
+                  source: ImageSource.gallery,
+                );
                 if (image != null) {
                   context.read<ProfileCubit>().updateImagePath(image.path);
                 }
               },
-              icon: Icon(Icons.image, color: Colors.blue, size: 50),
+              icon: Icon(Icons.image, size: 50),
             ),
           ),
           Padding(
@@ -108,12 +110,14 @@ class EditProfileHeader extends StatelessWidget {
             child: IconButton(
               onPressed: () async {
                 Navigator.pop(context);
-                final image = await ImagePicker().pickImage(source: ImageSource.camera);
+                final image = await ImagePicker().pickImage(
+                  source: ImageSource.camera,
+                );
                 if (image != null) {
                   context.read<ProfileCubit>().updateImagePath(image.path);
                 }
               },
-              icon: Icon(Icons.camera, color: Colors.blue, size: 50),
+              icon: Icon(Icons.camera, size: 50),
             ),
           ),
         ],

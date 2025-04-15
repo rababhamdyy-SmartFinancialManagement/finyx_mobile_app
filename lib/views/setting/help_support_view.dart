@@ -20,8 +20,7 @@ class HelpSupportView extends StatelessWidget {
           resizeToAvoidBottomInset: true,
           extendBodyBehindAppBar: true,
           appBar: CustomAppBar(
-            iconColor: Colors.black,
-            backgroundColor: Colors.black,
+       
             screenWidth: screenWidth,
             screenHeight: screenHeight,
           ),
@@ -32,21 +31,18 @@ class HelpSupportView extends StatelessWidget {
                 children: [
                   CustomTitleSection(
                     title: "Help & Support",
-                    titleColor: Colors.black,
                     screenWidth: screenWidth,
                     screenHeight: screenHeight,
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   CustomText(
                     fontSize: 0.035,
-                    color: Colors.black,
                     isCentered: true,
                     text:
                         "At Finyx, we're here to help you every step of the way. Whether you're facing a technical issue, need guidance, or have questions about our services — our support team is ready to assist you.\n\n",
                   ),
                   CustomText(
                     fontSize: 0.035,
-                    color: Colors.black,
                     isCentered: true,
                     text:
                         "How can we help you?\nYou can reach out to us for:\n\n"
@@ -55,12 +51,13 @@ class HelpSupportView extends StatelessWidget {
                         "• Questions about services and settings\n"
                         "• Feedback and suggestions\n\n",
                   ),
-                  CustomText(
-                    fontSize: 0.04,
-                    color: const Color(0xFF2F80ED),
-                    isBold: true,
-                    isCentered: true,
-                    text: "Contact Us",
+                  Text(
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.04,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF2F80ED),
+                    ),
+                    "Contact Us",
                   ),
                   SizedBox(height: screenHeight * 0.01),
 
@@ -71,8 +68,8 @@ class HelpSupportView extends StatelessWidget {
                         scheme: 'mailto',
                         path: 'finyx.contact@gmail.com',
                         queryParameters: {
-                          'subject': 'Finyx Support',
-                          'body': 'Hello Finyx Team,',
+                          'subject': 'Finyx_Support',
+                          'body': 'Hello,Finyx_Team,',
                         },
                       );
 
@@ -86,7 +83,10 @@ class HelpSupportView extends StatelessWidget {
                         } else {
                           // Fallback: Copy email to clipboard
                           await Clipboard.setData(
-                              const ClipboardData(text: 'finyx.contact@gmail.com'));
+                            const ClipboardData(
+                              text: 'finyx.contact@gmail.com',
+                            ),
+                          );
                           CustomSnackbar.show(
                             context,
                             'No email app found. Email copied to clipboard.',
@@ -95,7 +95,8 @@ class HelpSupportView extends StatelessWidget {
                         }
                       } catch (e) {
                         await Clipboard.setData(
-                            const ClipboardData(text: 'finyx.contact@gmail.com'));
+                          const ClipboardData(text: 'finyx.contact@gmail.com'),
+                        );
                         CustomSnackbar.show(
                           context,
                           'Error: ${e.toString()}. Email copied to clipboard.',
@@ -106,13 +107,12 @@ class HelpSupportView extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.email, color: Colors.black),
+                        const Icon(Icons.email),
                         const SizedBox(width: 8),
                         Text(
                           "finyx.contact@gmail.com",
                           style: TextStyle(
                             decoration: TextDecoration.underline,
-                            color: Colors.black,
                             fontSize: screenWidth * 0.035,
                             fontWeight: FontWeight.w500,
                           ),
@@ -125,14 +125,11 @@ class HelpSupportView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.access_time, color: Colors.black),
+                      const Icon(Icons.access_time),
                       const SizedBox(width: 8),
                       Text(
                         "Sunday to Thursday | 9 AM - 6 PM",
-                        style: TextStyle(
-                          fontSize: screenWidth * 0.035,
-                          color: Colors.black,
-                        ),
+                        style: TextStyle(fontSize: screenWidth * 0.035),
                       ),
                     ],
                   ),
@@ -140,7 +137,6 @@ class HelpSupportView extends StatelessWidget {
 
                   CustomText(
                     fontSize: 0.035,
-                    color: Colors.black,
                     isCentered: true,
                     text:
                         "Your experience matters to us. We're committed to providing fast, friendly, and helpful support — because your success is our priority.",

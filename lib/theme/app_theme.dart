@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData.dark().copyWith(
-      scaffoldBackgroundColor: const Color(0xFF121212), // ← أضفنا اللون المناسب للـ Dialog
+      scaffoldBackgroundColor: const Color(0xFF121212), 
       textTheme: ThemeData.dark().textTheme.apply(
         bodyColor: Colors.white70,
         displayColor: Colors.white,

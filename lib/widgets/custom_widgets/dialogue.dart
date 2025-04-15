@@ -88,7 +88,6 @@ class _DialogueState extends State<Dialogue> {
         width: MediaQuery.of(context).size.width * 0.99,
         height: MediaQuery.of(context).size.height * 0.99,
         child: AlertDialog(
-          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
             side: const BorderSide(color: Colors.grey, width: 5),
@@ -96,21 +95,23 @@ class _DialogueState extends State<Dialogue> {
           title: Text(
             widget.message,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.black,
-              fontFamily: 'Poppins',
-              fontSize: 20,
-            ),
+            style: const TextStyle(fontFamily: 'Poppins', fontSize: 20),
           ),
           content:
               isDelete
                   ? Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
+                      Text(
                         'Your account and all data will be permanently deleted.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontFamily: 'Poppins', fontSize: 16),
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 16,
+                          color: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium!.color!.withValues(alpha: 0.6),
+                        ),
                       ),
                       const SizedBox(height: 20),
                       TextField(
@@ -132,7 +133,7 @@ class _DialogueState extends State<Dialogue> {
               child: TextButton(
                 onPressed: _isLoading ? null : () => Navigator.pop(context),
                 style: TextButton.styleFrom(
-                  backgroundColor: Colors.white,
+                  backgroundColor: Color(0xFFFBBC05),
                   foregroundColor: const Color(0xffB6B6B6),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),

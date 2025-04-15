@@ -35,7 +35,7 @@ class _ChatDialogState extends State<ChatDialog> {
               alignment: Alignment.topRight,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.red.withOpacity(0.2),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
@@ -46,7 +46,7 @@ class _ChatDialogState extends State<ChatDialog> {
                   ],
                 ),
                 child: IconButton(
-                  icon: Icon(Icons.close, color: Color(0xFF3E0555)),
+                  icon: Icon(Icons.close, color: Colors.red),
                   onPressed: widget.onPressed,
                 ),
               ),
@@ -56,7 +56,6 @@ class _ChatDialogState extends State<ChatDialog> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF3E0555),
                 fontFamily: "REM",
               ),
             ),
@@ -66,7 +65,7 @@ class _ChatDialogState extends State<ChatDialog> {
                 width: double.infinity,
                 padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.grey.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: SingleChildScrollView(
@@ -74,7 +73,11 @@ class _ChatDialogState extends State<ChatDialog> {
                     botResponse.isEmpty
                         ? "Press start to begin..."
                         : botResponse,
-                    style: TextStyle(fontSize: 16, fontFamily: "Poppins"),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: "Poppins",
+                      color: Theme.of(context).textTheme.bodyMedium!.color!,
+                    ),
                   ),
                 ),
               ),

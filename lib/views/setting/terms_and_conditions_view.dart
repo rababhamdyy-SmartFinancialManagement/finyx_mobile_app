@@ -25,8 +25,6 @@ class _TermsAndConditionsViewState extends State<TermsAndConditionsView> {
           resizeToAvoidBottomInset: true,
           extendBodyBehindAppBar: true,
           appBar: CustomAppBar(
-            iconColor: Colors.black,
-            backgroundColor: Colors.black,
             screenWidth: screenWidth,
             screenHeight: screenHeight,
           ),
@@ -35,30 +33,28 @@ class _TermsAndConditionsViewState extends State<TermsAndConditionsView> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  SizedBox(height: screenHeight * 0.025),
+
                   CustomTitleSection(
                     title: "Terms & Conditions",
-                    titleColor: Colors.black,
                     screenWidth: screenWidth,
                     screenHeight: screenHeight,
                   ),
                   SizedBox(height: screenHeight * 0.015),
                   CustomText(
                     fontSize: 0.035,
-                    color: Colors.black,
                     isCentered: true,
                     text:
                         "Your privacy is important to us. It is Brainstorming's policy to respect your privacy regarding any information we may collect from you across our app, and other sites we own and operate.\n\n",
                   ),
                   CustomText(
                     fontSize: 0.035,
-                    color: Colors.black,
                     isCentered: true,
                     text:
                         "We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we’re collecting it and how it will be used.\n\n",
                   ),
                   CustomText(
                     fontSize: 0.035,
-                    color: Colors.black,
                     isCentered: true,
                     text:
                         "We only retain collected information for as long as necessary to provide you with your requested service.",
@@ -76,12 +72,13 @@ class _TermsAndConditionsViewState extends State<TermsAndConditionsView> {
                         activeColor: const Color(0xFF2F80ED),
                       ),
                       Expanded(
-                        child: CustomText(
-                          fontSize: 0.035,
-                          color: const Color(0xFF2F80ED),
-                          isBold: true,
-                          isCentered: false,
-                          text: "I agree to the Terms & Conditions",
+                        child: Text(
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.035,
+                            color: const Color(0xFF2F80ED),
+                            fontWeight: FontWeight.bold,
+                          ),
+                          "I agree to the Terms & Conditions",
                         ),
                       ),
                     ],
@@ -91,7 +88,6 @@ class _TermsAndConditionsViewState extends State<TermsAndConditionsView> {
                     text: "Ok",
                     width: screenWidth * 0.8,
                     height: screenHeight * 0.06,
-                    backgroundColor: Colors.black,
                     onPressed: () {
                       if (isChecked) {
                         Navigator.pop(context);

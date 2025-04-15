@@ -41,7 +41,6 @@ class HomepageBody extends StatelessWidget {
                       "Your available balance",
                       style: TextStyle(
                         fontSize: screenWidth * 0.04,
-                        color: Colors.grey,
                         fontFamily: 'Poppins',
                       ),
                     ),
@@ -53,7 +52,7 @@ class HomepageBody extends StatelessWidget {
                   icon: Icon(
                     Icons.notifications,
                     size: screenWidth * 0.09,
-                    color: const Color(0xFFDA9220)
+                    color: const Color(0xFFDA9220),
                   ),
                 ),
               ],
@@ -65,7 +64,7 @@ class HomepageBody extends StatelessWidget {
               create: (_) => ChartCubit(userType: userType),
               child: PieChartWidget(userType: userType),
             ),
-           // SizedBox(height: screenWidth * 0.02),
+            // SizedBox(height: screenWidth * 0.02),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

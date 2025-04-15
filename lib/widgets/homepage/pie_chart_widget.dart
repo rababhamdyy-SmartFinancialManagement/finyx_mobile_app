@@ -20,8 +20,12 @@ class PieChartWidget extends StatelessWidget {
 
     return BlocBuilder<ChartCubit, ChartState>(
       builder: (context, state) {
-        double totalPercentage = state.sections.fold(0, (sum, section) => sum + section.value);
-        double totalBudget = userType == UserType.individual ? 1800.00 : 5000.00;
+        double totalPercentage = state.sections.fold(
+          0,
+          (sum, section) => sum + section.value,
+        );
+        double totalBudget =
+            userType == UserType.individual ? 1800.00 : 5000.00;
         double availableBudget = (totalPercentage / 100) * totalBudget;
 
         return Center(
@@ -46,14 +50,15 @@ class PieChartWidget extends StatelessWidget {
                             centerSpaceRadius: chartSize * 0.3,
                             sectionsSpace: 6,
                             startDegreeOffset: -70,
-                            sections: state.sections.map((section) {
-                              return PieChartSectionData(
-                                value: section.value * value,
-                                title: "",
-                                color: section.color,
-                                radius: chartSize * 0.25,
-                              );
-                            }).toList(),
+                            sections:
+                                state.sections.map((section) {
+                                  return PieChartSectionData(
+                                    value: section.value * value,
+                                    title: "",
+                                    color: section.color,
+                                    radius: chartSize * 0.25,
+                                  );
+                                }).toList(),
                           ),
                         );
                       },
@@ -104,65 +109,60 @@ class PieChartWidget extends StatelessWidget {
                           vertical: screenWidth * 0.02,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white,
                           borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
                         ),
                         child: Wrap(
                           spacing: 20.0,
                           runSpacing: 8.0,
-                          children: state.sections.asMap().entries.map((entry) {
-                            // final index = entry.key;
-                            final section = entry.value;
+                          children:
+                              state.sections.asMap().entries.map((entry) {
+                                final index = entry.key;
+                                final section = entry.value;
 
-                            return Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: screenWidth * 0.025,
-                                  height: screenWidth * 0.025,
-                                  decoration: BoxDecoration(
-                                    color: section.color,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                SizedBox(width: 8),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: screenWidth * 0.03,
-                                    vertical: screenWidth * 0.015,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.8),
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                        color: section.color, width: 1.3),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: section.color.withOpacity(0.2),
-                                        blurRadius: 6,
-                                        offset: const Offset(2, 2),
+                                return Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: screenWidth * 0.025,
+                                      height: screenWidth * 0.025,
+                                      decoration: BoxDecoration(
+                                        color: section.color,
+                                        shape: BoxShape.circle,
                                       ),
-                                    ],
-                                  ),
-                                  child: Text(
-                                    "${section.title} - ${section.value.toInt()}%",
-                                    style: TextStyle(
-                                      fontSize: screenWidth * 0.034,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black87,
                                     ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          }).toList(),
+                                    SizedBox(width: 8),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: screenWidth * 0.03,
+                                        vertical: screenWidth * 0.015,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: section.color,
+                                          width: 1.3,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: section.color.withOpacity(
+                                              0.2,
+                                            ),
+                                            blurRadius: 6,
+                                            offset: const Offset(2, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Text(
+                                        "${section.title} - ${section.value.toInt()}%",
+                                        style: TextStyle(
+                                          fontSize: screenWidth * 0.034,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }).toList(),
                         ),
                       ),
                     ),
@@ -190,4 +190,3 @@ class PieChartWidget extends StatelessWidget {
     return midAngle * math.pi / 180;
   }
 }
-

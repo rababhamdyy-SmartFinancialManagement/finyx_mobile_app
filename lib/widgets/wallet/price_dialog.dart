@@ -23,11 +23,14 @@ class PriceDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final bool isDark = theme.brightness == Brightness.dark;
     return BlocBuilder<PriceCubit, PriceState>(
       // Listens to the state changes in PriceCubit
       builder: (context, state) {
         return AlertDialog(
-          backgroundColor: Colors.white, // Dialog background color
+          backgroundColor: theme.dialogBackgroundColor, // ← ياخد اللون من الثيم
+
           shape: RoundedRectangleBorder(
             // Rounded corners for the dialog
             borderRadius: BorderRadius.circular(16),

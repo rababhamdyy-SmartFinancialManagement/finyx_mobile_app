@@ -12,10 +12,10 @@ class CustomFloatingActionButton extends StatelessWidget {
       },
       backgroundColor: Colors.yellow[700],
       child: Padding(
-        padding: EdgeInsets.all(
-          MediaQuery.of(context).size.width * 0.025,
-        ),
-        child: Image.asset('assets/images/home/chatAI.png'), // تأكد من وجود الصورة في المسار الصحيح
+        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.025),
+        child: Image.asset(
+          'assets/images/home/chatAI.png',
+        ), // تأكد من وجود الصورة في المسار الصحيح
       ),
       shape: const CircleBorder(),
     );

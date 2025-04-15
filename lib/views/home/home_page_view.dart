@@ -27,7 +27,7 @@ class HomePageView extends StatelessWidget {
             index: currentIndex,
             children: [
               HomepageBody(userType: userType),
-              WalletScreen(userType: userType,),
+              WalletScreen(userType: userType),
               ProfileScreen(),
               SettingScreen(),
             ],
@@ -35,18 +35,20 @@ class HomePageView extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (currentIndex == 1) {
-                moreItems(context,userType);
+                moreItems(context, userType);
               } else {
                 showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return ChatDialog(
-                  onPressed: () {
-                    Navigator.of(context).pop();  // Close the Dialog when the button is pressed
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ChatDialog(
+                      onPressed: () {
+                        Navigator.of(
+                          context,
+                        ).pop(); // Close the Dialog when the button is pressed
+                      },
+                    );
                   },
                 );
-                },
-              );
               }
             },
             backgroundColor: Colors.yellow[700],

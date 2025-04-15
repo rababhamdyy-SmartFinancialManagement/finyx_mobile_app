@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class WalletScreen extends StatelessWidget {
   final UserType userType;
-  
+
   // Constructor to receive the user type (Individual or Business)
   const WalletScreen({super.key, required this.userType});
 
@@ -15,10 +15,15 @@ class WalletScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'View Bill', // Title displayed in the app bar
-          style: TextStyle(fontFamily: 'Righteous', fontSize: 25), // Text style for the title
+          style: TextStyle(
+            fontFamily: 'Righteous',
+            fontSize: 25,
+          ), // Text style for the title
         ),
       ),
-      body: WalletBody(userType: userType), // Pass the user type to the WalletBody to display appropriate content
+      body: WalletBody(
+        userType: userType,
+      ), // Pass the user type to the WalletBody to display appropriate content
     );
   }
 }

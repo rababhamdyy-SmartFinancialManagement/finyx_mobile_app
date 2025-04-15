@@ -25,27 +25,28 @@ class InformationGrid extends StatelessWidget {
       Colors.grey,
     ];
 
-    List<Map<String, dynamic>> items = userType == UserType.individual
-        ? [
-            {'icon': Icons.flash_on, 'label': 'Electricity'},
-            {'icon': Icons.wifi, 'label': 'Internet'},
-            {'icon': Icons.fastfood_outlined, 'label': 'Food'},
-            {'icon': Icons.money, 'label': 'Zakat'},
-            {'icon': Icons.shopping_cart, 'label': 'Shopping'},
-            {'icon': Icons.local_gas_station, 'label': 'Gas'},
-            {'icon': Icons.water_drop, 'label': 'WaterBill'},
-            {'icon': Icons.now_widgets_outlined, 'label': 'More'},
-          ]
-        : [
-            {'icon': Icons.bar_chart, 'label': 'T Revenue'},
-            {'icon': Icons.stacked_line_chart, 'label': 'T Expenses'},
-            {'icon': Icons.trending_up, 'label': 'Profits'},
-            {'icon': Icons.trending_down, 'label': 'Losses'},
-            {'icon': Icons.multiple_stop_rounded, 'label': 'Transfer'},
-            {'icon': Icons.monetization_on_rounded, 'label': 'E salaries'},
-            {'icon': Icons.account_balance_wallet, 'label': 'Loan'},
-            {'icon': Icons.now_widgets_outlined, 'label': 'More'},
-          ];
+    List<Map<String, dynamic>> items =
+        userType == UserType.individual
+            ? [
+              {'icon': Icons.flash_on, 'label': 'Electricity'},
+              {'icon': Icons.wifi, 'label': 'Internet'},
+              {'icon': Icons.fastfood_outlined, 'label': 'Food'},
+              {'icon': Icons.money, 'label': 'Zakat'},
+              {'icon': Icons.shopping_cart, 'label': 'Shopping'},
+              {'icon': Icons.local_gas_station, 'label': 'Gas'},
+              {'icon': Icons.water_drop, 'label': 'WaterBill'},
+              {'icon': Icons.now_widgets_outlined, 'label': 'More'},
+            ]
+            : [
+              {'icon': Icons.bar_chart, 'label': 'T Revenue'},
+              {'icon': Icons.stacked_line_chart, 'label': 'T Expenses'},
+              {'icon': Icons.trending_up, 'label': 'Profits'},
+              {'icon': Icons.trending_down, 'label': 'Losses'},
+              {'icon': Icons.multiple_stop_rounded, 'label': 'Transfer'},
+              {'icon': Icons.monetization_on_rounded, 'label': 'E salaries'},
+              {'icon': Icons.account_balance_wallet, 'label': 'Loan'},
+              {'icon': Icons.now_widgets_outlined, 'label': 'More'},
+            ];
 
     return BlocBuilder<PriceCubit, PriceState>(
       builder: (context, state) {
@@ -73,24 +74,26 @@ class InformationGrid extends StatelessWidget {
                     if (label == 'More') {
                       await showDialog(
                         context: context,
-                        builder: (_) => AddDialog(
-                          nameController: TextEditingController(),
-                          priceController: TextEditingController(),
-                          cubit: cubit,
-                          state: state,
-                        ),
+                        builder:
+                            (_) => AddDialog(
+                              nameController: TextEditingController(),
+                              priceController: TextEditingController(),
+                              cubit: cubit,
+                              state: state,
+                            ),
                       );
                     } else {
                       await showDialog(
                         context: context,
-                        builder: (_) => PriceDialog(
-                          priceController: TextEditingController(),
-                          cubit: cubit,
-                          state: state,
-                          label: label,
-                          icon: icon,
-                          iconColor: iconColor,
-                        ),
+                        builder:
+                            (_) => PriceDialog(
+                              priceController: TextEditingController(),
+                              cubit: cubit,
+                              state: state,
+                              label: label,
+                              icon: icon,
+                              iconColor: iconColor,
+                            ),
                       );
                     }
                   },

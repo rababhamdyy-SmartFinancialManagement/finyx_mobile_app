@@ -28,6 +28,7 @@ class _SettingScreenState extends State<SettingScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
         title: Text(
           'Settings',
           style: TextStyle(
@@ -36,7 +37,6 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
         elevation: 0,
       ),
