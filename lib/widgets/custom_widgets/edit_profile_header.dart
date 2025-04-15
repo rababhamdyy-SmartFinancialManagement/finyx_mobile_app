@@ -18,10 +18,11 @@ class EditProfileHeader extends StatelessWidget {
       children: [
         BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
-            final image = state.imagePath != null && state.imagePath!.isNotEmpty
-                ? FileImage(File(state.imagePath!))
-                : const AssetImage('assets/images/profile/profile.png')
-            as ImageProvider;
+            final image =
+                state.imagePath != null && state.imagePath!.isNotEmpty
+                    ? FileImage(File(state.imagePath!))
+                    : const AssetImage('assets/images/profile/profile.png')
+                        as ImageProvider;
 
             return Stack(
               alignment: Alignment.bottomRight,
@@ -44,8 +45,8 @@ class EditProfileHeader extends StatelessWidget {
                     onTap: () {
                       showModalBottomSheet(
                         context: context,
-                        builder: (context) =>
-                            _imagePickerBottomSheetWidget(context),
+                        builder:
+                            (context) => _imagePickerBottomSheetWidget(context),
                       );
                     },
                     child: CircleAvatar(
@@ -96,7 +97,9 @@ class EditProfileHeader extends StatelessWidget {
             child: IconButton(
               onPressed: () async {
                 Navigator.pop(context);
-                await context.read<ProfileCubit>().pickImage(ImageSource.gallery);
+                await context.read<ProfileCubit>().pickImage(
+                  ImageSource.gallery,
+                );
               },
               icon: Icon(Icons.image, color: Colors.blue, size: 50),
             ),
@@ -106,7 +109,9 @@ class EditProfileHeader extends StatelessWidget {
             child: IconButton(
               onPressed: () async {
                 Navigator.pop(context);
-                await context.read<ProfileCubit>().pickImage(ImageSource.camera);
+                await context.read<ProfileCubit>().pickImage(
+                  ImageSource.camera,
+                );
               },
               icon: Icon(Icons.camera, color: Colors.blue, size: 50),
             ),
