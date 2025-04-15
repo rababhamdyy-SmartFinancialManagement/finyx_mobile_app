@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'auth_footer_text_widget.dart';
 import '../buttons_widgets/social_icon_button_widget.dart';
+import '../../models/login_model.dart';
 
 class SocialAuthButtons extends StatelessWidget {
   final bool isSignup;
@@ -24,7 +25,9 @@ class SocialAuthButtons extends StatelessWidget {
                 child: Divider(
                   height: 0.0,
                   thickness: 0.7,
-                  color: Color(0xB2000000),
+                  color: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium!.color!.withValues(alpha: 0.6),
                 ),
               ),
               Text(
@@ -33,7 +36,9 @@ class SocialAuthButtons extends StatelessWidget {
                   fontSize: screenWidth * 0.04,
                   fontWeight: FontWeight.w500,
                   fontFamily: "Poppins",
-                  color: Color(0xB2000000),
+                  color: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -41,7 +46,9 @@ class SocialAuthButtons extends StatelessWidget {
                 child: Divider(
                   height: 0.0,
                   thickness: 0.7,
-                  color: Color(0xB2000000),
+                  color: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium!.color!.withValues(alpha: 0.6),
                 ),
               ),
             ],
@@ -55,17 +62,31 @@ class SocialAuthButtons extends StatelessWidget {
           children: [
             SocialIconButton(
               asset: "assets/images/icons/facebook.png",
-              onTap: () {},
+              onTap: () {
+                // Placeholder for Facebook login
+              },
               screenWidth: screenWidth,
             ),
             SocialIconButton(
               asset: "assets/images/icons/google.png",
-              onTap: () {},
+              onTap: () async {
+                final loginModel = LoginModel();
+                final userType = await loginModel.signInWithGoogle(context);
+                if (userType != null) {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    '/homepage',
+                    arguments: userType,
+                  );
+                }
+              },
               screenWidth: screenWidth,
             ),
             SocialIconButton(
               asset: "assets/images/icons/apple.png",
-              onTap: () {},
+              onTap: () {
+                // Placeholder for Apple login
+              },
               screenWidth: screenWidth,
             ),
           ],

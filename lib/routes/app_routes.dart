@@ -1,5 +1,12 @@
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/views/home/home_page_view.dart';
+import 'package:finyx_mobile_app/views/profile/edit_profile_view.dart';
+import 'package:finyx_mobile_app/views/profile/profile_view.dart';
+import 'package:finyx_mobile_app/views/setting/about_us_view.dart';
+import 'package:finyx_mobile_app/views/setting/help_support_view.dart';
+import 'package:finyx_mobile_app/views/setting/privacy_policy_view.dart';
+import 'package:finyx_mobile_app/views/setting/setting_view.dart';
+import 'package:finyx_mobile_app/views/setting/terms_and_conditions_view.dart';
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/views/intro/splash_view.dart';
 import 'package:finyx_mobile_app/views/intro/onboarding_view.dart';
@@ -18,27 +25,36 @@ class AppRoutes {
     '/onboarding': (_) => OnboardingScreen(),
     '/login': (_) => LoginScreen(),
     '/sign_up': (_) => SignUpScreen(),
-    '/forget_password' : (_) => ForgetPasswordScreen(),
-    '/otp_view' : (_) => OtpView(),
-    '/password_changed_view' : (_) => PasswordChangedScreen(),
-    '/reset_password_view' : (_) => ResetPasswordScreen(),
+    '/forget_password' : (_) => ForgetPasswordView(),
+    '/otp_view' : (_) => OtpView(email: '',),
+    '/password_changed_view' : (_) => PasswordChangedView(),
+    '/reset_password_view' : (_) => ResetPasswordView(),
     '/individual_signup' : (_) => IndividualSignupView(),
     '/business_signup' : (_) => BusinessSignUpView(),
+    '/setting': (_) => SettingScreen(),
+    '/PrivacyPolicy': (_) => PrivacyPolicyView(),
+    '/TermsAndConditions': (_) => TermsAndConditionsView(),
+    '/AboutUs': (_) => AboutUsView(),
+    '/HelpSupport': (_) => HelpSupportView(),
+    '/profile_view' : (_) => ProfileScreen(),
+    '/edit_profile_view' : (_) => EditProfileScreen(),
   };
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    // Assuming UserType is passed as an argument when navigating to the homepage
     if (settings.name == '/homepage') {
-      final userType = settings.arguments as UserType? ?? UserType.individual;
-      return MaterialPageRoute(
-        builder: (_) => HomepageView(userType: userType),
-      );
-    }
+   
+    final userType = settings.arguments is UserType
+        ? settings.arguments as UserType
+        : UserType.individual; 
+    return MaterialPageRoute(
+      builder: (_) => HomePageView(userType: userType),
+    );
+  }
 
     final builder = routes[settings.name];
     return MaterialPageRoute(
       builder: builder ?? (_) => Scaffold(
-        body: Center(child: Text('Page Not Found')),
+        body: Center(child: PasswordChangedView()),
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pin_code_fields/pin_code_fields.dart' show AnimationType, PinCodeFieldShape, PinCodeTextField, PinTheme;
-
+import 'package:pin_code_fields/pin_code_fields.dart'
+    show AnimationType, PinCodeFieldShape, PinCodeTextField, PinTheme;
 
 class OtpWidget extends StatelessWidget {
   const OtpWidget({super.key});
@@ -12,6 +12,7 @@ class OtpWidget extends StatelessWidget {
       length: 4,
       obscureText: false,
       animationType: AnimationType.fade,
+      cursorColor: Color(0xFFDA9220),
       pinTheme: PinTheme(
         shape: PinCodeFieldShape.box,
         borderRadius: BorderRadius.circular(10),
@@ -19,7 +20,7 @@ class OtpWidget extends StatelessWidget {
         fieldWidth: 70,
         activeColor: Colors.grey,
         inactiveColor: Colors.grey,
-        selectedColor: Colors.black,
+        selectedColor: Color(0xFFDA9220),
         borderWidth: 1,
       ),
       keyboardType: TextInputType.number,

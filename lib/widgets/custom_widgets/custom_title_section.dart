@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 
 class CustomTitleSection extends StatelessWidget {
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final double screenWidth;
   final double screenHeight;
+  final Color? titleColor;
+  final Color? subtitleColor;
 
   const CustomTitleSection({
     super.key,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
     required this.screenWidth,
     required this.screenHeight,
+    this.titleColor,
+    this.subtitleColor,
   });
 
   @override
@@ -26,20 +30,31 @@ class CustomTitleSection extends StatelessWidget {
             fontSize: screenWidth * 0.08,
             fontFamily: "Rockwell",
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color:
+                titleColor ??
+                Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.color, // اللون من الـ theme لو مفيش لون مخصص
           ),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: screenHeight * 0.04),
-        Text(
-          subtitle,
-          style: TextStyle(
-            color: Colors.white70,
-            fontFamily: "Poppins",
-            fontSize: screenWidth * 0.04,
+        if (subtitle != null && subtitle!.isNotEmpty)
+          Text(
+            subtitle!,
+            style: TextStyle(
+              fontFamily: "Poppins",
+              fontSize: screenWidth * 0.04,
+              color:
+                  subtitleColor ??
+                  Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.color, // اللون من الـ theme لو مفيش لون مخصص
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
       ],
     );
   }
