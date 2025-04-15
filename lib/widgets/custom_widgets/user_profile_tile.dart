@@ -13,7 +13,7 @@ class UserProfileCard extends StatelessWidget {
     this.name,
     this.imagePath,
   });
-
+ //user card
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
