@@ -31,7 +31,6 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     emit(state.copyWith(notifications: newNotifications));
 
-    // عرض الإشعار المحلي
     await _showLocalNotification(notification);
   }
 
@@ -44,8 +43,6 @@ class ProfileCubit extends Cubit<ProfileState> {
           priority: Priority.high,
           channelShowBadge: true,
           showWhen: true,
-          subText:
-              notification.title, 
         );
 
     NotificationDetails notificationDetails = NotificationDetails(
@@ -54,7 +51,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     await notificationsPlugin.show(
       notification.id.hashCode,
-      'Finyx',
+      notification.title,
       notification.message,
       notificationDetails,
     );

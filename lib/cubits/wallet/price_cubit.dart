@@ -82,29 +82,23 @@ class PriceCubit extends Cubit<PriceState> {
   }
 
   Future<void> _showPriceNotification(String title, String message) async {
-    AndroidNotificationDetails androidNotificationDetails =
+    const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
           'price_updates',
           'Price Updates',
           importance: Importance.high,
           priority: Priority.high,
           channelShowBadge: true,
-          subText: title,
-          styleInformation: BigTextStyleInformation(
-            message,
-            contentTitle: 'Finyx',
-            htmlFormatContent: true,
-            htmlFormatTitle: true,
-          ),
+           styleInformation: BigTextStyleInformation(''), 
         );
 
-    NotificationDetails notificationDetails = NotificationDetails(
+    const NotificationDetails notificationDetails = NotificationDetails(
       android: androidNotificationDetails,
     );
 
     await notificationsPlugin.show(
       DateTime.now().millisecondsSinceEpoch.hashCode,
-      'Finyx',
+      title,
       message,
       notificationDetails,
     );
