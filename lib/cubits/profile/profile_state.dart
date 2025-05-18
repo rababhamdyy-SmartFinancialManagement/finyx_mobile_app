@@ -1,3 +1,5 @@
+import 'package:finyx_mobile_app/models/notification/notification_model.dart';
+
 class ProfileState {
   final String name;
   final String email;
@@ -6,6 +8,7 @@ class ProfileState {
   final String idNumber;
   final String salary;
   final String? imagePath;
+  final List<AppNotification> notifications;
 
   ProfileState({
     this.name = '',
@@ -15,6 +18,7 @@ class ProfileState {
     this.idNumber = '',
     this.salary = '',
     this.imagePath,
+    this.notifications = const [],
   });
 
   ProfileState copyWith({
@@ -25,6 +29,7 @@ class ProfileState {
     String? idNumber,
     String? salary,
     String? imagePath,
+    List<AppNotification>? notifications,
   }) {
     return ProfileState(
       name: name ?? this.name,
@@ -34,6 +39,7 @@ class ProfileState {
       idNumber: idNumber ?? this.idNumber,
       salary: salary ?? this.salary,
       imagePath: imagePath ?? this.imagePath,
+      notifications: notifications ?? this.notifications,
     );
   }
 }

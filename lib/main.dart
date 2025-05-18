@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'firebase_options.dart';
 import 'package:finyx_mobile_app/cubits/bottom%20nav/navigation_cubit.dart';
 import 'package:finyx_mobile_app/cubits/home/chart_cubit.dart';
@@ -14,17 +15,34 @@ import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/routes/app_routes.dart';
 
+Future<void> _initializeNotifications() async {
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await FlutterLocalNotificationsPlugin().initialize(initializationSettings);
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   shared_preferences = await SharedPreferences.getInstance();
 
-  runApp(const MyApp());
+  final notificationsPlugin = FlutterLocalNotificationsPlugin();
+  await _initializeNotifications();
+
+  runApp(MyApp(notificationsPlugin: notificationsPlugin));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final FlutterLocalNotificationsPlugin notificationsPlugin;
+
+  const MyApp({super.key, required this.notificationsPlugin});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +51,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => NavigationCubit()),
         BlocProvider(create: (_) => ChartCubit(userType: UserType.individual)),
         BlocProvider(create: (_) => PriceCubit()),
-        BlocProvider(create: (_) => ProfileCubit()),
+        BlocProvider(create: (_) => ProfileCubit(notificationsPlugin)),
         BlocProvider(
           create: (_) => AppThemeCubit()..changeTheme(ThemeStateEnum.initial),
         ),
@@ -47,6 +65,7 @@ class MyApp extends StatelessWidget {
           } else if (state is AppLightTheme) {
             themeData = AppTheme.lightTheme;
           }
+
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: themeData,

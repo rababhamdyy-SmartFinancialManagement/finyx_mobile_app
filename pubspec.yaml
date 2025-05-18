@@ -51,6 +51,9 @@ dependencies:
   image_picker: ^1.1.2
   flutter_launcher_icons: ^0.14.3
   flutter_native_splash: ^2.4.6
+  flutter_local_notifications: ^19.2.0
+
+
 
 dev_dependencies:
   flutter_test:

@@ -4,7 +4,7 @@ import 'package:finyx_mobile_app/cubits/profile/profile_state.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/views/home/balance_card.dart';
 import 'package:finyx_mobile_app/views/home/information_grid.dart';
-import 'package:finyx_mobile_app/widgets/homepage/notification_button.dart';
+// import 'package:finyx_mobile_app/widgets/homepage/notification_button.dart';
 import 'package:finyx_mobile_app/widgets/homepage/pie_chart_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,7 +54,7 @@ class HomepageBody extends StatelessWidget {
                   },
                 ),
                 Spacer(),
-                NotificationButton(),
+                // NotificationButton(),
               ],
             ),
             SizedBox(height: screenWidth * 0.08),
