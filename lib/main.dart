@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => NavigationCubit()),
         BlocProvider(create: (_) => ChartCubit(userType: UserType.individual)),
-        BlocProvider(create: (_) => PriceCubit()),
+        BlocProvider(create: (_) => PriceCubit(notificationsPlugin)),
         BlocProvider(create: (_) => ProfileCubit(notificationsPlugin)),
         BlocProvider(
           create: (_) => AppThemeCubit()..changeTheme(ThemeStateEnum.initial),
