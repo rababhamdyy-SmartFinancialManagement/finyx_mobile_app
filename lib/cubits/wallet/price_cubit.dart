@@ -1,5 +1,6 @@
 import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class PriceState {
   final Map<String, double> prices;
@@ -18,7 +19,9 @@ class PriceState {
 }
 
 class PriceCubit extends Cubit<PriceState> {
-  PriceCubit() : super(PriceState(prices: {})) {
+  final FlutterLocalNotificationsPlugin notificationsPlugin;
+
+  PriceCubit(this.notificationsPlugin) : super(PriceState(prices: {})) {
     _loadPrices(); // Load prices from SharedPreferences on initialization
   }
 
@@ -36,6 +39,7 @@ class PriceCubit extends Cubit<PriceState> {
     }
 
     final newPrices = Map<String, double>.from(state.prices);
+    final bool isNewPrice = !state.prices.containsKey(label);
     newPrices[label] = price;
 
     // Save the updated prices in SharedPreferences
@@ -44,6 +48,13 @@ class PriceCubit extends Cubit<PriceState> {
     // Emit the new state only if the prices have actually changed
     if (newPrices.toString() != state.prices.toString()) {
       emit(state.copyWith(prices: newPrices));
+
+      _showPriceNotification(
+        isNewPrice ? 'Add New Price' : 'Price Updated',
+        isNewPrice
+            ? 'Added new price for $label: $price'
+            : 'Updated price for $label: $price',
+      );
     }
   }
 
@@ -62,6 +73,34 @@ class PriceCubit extends Cubit<PriceState> {
       SharedPrefsHelper.savePrices(newPrices);
 
       emit(state.copyWith(prices: newPrices));
+
+      _showPriceNotification(
+        'Removed Price',
+        'Price for $label has been removed',
+      );
     }
+  }
+
+  Future<void> _showPriceNotification(String title, String message) async {
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
+          'price_updates',
+          'Price Updates',
+          importance: Importance.high,
+          priority: Priority.high,
+          channelShowBadge: true,
+           styleInformation: BigTextStyleInformation(''), 
+        );
+
+    const NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+    );
+
+    await notificationsPlugin.show(
+      DateTime.now().millisecondsSinceEpoch.hashCode,
+      title,
+      message,
+      notificationDetails,
+    );
   }
 }
