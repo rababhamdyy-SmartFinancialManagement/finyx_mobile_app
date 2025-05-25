@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart'; // <-- تم إضافة هذا
+
 import '../../cubits/profile/profile_cubit.dart';
 
 class Dialogue extends StatefulWidget {
@@ -36,6 +38,7 @@ class _DialogueState extends State<Dialogue> {
     try {
       if (widget.actionType == 'logout') {
         await FirebaseAuth.instance.signOut();
+        await SharedPrefsHelper.saveLoginState(false); 
         if (mounted) {
           Navigator.pushNamedAndRemoveUntil(
             context,
@@ -110,7 +113,7 @@ class _DialogueState extends State<Dialogue> {
                           fontSize: 16,
                           color: Theme.of(
                             context,
-                          ).textTheme.bodyMedium!.color!.withValues(alpha: 0.6),
+                          ).textTheme.bodyMedium!.color!.withAlpha(150),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -133,7 +136,7 @@ class _DialogueState extends State<Dialogue> {
               child: TextButton(
                 onPressed: _isLoading ? null : () => Navigator.pop(context),
                 style: TextButton.styleFrom(
-                  backgroundColor: Color(0xFFFBBC05),
+                  backgroundColor: const Color(0xFFFBBC05),
                   foregroundColor: const Color(0xffB6B6B6),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),

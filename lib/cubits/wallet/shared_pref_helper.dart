@@ -1,6 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class SharedPrefsHelper {
   // Loads all prices stored in SharedPreferences and returns them as a Map
   static Future<Map<String, double>> loadPrices() async {
@@ -52,5 +51,15 @@ class SharedPrefsHelper {
   static Future<String?> getUserType() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('user_type'); 
+  }
+
+  static Future<void> saveLoginState(bool loggedIn) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_logged_in', loggedIn);
+  }
+
+  static Future<bool> getLoginState() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('is_logged_in') ?? false;
   }
 }

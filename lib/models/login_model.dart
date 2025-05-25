@@ -57,10 +57,12 @@ class LoginModel {
 
       if (userType == "individual") {
         await SharedPrefsHelper.saveUserType("individual");
+        await SharedPrefsHelper.saveLoginState(true);
         CustomSnackbar.show(context, "Logged in as Individual", isError: false);
         return UserType.individual;
       } else if (userType == "business") {
         await SharedPrefsHelper.saveUserType("business");
+        await SharedPrefsHelper.saveLoginState(true); 
         CustomSnackbar.show(context, "Logged in as Business", isError: false);
         return UserType.business;
       } else {
@@ -112,6 +114,7 @@ class LoginModel {
 
       if (userType == "individual") {
         await SharedPrefsHelper.saveUserType("individual");
+        await SharedPrefsHelper.saveLoginState(true);  // <-- حفظ حالة تسجيل الدخول
         CustomSnackbar.show(
           context,
           "Logged in with Google (Individual)",
@@ -120,6 +123,7 @@ class LoginModel {
         return UserType.individual;
       } else if (userType == "business") {
         await SharedPrefsHelper.saveUserType("business");
+        await SharedPrefsHelper.saveLoginState(true);  // <-- حفظ حالة تسجيل الدخول
         CustomSnackbar.show(
           context,
           "Logged in with Google (Business)",
