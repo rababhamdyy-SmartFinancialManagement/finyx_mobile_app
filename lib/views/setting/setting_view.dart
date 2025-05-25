@@ -144,13 +144,7 @@ class _SettingScreenState extends State<SettingScreen> {
                               : LangaugeEventEnums.ArbicLanguage,
                         );
                       },
-                      onPressed: () {
-                        context.read<AppLanguageCubit>().AppLanguageFunc(
-                          isEnglish
-                              ? LangaugeEventEnums.ArbicLanguage
-                              : LangaugeEventEnums.EnglishLanguage,
-                        );
-                      },
+                      onPressed: () {},
                     );
                   },
                 ),
@@ -175,6 +169,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   icon: Icons.help_outline_outlined,
                   iconSize: 0.03,
                 ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               ],
             ),
           ),

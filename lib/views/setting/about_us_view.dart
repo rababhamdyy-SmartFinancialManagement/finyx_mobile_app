@@ -34,7 +34,7 @@ class _AboutUsViewState extends State<AboutUsView> {
               child: Column(
                 children: [
                   CustomTitleSection(
-                    title: loc.translate("About_Us"), // من localization
+                    title: loc.translate("About_Us"), 
                     screenWidth: screenWidth,
                     screenHeight: screenHeight,
                   ),

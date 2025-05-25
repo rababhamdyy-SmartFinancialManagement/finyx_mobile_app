@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_appbar.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_text.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_title_section.dart';
@@ -16,6 +17,7 @@ class _PrivacyPolicyViewState extends State<PrivacyPolicyView> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return LayoutBuilder(
       builder: (context, constraints) {
         final double screenWidth = constraints.maxWidth;
@@ -33,35 +35,33 @@ class _PrivacyPolicyViewState extends State<PrivacyPolicyView> {
               child: Column(
                 children: [
                   CustomTitleSection(
-                    title: "Privacy Policy",
+                    title: loc.translate("Privacy_Policy"),
                     screenWidth: screenWidth,
                     screenHeight: screenHeight,
                   ),
                   SizedBox(height: screenHeight * 0.015),
+
                   CustomText(
                     fontSize: 0.035,
                     isCentered: true,
-                    text:
-                        "Your privacy is important to us. It is Brainstorming's policy to respect your privacy regarding any information we may collect from you across our app, and other sites we own and operate.\n\n",
+                    text: loc.translate("Privacy_Policy_Paragraph_1"),
                   ),
                   CustomText(
                     fontSize: 0.035,
                     isCentered: true,
-                    text:
-                        "We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we’re collecting it and how it will be used.\n\n",
+                    text: loc.translate("Privacy_Policy_Paragraph_2"),
                   ),
                   CustomText(
                     fontSize: 0.035,
                     isCentered: true,
-                    text:
-                        "We only retain collected information for as long as necessary to provide you with your requested service. What data we store, we’ll protect within commercially acceptable means to prevent loss and theft, as well as unauthorized access, disclosure, copying, use or modification.\n\n",
+                    text: loc.translate("Privacy_Policy_Paragraph_3"),
                   ),
                   CustomText(
                     fontSize: 0.035,
                     isCentered: true,
-                    text:
-                        "We don’t share any personally identifying information publicly or with third-parties, except when required to by law.",
+                    text: loc.translate("Privacy_Policy_Paragraph_4"),
                   ),
+
                   SizedBox(height: screenHeight * 0.03),
 
                   Row(
@@ -75,19 +75,23 @@ class _PrivacyPolicyViewState extends State<PrivacyPolicyView> {
                         },
                         activeColor: const Color(0xFF2F80ED),
                       ),
-                      Text(
-                        style: TextStyle(
-                          fontSize: screenWidth * 0.035,
-                          color: const Color(0xFF2F80ED),
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Text(
+                          loc.translate("Agree_Privacy_Policy"),
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.035,
+                            color: const Color(0xFF2F80ED),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        "I agree to the Privacy Policy",
                       ),
                     ],
                   ),
+
                   SizedBox(height: screenHeight * 0.03),
+
                   ButtonWidget(
-                    text: "Ok",
+                    text: loc.translate("Ok_Button"),
                     width: screenWidth * 0.8,
                     height: screenHeight * 0.06,
                     onPressed: () {
@@ -96,7 +100,9 @@ class _PrivacyPolicyViewState extends State<PrivacyPolicyView> {
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text("Please agree to the Privacy Policy"),
+                            content: Text(
+                              loc.translate("Privacy_Policy_Alert"),
+                            ),
                           ),
                         );
                       }

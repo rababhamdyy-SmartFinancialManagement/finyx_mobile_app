@@ -26,32 +26,33 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     final Color effectiveIconColor =
         iconColor ?? theme.iconTheme.color ?? Colors.white;
 
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      surfaceTintColor: Colors.transparent,
-      leadingWidth: screenWidth * 0.15,
-      leading: Padding(
-        padding: EdgeInsets.only(
-          left: screenWidth * 0.04,
-          top: screenHeight * 0.0,
-        ),
-        child: InkWell(
-          onTap: () => Navigator.pop(context),
-          borderRadius: BorderRadius.circular(30),
-          child: Container(
-            width: screenWidth * 0.1,
-            height: screenWidth * 0.1,
-            decoration: BoxDecoration(
-              color: effectiveBackgroundColor.withAlpha(
-                35,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        leadingWidth: screenWidth * 0.15,
+        leading: Padding(
+          padding: EdgeInsets.only(
+            left: screenWidth * 0.04,
+            top: screenHeight * 0.0,
+          ),
+          child: InkWell(
+            onTap: () => Navigator.pop(context),
+            borderRadius: BorderRadius.circular(30),
+            child: Container(
+              width: screenWidth * 0.1,
+              height: screenWidth * 0.1,
+              decoration: BoxDecoration(
+                color: effectiveBackgroundColor.withAlpha(35),
+                shape: BoxShape.circle,
               ),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.arrow_back_ios_new,
-              color: effectiveIconColor,
-              size: screenWidth * 0.05,
+              child: Icon(
+                Icons.arrow_back_ios_new,
+                color: effectiveIconColor,
+                size: screenWidth * 0.05,
+              ),
             ),
           ),
         ),

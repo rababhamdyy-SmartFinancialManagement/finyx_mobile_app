@@ -18,6 +18,7 @@ class _HelpSupportViewState extends State<HelpSupportView> {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final double screenWidth = constraints.maxWidth;
@@ -41,28 +42,29 @@ class _HelpSupportViewState extends State<HelpSupportView> {
                     screenHeight: screenHeight,
                   ),
                   SizedBox(height: screenHeight * 0.02),
+
+                  // Paragraph 1
                   CustomText(
                     fontSize: 0.035,
                     isCentered: true,
-                    text: loc.translate("About_Us_Paragraph_1"),
+                    text: loc.translate("Help_Support_Paragraph_1"),
                   ),
+
+                  // Paragraph 2
                   CustomText(
                     fontSize: 0.035,
                     isCentered: true,
-                    text:
-                        "How can we help you?\nYou can reach out to us for:\n\n"
-                        "• Troubleshooting app features or bugs\n"
-                        "• Account and login issues\n"
-                        "• Questions about services and settings\n"
-                        "• Feedback and suggestions\n\n",
+                    text: loc.translate("Help_Support_Paragraph_2"),
                   ),
+
+                  // Contact Us title
                   Text(
                     style: TextStyle(
                       fontSize: screenWidth * 0.04,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFF2F80ED),
                     ),
-                    "Contact Us",
+                    loc.translate("Contact_Us"),
                   ),
                   SizedBox(height: screenHeight * 0.01),
 
@@ -71,7 +73,7 @@ class _HelpSupportViewState extends State<HelpSupportView> {
                     onTap: () async {
                       final Uri emailUri = Uri(
                         scheme: 'mailto',
-                        path: 'finyx.contact@gmail.com',
+                        path: loc.translate("Email_Address"),
                         queryParameters: {
                           'subject': 'Finyx_Support',
                           'body': 'Hello,Finyx_Team,',
@@ -88,9 +90,7 @@ class _HelpSupportViewState extends State<HelpSupportView> {
                         } else {
                           // Fallback: Copy email to clipboard
                           await Clipboard.setData(
-                            const ClipboardData(
-                              text: 'finyx.contact@gmail.com',
-                            ),
+                            ClipboardData(text: loc.translate("Email_Address")),
                           );
                           CustomSnackbar.show(
                             context,
@@ -100,7 +100,7 @@ class _HelpSupportViewState extends State<HelpSupportView> {
                         }
                       } catch (e) {
                         await Clipboard.setData(
-                          const ClipboardData(text: 'finyx.contact@gmail.com'),
+                          ClipboardData(text: loc.translate("Email_Address")),
                         );
                         CustomSnackbar.show(
                           context,
@@ -115,7 +115,7 @@ class _HelpSupportViewState extends State<HelpSupportView> {
                         const Icon(Icons.email),
                         const SizedBox(width: 8),
                         Text(
-                          "finyx.contact@gmail.com",
+                          loc.translate("Email_Address"),
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                             fontSize: screenWidth * 0.035,
@@ -127,24 +127,26 @@ class _HelpSupportViewState extends State<HelpSupportView> {
                   ),
 
                   const SizedBox(height: 10),
+
+                  // Working Hours
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(Icons.access_time),
                       const SizedBox(width: 8),
                       Text(
-                        "Sunday to Thursday | 9 AM - 6 PM",
+                        loc.translate("Working_Hours"),
                         style: TextStyle(fontSize: screenWidth * 0.035),
                       ),
                     ],
                   ),
                   SizedBox(height: screenHeight * 0.03),
 
+                  // Paragraph 3
                   CustomText(
                     fontSize: 0.035,
                     isCentered: true,
-                    text:
-                        "Your experience matters to us. We're committed to providing fast, friendly, and helpful support — because your success is our priority.",
+                    text: loc.translate("Help_Support_Paragraph_3"),
                   ),
                   SizedBox(height: screenHeight * 0.03),
                 ],

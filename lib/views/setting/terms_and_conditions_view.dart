@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_appbar.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_text.dart';
@@ -16,6 +17,8 @@ class _TermsAndConditionsViewState extends State<TermsAndConditionsView> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final double screenWidth = constraints.maxWidth;
@@ -34,9 +37,8 @@ class _TermsAndConditionsViewState extends State<TermsAndConditionsView> {
               child: Column(
                 children: [
                   SizedBox(height: screenHeight * 0.025),
-
                   CustomTitleSection(
-                    title: "Terms & Conditions",
+                    title: loc.translate("Terms_Conditions"),
                     screenWidth: screenWidth,
                     screenHeight: screenHeight,
                   ),
@@ -44,20 +46,17 @@ class _TermsAndConditionsViewState extends State<TermsAndConditionsView> {
                   CustomText(
                     fontSize: 0.035,
                     isCentered: true,
-                    text:
-                        "Your privacy is important to us. It is Brainstorming's policy to respect your privacy regarding any information we may collect from you across our app, and other sites we own and operate.\n\n",
+                    text: loc.translate("Terms_Conditions_Paragraph_1"),
                   ),
                   CustomText(
                     fontSize: 0.035,
                     isCentered: true,
-                    text:
-                        "We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we’re collecting it and how it will be used.\n\n",
+                    text: loc.translate("Terms_Conditions_Paragraph_2"),
                   ),
                   CustomText(
                     fontSize: 0.035,
                     isCentered: true,
-                    text:
-                        "We only retain collected information for as long as necessary to provide you with your requested service.",
+                    text: loc.translate("Terms_Conditions_Paragraph_3"),
                   ),
                   SizedBox(height: screenHeight * 0.03),
                   Row(
@@ -73,19 +72,19 @@ class _TermsAndConditionsViewState extends State<TermsAndConditionsView> {
                       ),
                       Expanded(
                         child: Text(
+                          loc.translate("Agree_Terms_Conditions"),
                           style: TextStyle(
                             fontSize: screenWidth * 0.035,
                             color: const Color(0xFF2F80ED),
                             fontWeight: FontWeight.bold,
                           ),
-                          "I agree to the Terms & Conditions",
                         ),
                       ),
                     ],
                   ),
                   SizedBox(height: screenHeight * 0.03),
                   ButtonWidget(
-                    text: "Ok",
+                    text: loc.translate("Ok_Button"),
                     width: screenWidth * 0.8,
                     height: screenHeight * 0.06,
                     onPressed: () {
@@ -95,7 +94,7 @@ class _TermsAndConditionsViewState extends State<TermsAndConditionsView> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              "Please agree to the Terms & Conditions",
+                              loc.translate("Terms_Conditions_Alert"),
                             ),
                           ),
                         );
