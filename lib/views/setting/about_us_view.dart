@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_appbar.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_text.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_title_section.dart';
@@ -11,14 +12,15 @@ class AboutUsView extends StatefulWidget {
 }
 
 class _AboutUsViewState extends State<AboutUsView> {
-  bool isChecked = false;
-
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final double screenWidth = constraints.maxWidth;
         final double screenHeight = constraints.maxHeight;
+
         return Scaffold(
           resizeToAvoidBottomInset: true,
           extendBodyBehindAppBar: true,
@@ -32,7 +34,7 @@ class _AboutUsViewState extends State<AboutUsView> {
               child: Column(
                 children: [
                   CustomTitleSection(
-                    title: "About Us",
+                    title: loc.translate("About_Us"), // من localization
                     screenWidth: screenWidth,
                     screenHeight: screenHeight,
                   ),
@@ -40,33 +42,29 @@ class _AboutUsViewState extends State<AboutUsView> {
                   CustomText(
                     fontSize: 0.035,
                     isCentered: true,
-                    text:
-                        "Finyx is a cutting-edge platform that aims to empower individuals and businesses by providing innovative solutions to everyday challenges. We offer a wide range of tools and services designed to make life easier, more efficient, and more enjoyable for our users. Our commitment is to offer high-quality, user-centric experiences tailored to meet the unique needs of each individual.\n\n",
+                    text: loc.translate("About_Us_Paragraph_1"),
                   ),
                   CustomText(
                     fontSize: 0.035,
                     isCentered: true,
-                    text:
-                        "Our goal is to bridge gaps in the digital landscape by providing solutions that are not only accessible but also intuitive and reliable. Whether you're a student, professional, or business owner, Finyx strives to create value through seamless digital experiences.\n\n",
+                    text: loc.translate("About_Us_Paragraph_2"),
                   ),
                   CustomText(
                     fontSize: 0.035,
                     isCentered: true,
-                    text:
-                        "At Finyx, we prioritize customer satisfaction and focus on delivering solutions that help people achieve their personal and professional goals. We understand the challenges faced by our users, and we are dedicated to providing them with the best possible tools to succeed. We continuously innovate and improve to stay ahead in a rapidly evolving digital world.\n\n",
+                    text: loc.translate("About_Us_Paragraph_3"),
                   ),
                   CustomText(
                     fontSize: 0.045,
                     isCentered: true,
                     isBold: true,
-                    text: "Our Vision",
+                    text: loc.translate("Our_Vision"),
                   ),
                   SizedBox(height: screenHeight * 0.015),
                   CustomText(
                     fontSize: 0.035,
                     isCentered: true,
-                    text:
-                        "We envision a future where technology enhances the lives of everyone, making tasks simpler, more connected, and more efficient. Our goal is to build a platform that becomes the go-to solution for all digital needs, promoting growth, sustainability, and a better quality of life for all users.",
+                    text: loc.translate("Our_Vision_Paragraph"),
                   ),
                   SizedBox(height: screenHeight * 0.03),
                 ],

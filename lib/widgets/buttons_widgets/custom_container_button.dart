@@ -4,6 +4,7 @@ import 'package:finyx_mobile_app/widgets/custom_widgets/custom_text.dart';
 class CustomContainerButton extends StatefulWidget {
   final String text;
   final bool isSwitch;
+  final bool isLanguageSwitch; // جديد
   final IconData icon;
   final Function(bool)? onSwitchChanged;
   final Function() onPressed;
@@ -16,6 +17,7 @@ class CustomContainerButton extends StatefulWidget {
     required this.onPressed,
     required this.icon,
     this.isSwitch = false,
+    this.isLanguageSwitch = false, // جديد
     this.onSwitchChanged,
     this.iconSize = 0.02,
     this.initialSelected = false,
@@ -57,7 +59,7 @@ class _CustomContainerButtonState extends State<CustomContainerButton> {
                 BoxShadow(
                   color: Theme.of(
                     context,
-                  ).textTheme.bodyMedium!.color!.withValues(alpha: 0.2),
+                  ).textTheme.bodyMedium!.color!.withAlpha(50),
                   blurRadius: 6,
                   spreadRadius: 1,
                   offset: const Offset(0, 3),
@@ -72,25 +74,108 @@ class _CustomContainerButtonState extends State<CustomContainerButton> {
 
                 // Icon or Switch
                 widget.isSwitch
-                    ? Switch(
-                      value: selected,
-                      activeColor:
-                          Theme.of(context).brightness == Brightness.dark
-                              ? const Color(0xFFDA9220)
-                              : const Color(0xFF3E0555),
+                    ? widget.isLanguageSwitch
+                        ? Container(
+                          width: 70,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.grey.withOpacity(0.3),
+                          ),
+                          child: Stack(
+                            children: [
+                              AnimatedAlign(
+                                alignment:
+                                    selected
+                                        ? (Directionality.of(context) ==
+                                                TextDirection.rtl
+                                            ? Alignment.centerLeft
+                                            : Alignment.centerRight)
+                                        : (Directionality.of(context) ==
+                                                TextDirection.rtl
+                                            ? Alignment.centerRight
+                                            : Alignment.centerLeft),
 
-                      inactiveThumbColor: Colors.white,
-                      inactiveTrackColor: Colors.grey.withOpacity(0.3),
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      onChanged: (bool value) {
-                        setState(() {
-                          selected = value;
-                        });
-                        if (widget.onSwitchChanged != null) {
-                          widget.onSwitchChanged!(value);
-                        }
-                      },
-                    )
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.easeInOut,
+
+                                child: Container(
+                                  width: 35,
+                                  height: 35,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? const Color(0xFFDA9220)
+                                            : const Color(0xFF3E0555),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    selected ? 'EN' : 'AR',
+                                    style: const TextStyle(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              Row(
+                                children: const [
+                                  Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        'AR',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        'EN',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(20),
+                                  onTap: () {
+                                    setState(() {
+                                      selected = !selected;
+                                    });
+                                    if (widget.onSwitchChanged != null) {
+                                      widget.onSwitchChanged!(selected);
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                        : Switch(
+                          value: selected,
+                          activeColor:
+                              Theme.of(context).brightness == Brightness.dark
+                                  ? const Color(0xFFDA9220)
+                                  : const Color(0xFF3E0555),
+                          inactiveThumbColor: Colors.white,
+                          inactiveTrackColor: Colors.grey.withOpacity(0.3),
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          onChanged: (bool value) {
+                            setState(() {
+                              selected = value;
+                            });
+                            if (widget.onSwitchChanged != null) {
+                              widget.onSwitchChanged!(value);
+                            }
+                          },
+                        )
                     : CircleAvatar(
                       radius: 18,
                       backgroundColor:

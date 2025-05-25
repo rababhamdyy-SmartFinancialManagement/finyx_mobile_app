@@ -13,9 +13,11 @@ class UserProfileCard extends StatelessWidget {
 
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
-        final image = state.imagePath != null && state.imagePath!.isNotEmpty
-            ? FileImage(File(state.imagePath!))
-            : const AssetImage('assets/images/profile/profile.png') as ImageProvider;
+        final image =
+            state.imagePath != null && state.imagePath!.isNotEmpty
+                ? FileImage(File(state.imagePath!))
+                : const AssetImage('assets/images/profile/profile.png')
+                    as ImageProvider;
 
         return Column(
           children: [
@@ -25,10 +27,7 @@ class UserProfileCard extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(width: 2, color: Color(0xFF3E0555)),
               ),
-              child: CircleAvatar(
-                backgroundImage: image,
-                radius: width * 0.19,
-              ),
+              child: CircleAvatar(backgroundImage: image, radius: width * 0.19),
             ),
             const SizedBox(height: 12),
             Text(
@@ -36,7 +35,7 @@ class UserProfileCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: width * 0.045,
                 fontWeight: FontWeight.w500,
-                color: Colors.black,
+                // color: ,
                 fontFamily: 'Poppins',
               ),
             ),

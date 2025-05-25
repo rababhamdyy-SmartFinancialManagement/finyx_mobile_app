@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -6,11 +7,17 @@ import 'package:finyx_mobile_app/widgets/custom_widgets/custom_text.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_title_section.dart';
 import 'package:finyx_mobile_app/widgets/shared/custom_snack_bar_widget.dart';
 
-class HelpSupportView extends StatelessWidget {
+class HelpSupportView extends StatefulWidget {
   const HelpSupportView({super.key});
 
   @override
+  State<HelpSupportView> createState() => _HelpSupportViewState();
+}
+
+class _HelpSupportViewState extends State<HelpSupportView> {
+  @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return LayoutBuilder(
       builder: (context, constraints) {
         final double screenWidth = constraints.maxWidth;
@@ -20,7 +27,6 @@ class HelpSupportView extends StatelessWidget {
           resizeToAvoidBottomInset: true,
           extendBodyBehindAppBar: true,
           appBar: CustomAppBar(
-       
             screenWidth: screenWidth,
             screenHeight: screenHeight,
           ),
@@ -30,7 +36,7 @@ class HelpSupportView extends StatelessWidget {
               child: Column(
                 children: [
                   CustomTitleSection(
-                    title: "Help & Support",
+                    title: loc.translate("Help_Support"),
                     screenWidth: screenWidth,
                     screenHeight: screenHeight,
                   ),
@@ -38,8 +44,7 @@ class HelpSupportView extends StatelessWidget {
                   CustomText(
                     fontSize: 0.035,
                     isCentered: true,
-                    text:
-                        "At Finyx, we're here to help you every step of the way. Whether you're facing a technical issue, need guidance, or have questions about our services — our support team is ready to assist you.\n\n",
+                    text: loc.translate("About_Us_Paragraph_1"),
                   ),
                   CustomText(
                     fontSize: 0.035,

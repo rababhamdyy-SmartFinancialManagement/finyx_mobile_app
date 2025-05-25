@@ -1,11 +1,15 @@
+import 'package:finyx_mobile_app/cubits/app_language/app_language_cubit.dart';
 import 'package:finyx_mobile_app/cubits/app_theme/app_theme_cubit.dart';
 import 'package:finyx_mobile_app/cubits/profile/profile_cubit.dart';
 import 'package:finyx_mobile_app/helpers/constants.dart';
+import 'package:finyx_mobile_app/models/applocalization.dart';
+import 'package:finyx_mobile_app/models/langaugeEventType.dart';
 import 'package:finyx_mobile_app/models/theme_state_enum.dart';
 import 'package:finyx_mobile_app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'firebase_options.dart';
@@ -55,22 +59,51 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => AppThemeCubit()..changeTheme(ThemeStateEnum.initial),
         ),
+          BlocProvider(
+          create:
+              (_) =>
+                  AppLanguageCubit()
+                    ..AppLanguageFunc(LangaugeEventEnums.IntialLangauge),
+        ),
       ],
-      child: BlocBuilder<AppThemeCubit, AppThemeState>(
-        builder: (context, state) {
+child: BlocBuilder<AppThemeCubit, AppThemeState>(
+        builder: (context, themeState) {
           ThemeData? themeData;
-
-          if (state is AppDarkTheme) {
+          if (themeState is AppDarkTheme) {
             themeData = AppTheme.darkTheme;
-          } else if (state is AppLightTheme) {
+          } else if (themeState is AppLightTheme) {
             themeData = AppTheme.lightTheme;
           }
-
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: themeData,
-            initialRoute: '/',
-            onGenerateRoute: AppRoutes.generateRoute,
+          return BlocBuilder<AppLanguageCubit, AppLanguageState>(
+            builder: (context, langState) {
+              var lang =
+                  langState is AppChangeLanguage
+                      ? langState.languageCode
+                      : 'en';
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                locale: Locale(lang!),
+                theme: themeData,
+                initialRoute: '/',
+                onGenerateRoute: AppRoutes.generateRoute,
+                supportedLocales: const [Locale('en'), Locale('ar')],
+                localizationsDelegates: [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                localeResolutionCallback: (deviceLocale, supportedLocales) {
+                  for (var locale in supportedLocales) {
+                    if (deviceLocale != null &&
+                        deviceLocale.languageCode == locale.languageCode) {
+                      return deviceLocale;
+                    }
+                  }
+                  return supportedLocales.first;
+                },
+              );
+            },
           );
         },
       ),
