@@ -1,0 +1,42 @@
+{
+  "Settings_title": "Settings", 
+  "General": "General", 
+  "App_Preferences": "App Preferences", 
+  "Push_notifications": "Push notifications", 
+  "Dark_mode": "Dark mode",
+  "Language": "Language", 
+  "Support": "Support", 
+  
+  "About_Us": "About Us",
+  "About_Us_Paragraph_1": "Finyx is a cutting-edge platform that aims to empower individuals and businesses by providing innovative solutions to everyday challenges. We offer a wide range of tools and services designed to make life easier, more efficient, and more enjoyable for our users. Our commitment is to offer high-quality, user-centric experiences tailored to meet the unique needs of each individual.",
+  "About_Us_Paragraph_2": "Our goal is to bridge gaps in the digital landscape by providing solutions that are not only accessible but also intuitive and reliable. Whether you're a student, professional, or business owner, Finyx strives to create value through seamless digital experiences.",
+  "About_Us_Paragraph_3": "At Finyx, we prioritize customer satisfaction and focus on delivering solutions that help people achieve their personal and professional goals. We understand the challenges faced by our users, and we are dedicated to providing them with the best possible tools to succeed. We continuously innovate and improve to stay ahead in a rapidly evolving digital world.",
+  "Our_Vision": "Our Vision",
+  "Our_Vision_Paragraph": "We envision a future where technology enhances the lives of everyone, making tasks simpler, more connected, and more efficient. Our goal is to build a platform that becomes the go-to solution for all digital needs, promoting growth, sustainability, and a better quality of life for all users.",
+
+  "Help_Support": "Help & Support",
+  "Help_Support_Paragraph_1": "At Finyx, we're here to help you every step of the way. Whether you're facing a technical issue, need guidance, or have questions about our services — our support team is ready to assist you.",
+  "Help_Support_Paragraph_2": "How can we help you?\nYou can reach out to us for:\n\n• Troubleshooting app features or bugs\n• Account and login issues\n• Questions about services and settings\n• Feedback and suggestions",
+  "Contact_Us": "Contact Us",
+  "Email_Address": "finyx.contact@gmail.com",
+  "Working_Hours": "Sunday to Thursday | 9 AM - 6 PM",
+  "Help_Support_Paragraph_3": "Your experience matters to us. We're committed to providing fast, friendly, and helpful support — because your success is our priority.",
+
+  "Privacy_Policy": "Privacy Policy",
+  "Privacy_Policy_Paragraph_1": "Your privacy is important to us. It is Brainstorming's policy to respect your privacy regarding any information we may collect from you across our app, and other sites we own and operate.",
+  "Privacy_Policy_Paragraph_2": "We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we’re collecting it and how it will be used.",
+  "Privacy_Policy_Paragraph_3": "We only retain collected information for as long as necessary to provide you with your requested service. What data we store, we’ll protect within commercially acceptable means to prevent loss and theft, as well as unauthorized access, disclosure, copying, use or modification.",
+  "Privacy_Policy_Paragraph_4": "We don’t share any personally identifying information publicly or with third-parties, except when required to by law.",
+  "Agree_Privacy_Policy": "I agree to the Privacy Policy",
+  "Privacy_Policy_Alert": "Please agree to the Privacy Policy",
+
+  "Terms_Conditions": "Terms & Conditions",
+  "Terms_Conditions_Paragraph_1": "Your privacy is important to us. It is Brainstorming's policy to respect your privacy regarding any information we may collect from you across our app, and other sites we own and operate.",
+  "Terms_Conditions_Paragraph_2": "We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we’re collecting it and how it will be used.",
+  "Terms_Conditions_Paragraph_3": "We only retain collected information for as long as necessary to provide you with your requested service.",
+  "Agree_Terms_Conditions": "I agree to the Terms & Conditions",
+  "Terms_Conditions_Alert": "Please agree to the Terms & Conditions",
+
+  "Ok_Button": "Ok"
+}
+

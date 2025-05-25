@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "63018309040",
+    "project_id": "finyx-99abc",
+    "storage_bucket": "finyx-99abc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:63018309040:android:c96b6ec03e91a1a8007275",
+        "android_client_info": {
+          "package_name": "com.example.finyx_mobile_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuy5G29-PvEo4ocOcaXJX_OdPwA7a4aBc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
