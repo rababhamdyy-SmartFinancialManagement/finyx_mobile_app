@@ -1,6 +1,7 @@
 import 'package:finyx_mobile_app/cubits/home/chart_cubit.dart';
 import 'package:finyx_mobile_app/cubits/profile/profile_cubit.dart';
 import 'package:finyx_mobile_app/cubits/profile/profile_state.dart';
+import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:finyx_mobile_app/models/chart_section.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -19,6 +20,7 @@ class PieChartWidget extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final chartSize = screenWidth * 0.58;
+    final loc = AppLocalizations.of(context)!;
 
     return BlocBuilder<ChartCubit, ChartState>(
       builder: (context, state) {
@@ -88,7 +90,7 @@ class PieChartWidget extends StatelessWidget {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              "Available Salary",
+                              "${loc.translate("available_salary")}",
                               style: TextStyle(
                                 fontSize: screenWidth * 0.035,
                                 color: Colors.grey,

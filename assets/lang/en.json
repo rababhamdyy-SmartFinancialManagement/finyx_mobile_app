@@ -73,7 +73,27 @@
 
   "password_changed_title": "Password Changed",
   "password_changed_message": "Your password has been successfully updated",
-  "go_to_login": "Go to Login"
+  "go_to_login": "Go to Login",
+  "today_change": "2.70% Today",
+  "hello": "Hello",
+  "available_balance": "Your available balance",
+  "available_salary": "Available Balance",
+  "information_list": "Information List",
+  "electricity": "Electricity",
+  "internet": "Internet",
+  "food": "Food",
+  "zakat": "Zakat",
+  "shopping": "Shopping",
+  "gas": "Gas",
+  "waterBill": "Water Bill",
+  "more": "More",
+  "tRevenue": "T Revenue",
+  "tExpenses": "T Expenses",
+  "profits": "Profits",
+  "losses": "Losses",
+  "transfer": "Transfer",
+  "eSalaries": "E Salaries",
+  "loan": "Loan"
 
 
 

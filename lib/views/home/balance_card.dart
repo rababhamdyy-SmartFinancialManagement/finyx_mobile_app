@@ -1,16 +1,25 @@
-import 'package:finyx_mobile_app/cubits/profile/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finyx_mobile_app/cubits/profile/profile_cubit.dart';
+import 'package:finyx_mobile_app/cubits/profile/profile_state.dart';
+import '../../models/applocalization.dart';
 
-class BalanceCard extends StatelessWidget {
+class BalanceCard extends StatefulWidget {
+  const BalanceCard({super.key});
+
+  @override
+  State<BalanceCard> createState() => _BalanceCardState();
+}
+
+class _BalanceCardState extends State<BalanceCard> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
     final cardWidth = screenWidth * 0.98;
     final cardHeight = screenHeight * 0.16;
+    final loc = AppLocalizations.of(context)!;
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     return Center(
       child: SizedBox(
@@ -39,23 +48,23 @@ class BalanceCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "2.70% Today",
-                          style: TextStyle(
+                        Text(
+                          loc.translate("today_change"),
+                          style: const TextStyle(
                             color: Colors.pinkAccent,
                             fontSize: 12,
                             fontFamily: 'Poppins',
                           ),
                         ),
-                        SizedBox(height: 6),
+                        const SizedBox(height: 6),
                         BlocBuilder<ProfileCubit, ProfileState>(
                           builder: (context, profileState) {
                             final salary = profileState.salary.isNotEmpty
                                 ? profileState.salary
                                 : "\$0.00";
                             return Text(
-                              "\$$salary",  
-                              style: TextStyle(
+                              "\$$salary",
+                              style: const TextStyle(
                                 fontSize: 26,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -71,7 +80,8 @@ class BalanceCard extends StatelessWidget {
                 ],
               ),
               Positioned(
-                right: -screenWidth * 0.1,
+                right: isRtl ? null : -screenWidth * 0.1,
+                left: isRtl ? -screenWidth * 0.1 : null,
                 top: -screenHeight * 0.08,
                 child: Image.asset(
                   'assets/images/home/money.png',

@@ -1,9 +1,12 @@
+import 'package:finyx_mobile_app/models/applocalization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/widgets/wallet/add_dialog.dart';
 import 'package:finyx_mobile_app/widgets/wallet/price_dialog.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
+
 
 class InformationGrid extends StatelessWidget {
   final UserType userType;
@@ -13,6 +16,7 @@ class InformationGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<PriceCubit>();
+    final loc = AppLocalizations.of(context)!;
 
     List<Color> iconColors = [
       Colors.orange,
@@ -25,28 +29,27 @@ class InformationGrid extends StatelessWidget {
       Colors.grey,
     ];
 
-    List<Map<String, dynamic>> items =
-        userType == UserType.individual
-            ? [
-              {'icon': Icons.flash_on, 'label': 'Electricity'},
-              {'icon': Icons.wifi, 'label': 'Internet'},
-              {'icon': Icons.fastfood_outlined, 'label': 'Food'},
-              {'icon': Icons.money, 'label': 'Zakat'},
-              {'icon': Icons.shopping_cart, 'label': 'Shopping'},
-              {'icon': Icons.local_gas_station, 'label': 'Gas'},
-              {'icon': Icons.water_drop, 'label': 'WaterBill'},
-              {'icon': Icons.now_widgets_outlined, 'label': 'More'},
-            ]
-            : [
-              {'icon': Icons.bar_chart, 'label': 'T Revenue'},
-              {'icon': Icons.stacked_line_chart, 'label': 'T Expenses'},
-              {'icon': Icons.trending_up, 'label': 'Profits'},
-              {'icon': Icons.trending_down, 'label': 'Losses'},
-              {'icon': Icons.multiple_stop_rounded, 'label': 'Transfer'},
-              {'icon': Icons.monetization_on_rounded, 'label': 'E salaries'},
-              {'icon': Icons.account_balance_wallet, 'label': 'Loan'},
-              {'icon': Icons.now_widgets_outlined, 'label': 'More'},
-            ];
+    List<Map<String, dynamic>> items = userType == UserType.individual
+        ? [
+            {'icon': Icons.flash_on, 'label': loc.translate("electricity")},
+            {'icon': Icons.wifi, 'label': loc.translate("internet")},
+            {'icon': Icons.fastfood_outlined, 'label': loc.translate("food")},
+            {'icon': Icons.money, 'label': loc.translate("zakat")},
+            {'icon': Icons.shopping_cart, 'label': loc.translate("shopping")},
+            {'icon': Icons.local_gas_station, 'label': loc.translate("gas")},
+            {'icon': Icons.water_drop, 'label': loc.translate("waterBill")},
+            {'icon': Icons.now_widgets_outlined, 'label': loc.translate("more")},
+          ]
+        : [
+            {'icon': Icons.bar_chart, 'label': loc.translate("tRevenue")},
+            {'icon': Icons.stacked_line_chart, 'label': loc.translate("tExpenses")},
+            {'icon': Icons.trending_up, 'label': loc.translate("profits")},
+            {'icon': Icons.trending_down, 'label': loc.translate("losses")},
+            {'icon': Icons.multiple_stop_rounded, 'label': loc.translate("transfer")},
+            {'icon': Icons.monetization_on_rounded, 'label': loc.translate("eSalaries")},
+            {'icon': Icons.account_balance_wallet, 'label': loc.translate("loan")},
+            {'icon': Icons.now_widgets_outlined, 'label': loc.translate("more")},
+          ];
 
     return BlocBuilder<PriceCubit, PriceState>(
       builder: (context, state) {
@@ -71,29 +74,27 @@ class InformationGrid extends StatelessWidget {
 
                 return GestureDetector(
                   onTap: () async {
-                    if (label == 'More') {
+                    if (label == loc.translate("more")) {
                       await showDialog(
                         context: context,
-                        builder:
-                            (_) => AddDialog(
-                              nameController: TextEditingController(),
-                              priceController: TextEditingController(),
-                              cubit: cubit,
-                              state: state,
-                            ),
+                        builder: (_) => AddDialog(
+                          nameController: TextEditingController(),
+                          priceController: TextEditingController(),
+                          cubit: cubit,
+                          state: state,
+                        ),
                       );
                     } else {
                       await showDialog(
                         context: context,
-                        builder:
-                            (_) => PriceDialog(
-                              priceController: TextEditingController(),
-                              cubit: cubit,
-                              state: state,
-                              label: label,
-                              icon: icon,
-                              iconColor: iconColor,
-                            ),
+                        builder: (_) => PriceDialog(
+                          priceController: TextEditingController(),
+                          cubit: cubit,
+                          state: state,
+                          label: label,
+                          icon: icon,
+                          iconColor: iconColor,
+                        ),
                       );
                     }
                   },

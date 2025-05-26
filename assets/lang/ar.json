@@ -74,7 +74,27 @@
 
   "password_changed_title": "تم تغيير كلمة المرور",
   "password_changed_message": "تم تحديث كلمة المرور الخاصة بك بنجاح",
-  "go_to_login": "العودة لتسجيل الدخول"
+  "go_to_login": "العودة لتسجيل الدخول",
+  "today_change": "٪2.70 اليوم",
+  "hello": "مرحبًا ",
+  "available_balance": "رصيدك المتاح",
+  "available_salary": "الراتب المتاح",
+  "information_list": "قائمة المعلومات",
+  "electricity": "الكهرباء",
+  "internet": "الإنترنت",
+  "food": "الطعام",
+  "zakat": "الزكاة",
+  "shopping": "التسوق",
+  "gas": "البنزين",
+  "waterBill": "فاتورة المياه",
+  "more": "المزيد",
+  "tRevenue": "الإيرادات",
+  "tExpenses": "المصروفات",
+  "profits": "الأرباح",
+  "losses": "الخسائر",
+  "transfer": "التحويل",
+  "eSalaries": "الرواتب",
+  "loan": "القرض"
 
 
 }
