@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/models/chart_section.dart';
+import 'package:finyx_mobile_app/models/applocalization.dart';  
 
 class ChartSectionWidget extends StatelessWidget {
   final ChartSection section;
@@ -9,6 +10,7 @@ class ChartSectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final loc = AppLocalizations.of(context)!;
 
     return Container(
       width: screenWidth * 0.9,
@@ -24,7 +26,10 @@ class ChartSectionWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(section.title, style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(
+            loc.translate(section.title),
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           Text("${section.value}%"),
         ],
       ),

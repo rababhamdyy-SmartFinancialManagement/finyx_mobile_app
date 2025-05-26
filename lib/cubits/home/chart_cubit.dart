@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../models/chart_section.dart';
