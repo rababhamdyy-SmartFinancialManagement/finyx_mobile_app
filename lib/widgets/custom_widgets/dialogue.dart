@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart'; // <-- تم إضافة هذا
+import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
 
 import '../../cubits/profile/profile_cubit.dart';
+import '../../models/applocalization.dart';
 
 class Dialogue extends StatefulWidget {
   final String message;
   final String actionType;
 
   const Dialogue({Key? key, required this.message, required this.actionType})
-    : super(key: key);
+      : super(key: key);
 
   @override
   State<Dialogue> createState() => _DialogueState();
@@ -34,16 +35,17 @@ class _DialogueState extends State<Dialogue> {
     });
 
     final scaffold = ScaffoldMessenger.of(context);
+    final loc = AppLocalizations.of(context)!;
 
     try {
       if (widget.actionType == 'logout') {
         await FirebaseAuth.instance.signOut();
-        await SharedPrefsHelper.saveLoginState(false); 
+        await SharedPrefsHelper.saveLoginState(false);
         if (mounted) {
           Navigator.pushNamedAndRemoveUntil(
             context,
             '/login',
-            (route) => false,
+                (route) => false,
           );
         }
       } else if (widget.actionType == 'delete') {
@@ -52,8 +54,8 @@ class _DialogueState extends State<Dialogue> {
         if (isValid) {
           await cubit.deleteAccount();
           scaffold.showSnackBar(
-            const SnackBar(
-              content: Text('Account deleted successfully'),
+            SnackBar(
+              content: Text(loc.translate("account_deleted_successfully")),
               backgroundColor: Colors.green,
             ),
           );
@@ -61,7 +63,7 @@ class _DialogueState extends State<Dialogue> {
             Navigator.pushNamedAndRemoveUntil(
               context,
               '/sign_up',
-              (route) => false,
+                  (route) => false,
             );
           }
         } else {
@@ -74,7 +76,7 @@ class _DialogueState extends State<Dialogue> {
     } catch (e) {
       scaffold.showSnackBar(
         SnackBar(
-          content: Text('Error: ${e.toString()}'),
+          content: Text(loc.translate("error_occurred") + e.toString()),
           backgroundColor: Colors.red,
         ),
       );
@@ -84,6 +86,7 @@ class _DialogueState extends State<Dialogue> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final bool isDelete = widget.actionType == 'delete';
 
     return Center(
@@ -100,35 +103,37 @@ class _DialogueState extends State<Dialogue> {
             textAlign: TextAlign.center,
             style: const TextStyle(fontFamily: 'Poppins', fontSize: 20),
           ),
-          content:
-              isDelete
-                  ? Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Your account and all data will be permanently deleted.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 16,
-                          color: Theme.of(
-                            context,
-                          ).textTheme.bodyMedium!.color!.withAlpha(150),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: 'Enter your password to confirm',
-                          border: const OutlineInputBorder(),
-                          errorText: _showError ? 'Incorrect password' : null,
-                        ),
-                      ),
-                    ],
-                  )
-                  : null,
+          content: isDelete
+              ? Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                loc.translate("delete_warning"),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 16,
+                  color: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .color!
+                      .withAlpha(150),
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: loc.translate("enter_password"),
+                  border: const OutlineInputBorder(),
+                  errorText:
+                  _showError ? loc.translate("incorrect_password") : null,
+                ),
+              ),
+            ],
+          )
+              : null,
           actionsAlignment: MainAxisAlignment.spaceAround,
           actions: [
             SizedBox(
@@ -142,9 +147,9 @@ class _DialogueState extends State<Dialogue> {
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(
+                child: Text(
+                  loc.translate("cancel"),
+                  style: const TextStyle(
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.w700,
                     fontSize: 20,
@@ -164,17 +169,16 @@ class _DialogueState extends State<Dialogue> {
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
-                child:
-                    _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                          'Yes',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w700,
-                            fontSize: 20,
-                          ),
-                        ),
+                child: _isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : Text(
+                  loc.translate("yes"),
+                  style: const TextStyle(
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
+                  ),
+                ),
               ),
             ),
           ],

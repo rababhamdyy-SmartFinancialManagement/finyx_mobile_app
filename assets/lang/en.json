@@ -37,6 +37,45 @@
   "Agree_Terms_Conditions": "I agree to the Terms & Conditions",
   "Terms_Conditions_Alert": "Please agree to the Terms & Conditions",
 
-  "Ok_Button": "Ok"
+  "Ok_Button": "Ok",
+
+  "profile_title": "Profile",
+  "edit_profile": "Edit Profile",
+  "change_password": "Change Password",
+  "delete_account": "Delete Account",
+  "log_out": "Log Out",
+  "delete_account_confirmation": "Are you sure you want to delete your account?",
+  "logout_confirmation": "Are you sure you want to log out?",
+
+
+  "cancel": "Cancel",
+  "yes": "Yes",
+  "delete_warning": "Your account and all data will be permanently deleted.",
+  "enter_password": "Enter your password to confirm",
+  "incorrect_password": "Incorrect password",
+  "account_deleted_successfully": "Account deleted successfully",
+  "error_occurred": "Error: ",
+
+  "reset_password_title": "Reset Password",
+  "reset_password_subtitle": "Create a new password for your account",
+  "new_password_label": "New Password",
+  "new_password_hint": "Must be at least 8 characters",
+  "confirm_password_label": "Confirm Password",
+  "confirm_password_hint": "Re-enter the new password",
+  "enter_new_password_error": "Please enter a new password",
+  "password_too_short_error": "Password must be at least 8 characters long",
+  "enter_confirm_password_error": "Please confirm your password",
+  "passwords_do_not_match_error": "Passwords do not match",
+  "update_password_button": "Update Password",
+  "no_email_found_error": "No email found for the user. Please sign in again.",
+  "invalid_reset_request_error": "Reset request is invalid or has expired",
+  "password_update_failed_error": "Failed to update password: ",
+
+  "password_changed_title": "Password Changed",
+  "password_changed_message": "Your password has been successfully updated",
+  "go_to_login": "Go to Login"
+
+
+
 }
 

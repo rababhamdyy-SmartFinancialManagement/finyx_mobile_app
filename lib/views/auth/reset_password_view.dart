@@ -1,12 +1,13 @@
-import 'package:finyx_mobile_app/widgets/shared/password_reset_handler.dart';
 import 'package:flutter/material.dart';
-import 'package:finyx_mobile_app/models/reset_password_model.dart';
-import 'package:finyx_mobile_app/widgets/shared/button_widget.dart';
-import 'package:finyx_mobile_app/widgets/custom_widgets/custom_textfield_widget.dart';
-import 'package:finyx_mobile_app/widgets/custom_widgets/custom_title_section.dart';
-import 'package:finyx_mobile_app/widgets/custom_widgets/custom_appbar.dart';
-import 'package:finyx_mobile_app/widgets/shared/curved_background_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../models/reset_password_model.dart';
+import '../../models/applocalization.dart';
+import '../../widgets/shared/password_reset_handler.dart';
+import '../../widgets/shared/button_widget.dart';
+import '../../widgets/custom_widgets/custom_textfield_widget.dart';
+import '../../widgets/custom_widgets/custom_title_section.dart';
+import '../../widgets/custom_widgets/custom_appbar.dart';
+import '../../widgets/shared/curved_background_widget.dart';
 
 class ResetPasswordView extends StatefulWidget {
   const ResetPasswordView({super.key});
@@ -27,16 +28,18 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
+    final loc = AppLocalizations.of(context)!;
+
     try {
       final handler = PasswordResetHandler();
       final email = _auth.currentUser?.email ?? '';
 
       if (email.isEmpty) {
-        throw Exception('No user email found. Please sign in again.');
+        throw Exception(loc.translate('no_email_found_error'));
       }
 
       if (!await handler.verifyResetRequest(email)) {
-        throw Exception('Invalid or expired reset request');
+        throw Exception(loc.translate('invalid_reset_request_error'));
       }
 
       await _model.updatePassword();
@@ -49,7 +52,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: ${e.toString()}'),
+            content: Text('${loc.translate("password_update_failed_error")}${e.toString()}'),
             duration: const Duration(seconds: 5),
           ),
         );
@@ -69,6 +72,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -98,15 +102,15 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                   children: [
                     SizedBox(height: screenHeight * 0.1),
                     CustomTitleSection(
-                      title: "Reset Password",
-                      subtitle: "Create a new password for your account",
+                      title: loc.translate("reset_password_title"),
+                      subtitle: loc.translate("reset_password_subtitle"),
                       screenWidth: screenWidth,
                       screenHeight: screenHeight,
                     ),
                     SizedBox(height: screenHeight * 0.05),
                     CustomTextField(
-                      label: "New Password",
-                      hint: "At least 8 characters",
+                      label: loc.translate("new_password_label"),
+                      hint: loc.translate("new_password_hint"),
                       controller: _model.newPasswordController,
                       obscureText: _obscureNewPassword,
                       suffixIcon: IconButton(
@@ -123,18 +127,18 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter new password';
+                          return loc.translate("enter_new_password_error");
                         }
                         if (value.length < 8) {
-                          return 'Password must be at least 8 characters';
+                          return loc.translate("password_too_short_error");
                         }
                         return null;
                       },
                     ),
                     SizedBox(height: screenHeight * 0.03),
                     CustomTextField(
-                      label: "Confirm Password",
-                      hint: "Re-enter your new password",
+                      label: loc.translate("confirm_password_label"),
+                      hint: loc.translate("confirm_password_hint"),
                       controller: _model.confirmPasswordController,
                       obscureText: _obscureConfirmPassword,
                       suffixIcon: IconButton(
@@ -151,10 +155,10 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please confirm password';
+                          return loc.translate("enter_confirm_password_error");
                         }
                         if (value != _model.newPasswordController.text) {
-                          return 'Passwords do not match';
+                          return loc.translate("passwords_do_not_match_error");
                         }
                         return null;
                       },
@@ -162,7 +166,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                     SizedBox(height: screenHeight * 0.05),
                     Center(
                       child: ButtonWidget(
-                        text: "Update Password",
+                        text: loc.translate("update_password_button"),
                         width: screenWidth * 0.7,
                         height: screenHeight * 0.06,
                         onPressed: _isLoading ? null : _updatePassword,

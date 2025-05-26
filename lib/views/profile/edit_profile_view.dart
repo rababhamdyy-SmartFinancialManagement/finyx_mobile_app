@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../cubits/profile/profile_cubit.dart';
 import '../../cubits/profile/profile_state.dart';
+import '../../models/applocalization.dart';
 import '../../widgets/custom_widgets/edit_profile_header.dart';
 import '../../widgets/custom_widgets/edit_profile_info_tile.dart';
 
@@ -11,6 +12,7 @@ class EditProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return BlocProvider(
       create: (context) => ProfileCubit(FlutterLocalNotificationsPlugin()),
       child: Scaffold(
@@ -18,7 +20,7 @@ class EditProfileScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           title: Text(
-            'Edit Profile',
+            loc.translate("edit_profile"),
             style: TextStyle(
               fontFamily: 'Righteous',
               fontSize: MediaQuery.of(context).size.width * 0.06,

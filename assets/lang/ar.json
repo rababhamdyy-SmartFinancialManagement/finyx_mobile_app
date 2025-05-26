@@ -37,7 +37,44 @@
   "Agree_Terms_Conditions": "أوافق على الشروط والأحكام",
   "Terms_Conditions_Alert": "يرجى الموافقة على الشروط والأحكام",
 
-  "Ok_Button": "موافق"
+  "Ok_Button": "موافق",
+
+
+  "profile_title": "الملف الشخصي",
+  "edit_profile": "تعديل الملف الشخصي",
+  "change_password": "تغيير كلمة المرور",
+  "delete_account": "حذف الحساب",
+  "log_out": "تسجيل الخروج",
+  "delete_account_confirmation": "هل أنت متأكد أنك تريد حذف حسابك؟",
+  "logout_confirmation": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+
+
+  "cancel": "إلغاء",
+  "yes": "نعم",
+  "delete_warning": "سيتم حذف حسابك وجميع البيانات نهائيًا.",
+  "enter_password": "أدخل كلمة المرور للتأكيد",
+  "incorrect_password": "كلمة المرور غير صحيحة",
+  "account_deleted_successfully": "تم حذف الحساب بنجاح",
+  "error_occurred": "حدث خطأ: ",
+
+  "reset_password_title": "إعادة تعيين كلمة المرور",
+  "reset_password_subtitle": "أنشئ كلمة مرور جديدة لحسابك",
+  "new_password_label": "كلمة المرور الجديدة",
+  "new_password_hint": "لا تقل عن 8 أحرف",
+  "confirm_password_label": "تأكيد كلمة المرور",
+  "confirm_password_hint": "أعد إدخال كلمة المرور الجديدة",
+  "enter_new_password_error": "من فضلك أدخل كلمة مرور جديدة",
+  "password_too_short_error": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
+  "enter_confirm_password_error": "من فضلك أكد كلمة المرور",
+  "passwords_do_not_match_error": "كلمتا المرور غير متطابقتين",
+  "update_password_button": "تحديث كلمة المرور",
+  "no_email_found_error": "لم يتم العثور على بريد إلكتروني للمستخدم. يرجى تسجيل الدخول مرة أخرى.",
+  "invalid_reset_request_error": "طلب إعادة التعيين غير صالح أو منتهي الصلاحية",
+  "password_update_failed_error": "فشل في تحديث كلمة المرور: ",
+
+  "password_changed_title": "تم تغيير كلمة المرور",
+  "password_changed_message": "تم تحديث كلمة المرور الخاصة بك بنجاح",
+  "go_to_login": "العودة لتسجيل الدخول"
 
 
 }
