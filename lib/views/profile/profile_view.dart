@@ -21,6 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
+        //profile
         title: Text(
           loc.translate("profile_title"),
           style: TextStyle(fontFamily: 'Righteous', fontSize: width * 0.06),
