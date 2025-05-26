@@ -37,8 +37,28 @@
   "Agree_Terms_Conditions": "أوافق على الشروط والأحكام",
   "Terms_Conditions_Alert": "يرجى الموافقة على الشروط والأحكام",
 
-  "Ok_Button": "موافق"
+  "Ok_Button": "موافق",
 
+"forgot_password_title": "نسيت كلمة المرور",
+  "forgot_password_subtitle": "لا تقلق! يحدث ذلك. من فضلك أدخل البريد الإلكتروني المرتبط بحسابك.",
+  "change_password_title": "تغيير كلمة المرور",
+  "change_password_subtitle": "من فضلك أدخل بريدك الإلكتروني لتصلك رابط تغيير كلمة المرور.",
+  "email_label": "البريد الإلكتروني",
+  "email_hint": "example123@gmail.com",
+  "email_required": "من فضلك أدخل بريدك الإلكتروني",
+  "invalid_email": "من فضلك أدخل بريدًا إلكترونيًا صحيحًا",
+  "send_button": "إرسال",
+  "reset_link_sent": "تم إرسال رابط إعادة التعيين إلى",
+
+  "email": "البريد الإلكتروني",
+  "enter_email": "أدخل بريدك الإلكتروني",
+  "password": "كلمة المرور",
+  "enter_password": "أدخل كلمة المرور",
+  "remember_me": "تذكرني",
+  "forget_password": "هل نسيت كلمة المرور؟",
+  "login": "تسجيل الدخول",
+  "login_failed": "فشل تسجيل الدخول، حاول مرة أخرى",
+  "unknown_user_type": "نوع المستخدم غير معروف"
 
 }
 

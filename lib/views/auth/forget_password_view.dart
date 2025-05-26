@@ -1,3 +1,5 @@
+import 'package:finyx_mobile_app/models/PasswordPageType.dart';
+import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/models/forget_password_model.dart';
 import 'package:finyx_mobile_app/widgets/shared/button_widget.dart';
@@ -7,7 +9,9 @@ import 'package:finyx_mobile_app/widgets/custom_widgets/custom_appbar.dart';
 import 'package:finyx_mobile_app/widgets/shared/curved_background_widget.dart';
 
 class ForgetPasswordView extends StatefulWidget {
-  const ForgetPasswordView({super.key});
+  final PasswordPageType pageType;
+
+  const ForgetPasswordView({super.key, required this.pageType});
 
   @override
   State<ForgetPasswordView> createState() => _ForgetPasswordViewState();
@@ -27,7 +31,7 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Reset link sent to ${_model.emailController.text}'),
+            content: Text('${loc.translate("reset_link_sent")} ${_model.emailController.text}'),
             duration: Duration(seconds: 5),
           ),
         );
@@ -46,6 +50,8 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
     }
   }
 
+  late AppLocalizations loc;
+
   @override
   void dispose() {
     _model.dispose();
@@ -56,6 +62,21 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    loc = AppLocalizations.of(context)!;
+
+    String title;
+    String subtitle;
+
+    switch (widget.pageType) {
+      case PasswordPageType.forget:
+        title = loc.translate("forgot_password_title");
+        subtitle = loc.translate("forgot_password_subtitle");
+        break;
+      case PasswordPageType.change:
+        title = loc.translate("change_password_title");
+        subtitle = loc.translate("change_password_subtitle");
+        break;
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -81,13 +102,12 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CustomTitleSection(
-                      title: "Forgot Password",
-                      subtitle:
-                          "Don’t worry! It happens. Please enter the email associated with your account.",
+                      title: title,
+                      subtitle: subtitle,
                       screenWidth: screenWidth,
                       screenHeight: screenHeight,
-                      titleColor: Colors.white, 
-                      subtitleColor: Colors.white.withValues(alpha: 0.7),
+                      titleColor: Colors.white,
+                      subtitleColor: Colors.white.withOpacity(0.7),
                     ),
                     SizedBox(height: screenHeight * 0.05),
                     Image.asset(
@@ -96,18 +116,16 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
                     ),
                     SizedBox(height: screenHeight * 0.05),
                     CustomTextField(
-                      label: "Email address",
-                      hint: "example123@gmail.com",
+                      label: loc.translate("email_label"),
+                      hint: loc.translate("email_hint"),
                       controller: _model.emailController,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
+                          return loc.translate("email_required");
                         }
-                        if (!RegExp(
-                          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                        ).hasMatch(value)) {
-                          return 'Please enter a valid email';
+                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                          return loc.translate("invalid_email");
                         }
                         return null;
                       },
@@ -115,7 +133,7 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
                     SizedBox(height: screenHeight * 0.04),
                     Center(
                       child: ButtonWidget(
-                        text: "Send",
+                        text: loc.translate("send_button"),
                         width: screenWidth * 0.7,
                         height: screenHeight * 0.06,
                         onPressed: _isLoading ? null : _sendResetEmail,

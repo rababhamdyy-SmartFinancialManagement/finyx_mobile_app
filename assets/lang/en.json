@@ -37,6 +37,27 @@
   "Agree_Terms_Conditions": "I agree to the Terms & Conditions",
   "Terms_Conditions_Alert": "Please agree to the Terms & Conditions",
 
-  "Ok_Button": "Ok"
+  "Ok_Button": "Ok",
+
+  "forgot_password_title": "Forgot Password",
+  "forgot_password_subtitle": "Don’t worry! It happens. Please enter the email associated with your account.",
+  "change_password_title": "Change Password",
+  "change_password_subtitle": "Please enter your email to receive a password change link.",
+  "email_label": "Email address",
+  "email_hint": "example123@gmail.com",
+  "email_required": "Please enter your email",
+  "invalid_email": "Please enter a valid email",
+  "send_button": "Send",
+  "reset_link_sent": "Reset link sent to",
+
+  "email": "Email",
+  "enter_email": "Enter your email",
+  "password": "Password",
+  "enter_password": "Enter your password",
+  "remember_me": "Remember me",
+  "forget_password": "Forget password?",
+  "login": "Login",
+  "login_failed": "Login failed, please try again",
+  "unknown_user_type": "Unknown user type"
 }
 

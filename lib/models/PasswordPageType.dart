@@ -1,0 +1,1 @@
+enum PasswordPageType { forget, change }
