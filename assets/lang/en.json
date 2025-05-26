@@ -58,6 +58,18 @@
   "forget_password": "Forget password?",
   "login": "Login",
   "login_failed": "Login failed, please try again",
-  "unknown_user_type": "Unknown user type"
+  "unknown_user_type": "Unknown user type",
+
+  "email_or_password_empty": "Email or password cannot be empty",
+  "login_failed_user_not_found": "Login failed. User not found.",
+  "logged_in_individual": "Logged in as Individual",
+  "logged_in_business": "Logged in as Business",
+  "login_error": "Login error",
+  "unexpected_error": "Unexpected error",
+  "google_sign_in_cancelled": "Google sign-in cancelled",
+  "google_sign_in_failed": "Google sign-in failed",
+  "logged_in_google_individual": "Logged in with Google (Individual)",
+  "logged_in_google_business": "Logged in with Google (Business)",
+  "google_sign_in_error": "Google sign-in error"
 }
 

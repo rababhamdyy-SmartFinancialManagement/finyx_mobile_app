@@ -22,6 +22,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final LoginModel loginModel = LoginModel();
 
   @override
+  void initState() {
+    super.initState();
+    loginModel.loadSavedCredentials().then((_) {
+      setState(() {});
+    });
+  }
+
+  @override
   void dispose() {
     loginModel.dispose();
     super.dispose();
