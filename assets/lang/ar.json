@@ -94,7 +94,39 @@
   "losses": "الخسائر",
   "transfer": "التحويل",
   "eSalaries": "الرواتب",
-  "loan": "القرض"
+  "loan": "القرض",
+
+  "forgot_password_title": "نسيت كلمة المرور",
+  "forgot_password_subtitle": "لا تقلق! يحدث ذلك. من فضلك أدخل البريد الإلكتروني المرتبط بحسابك.",
+  "change_password_title": "تغيير كلمة المرور",
+  "change_password_subtitle": "من فضلك أدخل بريدك الإلكتروني لتصلك رابط تغيير كلمة المرور.",
+  "email_label": "البريد الإلكتروني",
+  "email_hint": "example123@gmail.com",
+  "email_required": "من فضلك أدخل بريدك الإلكتروني",
+  "invalid_email": "من فضلك أدخل بريدًا إلكترونيًا صحيحًا",
+  "send_button": "إرسال",
+  "reset_link_sent": "تم إرسال رابط إعادة التعيين إلى",
+
+  "email": "البريد الإلكتروني",
+  "enter_email": "أدخل بريدك الإلكتروني",
+  "password": "كلمة المرور",
+  "remember_me": "تذكرني",
+  "forget_password": "هل نسيت كلمة المرور؟",
+  "login": "تسجيل الدخول",
+  "login_failed": "فشل تسجيل الدخول، حاول مرة أخرى",
+  "unknown_user_type": "نوع المستخدم غير معروف",
+
+   "email_or_password_empty": "البريد الإلكتروني أو كلمة المرور لا يمكن أن تكون فارغة",
+  "login_failed_user_not_found": "فشل تسجيل الدخول. المستخدم غير موجود.",
+  "logged_in_individual": "تم تسجيل الدخول كمستخدم فردي",
+  "logged_in_business": "تم تسجيل الدخول كمستخدم تجاري",
+  "login_error": "خطأ في تسجيل الدخول",
+  "unexpected_error": "خطأ غير متوقع",
+  "google_sign_in_cancelled": "تم إلغاء تسجيل الدخول عبر جوجل",
+  "google_sign_in_failed": "فشل تسجيل الدخول عبر جوجل",
+  "logged_in_google_individual": "تم تسجيل الدخول عبر جوجل (فردي)",
+  "logged_in_google_business": "تم تسجيل الدخول عبر جوجل (تجاري)",
+  "google_sign_in_error": "خطأ في تسجيل الدخول عبر جوجل"
 
 
 }
