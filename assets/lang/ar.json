@@ -126,7 +126,52 @@
   "google_sign_in_failed": "فشل تسجيل الدخول عبر جوجل",
   "logged_in_google_individual": "تم تسجيل الدخول عبر جوجل (فردي)",
   "logged_in_google_business": "تم تسجيل الدخول عبر جوجل (تجاري)",
-  "google_sign_in_error": "خطأ في تسجيل الدخول عبر جوجل"
+  "google_sign_in_error": "خطأ في تسجيل الدخول عبر جوجل",
+  "add_new_item": "إضافة عنصر جديد",
+  "item_name": "اسم العنصر",
+  "price": "السعر",
+  "Enter Price": "أدخل السعر",
+  "month": "شهر",
+  "item_name_error": "من فضلك أدخل اسم العنصر",
+  "price_error": "أدخل سعرًا صحيحًا",
+  "save": "حفظ",
+
+  "otp_verification": "التحقق من OTP",
+  "resend_otp": "إعادة إرسال OTP",
+  "otp_sent_successfully": "تم إرسال رمز التحقق بنجاح!",
+  "otp_send_failed": "فشل في إرسال رمز التحقق",
+  "otp_error": "خطأ في التحقق من الرمز",
+
+  "individual": "فرد",
+  "business": "شركة",
+  "confirm_password": "تأكيد كلمة المرور",
+  "phone_number": "رقم الهاتف",
+  "enter_phone_number": "أدخل رقم الهاتف",
+  "sign_up": "إنشاء حساب",
+
+  "full_name": "الاسم الكامل",
+  "enter_full_name": "أدخل اسمك الكامل",
+  "dob": "تاريخ الميلاد",
+  "dob_format": "يوم/شهر/سنة",
+  "address": "العنوان",
+  "enter_address": "أدخل عنوانك",
+  "monthly_income": "الدخل الشهري",
+  "enter_income": "أدخل راتبك الشهري",
+  "national_id": "الرقم القومي",
+  "enter_national_id": "أدخل رقمك القومي",
+
+  "Add New Bill": "إضافة فاتورة جديدة",
+  "Club": "نادي",
+  "Mobile Credit": "رصيد موبايل",
+  "Car": "سيارة",
+  "Voucher": "قسيمة",
+  "Assurance": "تأمين",
+  "Cinema": "سينما",
+  "Association": "جمعية",
+  "More": "المزيد",
+  "Licenses": "تراخيص",
+  "Accrued Interest": "فوائد مستحقة",
+  "Admin Expenses": "المصاريف الإدارية"
 
 
 }

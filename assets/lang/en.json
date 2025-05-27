@@ -95,6 +95,18 @@
   "eSalaries": "E Salaries",
   "loan": "Loan",
 
+  "Add New Bill": "Add New Bill",
+  "Club": "Club",
+  "Mobile Credit": "Mobile Credit",
+  "Car": "Car",
+  "Voucher": "Voucher",
+  "Assurance": "Assurance",
+  "Cinema": "Cinema",
+  "Association": "Association",
+  "More": "More",
+  "Licenses": "Licenses",
+  "Accrued Interest": "Accrued Interest",
+
 
 "forgot_password_title": "Forgot Password",
   "forgot_password_subtitle": "Don’t worry! It happens. Please enter the email associated with your account.",
@@ -126,7 +138,40 @@
   "google_sign_in_failed": "Google sign-in failed",
   "logged_in_google_individual": "Logged in with Google (Individual)",
   "logged_in_google_business": "Logged in with Google (Business)",
-  "google_sign_in_error": "Google sign-in error"
+  "google_sign_in_error": "Google sign-in error",
+  "add_new_item": "Add New Item",
+  "item_name": "Item Name",
+  "price": "Price",
+  "Enter Price": "Enter price",
+  "month": "month",
+  "item_name_error": "Please enter a name",
+  "price_error": "Enter valid price",
+  "save": "Save",
+
+
+  "otp_verification": "OTP Verification",
+  "resend_otp": "Resend OTP",
+  "otp_sent_successfully": "OTP sent successfully!",
+  "otp_send_failed": "Failed to send OTP",
+  "otp_error": "Error verifying OTP",
+
+  "individual": "Individual",
+  "business": "Business",
+  "confirm_password": "Confirm Password",
+  "phone_number": "Phone Number",
+  "enter_phone_number": "Enter your phone number",
+  "sign_up": "Sign Up",
+
+  "full_name": "Full Name",
+  "enter_full_name": "Enter your full name",
+  "dob": "Date of Birth",
+  "dob_format": "DD/MM/YYYY",
+  "address": "Address",
+  "enter_address": "Enter your address",
+  "monthly_income": "Monthly Income",
+  "enter_income": "Enter your monthly salary",
+  "national_id": "National ID",
+  "enter_national_id": "Enter your national ID"
 
 
 }

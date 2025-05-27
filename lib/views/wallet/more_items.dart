@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:finyx_mobile_app/widgets/wallet/add_dialog.dart';
 import 'package:finyx_mobile_app/widgets/wallet/price_dialog.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
 
-// Displays the "More Items" dialog, with content varying based on user type
 Future<void> moreItems(BuildContext context, UserType userType) async {
   await showDialog(
     context: context,
@@ -15,14 +15,13 @@ Future<void> moreItems(BuildContext context, UserType userType) async {
           return MoreItems(
             state: state,
             userType: userType,
-          ); // Pass userType to MoreItems widget
+          );
         },
       );
     },
   );
 }
 
-// Widget to display the "More Items" dialog with different options based on user type
 class MoreItems extends StatelessWidget {
   final PriceState state;
   final UserType userType;
@@ -33,6 +32,7 @@ class MoreItems extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final cubit = context.read<PriceCubit>(); // Access the PriceCubit
+    final loc = AppLocalizations.of(context)!; // Translation instance
 
     // List of icon colors for the items
     List<Color> iconColors = [
@@ -70,28 +70,28 @@ class MoreItems extends StatelessWidget {
       Icons.now_widgets_outlined, // More
     ];
 
-    // Names for individual users
+    // Names for individual users (using loc.translate)
     List<String> individualNames = [
-      'Club',
-      'Mobile Credit',
-      'Car',
-      'Voucher',
-      'Assurance',
-      'Cinema',
-      'Association',
-      'More',
+      loc.translate('Club'),
+      loc.translate('Mobile Credit'),
+      loc.translate('Car'),
+      loc.translate('Voucher'),
+      loc.translate('Assurance'),
+      loc.translate('Cinema'),
+      loc.translate('Association'),
+      loc.translate('More'),
     ];
 
-    // Names for business users
+    // Names for business users (using loc.translate)
     List<String> businessNames = [
-      'Licenses',
-      'Accrued Interest',
-      'Admin Expenses',
-      'Electricity',
-      'Internet',
-      'Shipping',
-      'Zakat',
-      'More',
+      loc.translate('Licenses'),
+      loc.translate('Accrued Interest'),
+      loc.translate('Admin Expenses'),
+      loc.translate('Electricity'),
+      loc.translate('Internet'),
+      loc.translate('Shipping'),
+      loc.translate('Zakat'),
+      loc.translate('More Business'),
     ];
 
     // Choose the appropriate icons and names based on the user type
@@ -106,7 +106,7 @@ class MoreItems extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Center(
         child: Text(
-          'Add New Bill',
+          loc.translate('Add New Bill'),
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -130,7 +130,7 @@ class MoreItems extends StatelessWidget {
                 Navigator.of(context).pop(); // Close the dialog first
 
                 // Show the appropriate dialog based on the selected item
-                if (label == 'More' || label == 'More Business') {
+                if (label == loc.translate('More') || label == loc.translate('More Business')) {
                   await showDialog(
                     context: context,
                     builder:

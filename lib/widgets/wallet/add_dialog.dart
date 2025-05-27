@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
@@ -19,12 +20,12 @@ class AddDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final bool isDark = theme.brightness == Brightness.dark;
-    final Color iconColor =
-        isDark
-            ? const Color.fromARGB(255, 219, 159, 243)
-            : const Color(0xFF3E0555);
+    final loc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final iconColor = isDark
+        ? const Color.fromARGB(255, 219, 159, 243)
+        : const Color(0xFF3E0555);
 
     return BlocBuilder<PriceCubit, PriceState>(
       builder: (context, state) {
@@ -47,7 +48,7 @@ class AddDialog extends StatelessWidget {
               ),
               const SizedBox(width: 16),
               Text(
-                'Add New Item',
+               loc.translate("add_new_item"),
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -64,7 +65,7 @@ class AddDialog extends StatelessWidget {
                 controller: nameController,
                 style: TextStyle(color: iconColor),
                 decoration: InputDecoration(
-                  hintText: 'Item Name',
+                  hintText: loc.translate("item_name"),
                   hintStyle: TextStyle(color: iconColor.withOpacity(0.6)),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: iconColor),
@@ -72,7 +73,8 @@ class AddDialog extends StatelessWidget {
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: iconColor),
                   ),
-                  errorText: state.showError ? 'Please enter a name' : null,
+                  errorText:
+                      state.showError ? loc.translate("item_name_error") : null,
                 ),
               ),
               const SizedBox(height: 10),
@@ -81,7 +83,7 @@ class AddDialog extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 style: TextStyle(color: iconColor),
                 decoration: InputDecoration(
-                  hintText: 'Price',
+                  hintText: loc.translate("price"),
                   hintStyle: TextStyle(color: iconColor.withOpacity(0.6)),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: iconColor),
@@ -89,7 +91,8 @@ class AddDialog extends StatelessWidget {
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: iconColor),
                   ),
-                  errorText: state.showError ? 'Enter valid price' : null,
+                  errorText:
+                      state.showError ? loc.translate("price_error") : null,
                 ),
               ),
             ],
@@ -104,7 +107,7 @@ class AddDialog extends StatelessWidget {
                     Navigator.of(context).pop();
                   },
                   child: Text(
-                    'Cancel',
+                    loc.translate("cancel"),
                     style: TextStyle(color: iconColor, fontFamily: 'Poppins'),
                   ),
                 ),
@@ -112,7 +115,8 @@ class AddDialog extends StatelessWidget {
                 TextButton(
                   onPressed: () async {
                     final name = nameController.text.trim();
-                    final price = double.tryParse(priceController.text.trim());
+                    final price =
+                        double.tryParse(priceController.text.trim());
 
                     if (name.isEmpty || price == null || price <= 0) {
                       cubit.setShowError(true);
@@ -125,7 +129,7 @@ class AddDialog extends StatelessWidget {
                     Navigator.of(context).pop();
                   },
                   child: Text(
-                    'Save',
+                    loc.translate("save"),
                     style: TextStyle(color: iconColor, fontFamily: "Poppins"),
                   ),
                 ),

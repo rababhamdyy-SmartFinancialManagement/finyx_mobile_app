@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:flutter/material.dart';
 
 class WalletListTile extends StatelessWidget {
@@ -27,8 +28,7 @@ class WalletListTile extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final Color trailingBackgroundColor =
         theme.brightness == Brightness.dark
-            ? theme
-                .cardColor // Get the background color from the theme for dark mode
+            ? theme.cardColor // Get the background color from the theme for dark mode
             : Colors.white; // Use white for light mode
 
     return Padding(
@@ -41,7 +41,7 @@ class WalletListTile extends StatelessWidget {
           label,
           style: const TextStyle(fontSize: 16, fontFamily: "Poppins"),
         ),
-        trailing: _buildTrailingButton(trailingBackgroundColor),
+        trailing: _buildTrailingButton(trailingBackgroundColor, context),
       ),
     );
   }
@@ -58,7 +58,10 @@ class WalletListTile extends StatelessWidget {
     );
   }
 
-  Widget _buildTrailingButton(Color trailingBackgroundColor) {
+  // أضفنا context هنا عشان نستخدم loc.translate داخل النص
+  Widget _buildTrailingButton(Color trailingBackgroundColor, BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -70,7 +73,9 @@ class WalletListTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
-          price != null ? 'EGP $price/month' : 'Enter Price',
+          price != null
+              ? 'EGP $price/${loc.translate('month')}' 
+              : loc.translate('Enter Price'),
           style: const TextStyle(fontSize: 14, fontFamily: "Poppins"),
           textAlign: TextAlign.center,
         ),

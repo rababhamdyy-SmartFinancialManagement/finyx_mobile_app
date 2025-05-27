@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
-import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../cubits/wallet/price_cubit.dart';
+import '../../cubits/wallet/shared_pref_helper.dart';
+import '../../models/applocalization.dart';
 
 class PriceDialog extends StatelessWidget {
   final TextEditingController priceController;
@@ -23,31 +24,25 @@ class PriceDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final bool isDark = theme.brightness == Brightness.dark;
+    final loc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
     return BlocBuilder<PriceCubit, PriceState>(
-      // Listens to the state changes in PriceCubit
       builder: (context, state) {
         return AlertDialog(
-          backgroundColor: theme.dialogBackgroundColor, // ← ياخد اللون من الثيم
-
+          backgroundColor: theme.dialogBackgroundColor,
           shape: RoundedRectangleBorder(
-            // Rounded corners for the dialog
             borderRadius: BorderRadius.circular(16),
           ),
-          title:
-              _buildTitle(), // Method to build the title section of the dialog
-          content: _buildContent(
-            state,
-          ), // Method to build the content of the dialog
-          actions: _buildActions(context, state), // Buttons for Cancel and Save
+          title: _buildTitle(loc),
+          content: _buildContent(loc, state),
+          actions: _buildActions(context, loc, state),
         );
       },
     );
   }
 
-  // Builds the title section with an icon and label
-  Widget _buildTitle() {
+  Widget _buildTitle(AppLocalizations loc) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -56,93 +51,80 @@ class PriceDialog extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: iconColor,
-            ), // Border color based on iconColor
+            border: Border.all(color: iconColor),
           ),
-          child: Icon(icon, size: 40, color: iconColor), // Display the icon
+          child: Icon(icon, size: 40, color: iconColor),
         ),
         const SizedBox(width: 16),
         Text(
-          label, // Display the label (e.g., item name)
+          label,
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
             fontFamily: "Poppins",
-            color: iconColor, // Text color based on iconColor
+            color: iconColor,
           ),
         ),
       ],
     );
   }
 
-  // Builds the content section with a price input field
-  Widget _buildContent(PriceState state) {
+  Widget _buildContent(AppLocalizations loc, PriceState state) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         TextField(
-          controller: priceController, // Bind the controller for input
+          controller: priceController,
+          keyboardType: TextInputType.number,
           decoration: InputDecoration(
-            hintText: 'Enter Price', // Placeholder text
-            border: OutlineInputBorder(),
-            errorText:
-                state.showError
-                    ? 'Please enter a valid price'
-                    : null, // Error handling for invalid input
+            hintText: loc.translate("price"),
+            border: const OutlineInputBorder(),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: iconColor), // Focused border color
+              borderSide: BorderSide(color: iconColor),
             ),
+            errorText: state.showError
+                ? loc.translate("price_error")
+                : null,
           ),
-          keyboardType:
-              TextInputType.number, // Numeric keyboard for price input
         ),
-        const SizedBox(height: 16), // Space between input and buttons
+        const SizedBox(height: 16),
       ],
     );
   }
 
-  // Builds the actions (Cancel and Save) buttons
-  List<Widget> _buildActions(BuildContext context, PriceState state) {
+  List<Widget> _buildActions(
+      BuildContext context, AppLocalizations loc, PriceState state) {
     return [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           TextButton(
             onPressed: () {
-              cubit.setShowError(false); // Hide error message
-              Navigator.of(context).pop(); // Close the dialog
+              cubit.setShowError(false);
+              Navigator.of(context).pop();
             },
             child: Text(
-              'Cancel', // Cancel button text
+              loc.translate("cancel"),
               style: TextStyle(color: iconColor, fontFamily: "Poppins"),
             ),
           ),
           const SizedBox(width: 10),
           TextButton(
             onPressed: () async {
-              double? price = double.tryParse(
-                priceController.text,
-              ); // Try to parse the price input
+              final price = double.tryParse(priceController.text.trim());
+
               if (price == null || price <= 0) {
-                cubit.setShowError(true); // Show error if input is invalid
+                cubit.setShowError(true);
                 return;
               }
 
-              // Update the price in the cubit state
               cubit.updatePrice(label, price);
-
-              // Save the updated prices in SharedPreferences
               await SharedPrefsHelper.savePrices(cubit.state.prices);
-
-              // Hide error message after successful save
               cubit.setShowError(false);
-
-              // Close the dialog
               Navigator.of(context).pop();
             },
             child: Text(
-              'Save', // Save button text
+              loc.translate("save"),
               style: TextStyle(color: iconColor, fontFamily: "Poppins"),
             ),
           ),
