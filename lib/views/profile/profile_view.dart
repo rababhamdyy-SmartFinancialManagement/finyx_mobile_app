@@ -1,3 +1,5 @@
+import 'package:finyx_mobile_app/models/PasswordPageType.dart';
+import 'package:finyx_mobile_app/views/auth/forget_password_view.dart';
 import 'package:flutter/material.dart';
 import '../../models/applocalization.dart';
 import '../../widgets/buttons_widgets/custom_container_button.dart';
@@ -45,9 +47,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
               CustomContainerButton(
                 text: loc.translate("change_password"),
                 icon: Icons.lock_outline,
-                onPressed:
-                    () => Navigator.pushNamed(context, '/reset_password_view'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => ForgetPasswordView(
+                            pageType: PasswordPageType.change,
+                          ),
+                    ),
+                  );
+                },
               ),
+
               const SizedBox(height: 16),
               CustomContainerButton(
                 text: loc.translate("delete_account"),

@@ -1,4 +1,7 @@
+import 'package:finyx_mobile_app/models/PasswordPageType.dart';
+import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
+import 'package:finyx_mobile_app/views/auth/forget_password_view.dart';
 import 'package:finyx_mobile_app/widgets/shared/custom_snack_bar_widget.dart';
 import 'package:flutter/material.dart';
 import '../../models/login_model.dart';
@@ -7,7 +10,6 @@ import '../../widgets/shared/button_widget.dart';
 import '../../widgets/custom_widgets/custom_textfield_widget.dart';
 import '../../widgets/splash/finyx_widget.dart';
 import '../../cubits/wallet/shared_pref_helper.dart';
-//import '../../models/user_type.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -20,6 +22,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final LoginModel loginModel = LoginModel();
 
   @override
+  void initState() {
+    super.initState();
+    loginModel.loadSavedCredentials().then((_) {
+      setState(() {});
+    });
+  }
+
+  @override
   void dispose() {
     loginModel.dispose();
     super.dispose();
@@ -29,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: SafeArea(
@@ -45,15 +56,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 FinyxWidget(fontSize: screenWidth * 0.14),
                 SizedBox(height: screenHeight * 0.1),
                 CustomTextField(
-                  label: "Email",
-                  hint: "Enter your email",
+                  label: loc.translate("email"),
+                  hint: loc.translate("enter_email"),
                   controller: loginModel.emailController,
                   keyboardType: TextInputType.emailAddress,
                 ),
                 SizedBox(height: screenHeight * 0.02),
                 CustomTextField(
-                  label: "Password",
-                  hint: "Enter your password",
+                  label: loc.translate("password"),
+                  hint: loc.translate("enter_password"),
                   controller: loginModel.passwordController,
                   obscureText: true,
                 ),
@@ -72,52 +83,55 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           activeColor: const Color(0xFF3E0555),
                         ),
-                        const Text(
-                          "Remember me",
-                          style: TextStyle(color: Colors.blueGrey),
+                        Text(
+                          loc.translate("remember_me"),
+                          style: const TextStyle(color: Colors.blueGrey),
                         ),
                       ],
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/forget_password');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ForgetPasswordView(
+                              pageType: PasswordPageType.forget,
+                            ),
+                          ),
+                        );
                       },
-                      child: const Text(
-                        "Forget password?",
-                      ),
+                      child: Text(loc.translate("forget_password")),
                     ),
                   ],
                 ),
                 SizedBox(height: screenHeight * 0.06),
                 ButtonWidget(
-                  text: "Login",
+                  text: loc.translate("login"),
                   width: screenWidth * 0.9,
                   height: screenHeight * 0.06,
                   onPressed: () async {
                     final result = await loginModel.loginUser(context);
                     if (result != null) {
                       final userType = await SharedPrefsHelper.getUserType();
-                      print(userType);
                       if (userType != null) {
                         Navigator.pushReplacementNamed(
                           context,
                           '/homepage',
-                          arguments:
-                              userType == 'individual'
-                                  ? UserType.individual
-                                  : UserType.business,
+                          arguments: userType == 'individual'
+                              ? UserType.individual
+                              : UserType.business,
                         );
                       } else {
                         CustomSnackbar.show(
                           context,
-                          'Unknown user type',
+                          loc.translate("unknown_user_type"),
                           isError: true,
                         );
                       }
                     } else {
                       CustomSnackbar.show(
                         context,
-                        'Login failed, please try again',
+                        loc.translate("login_failed"),
                         isError: true,
                       );
                     }
