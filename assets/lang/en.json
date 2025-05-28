@@ -171,7 +171,18 @@
   "monthly_income": "Monthly Income",
   "enter_income": "Enter your monthly salary",
   "national_id": "National ID",
-  "enter_national_id": "Enter your national ID"
+  "enter_national_id": "Enter your national ID",
+  "RegisterWith": "أو سجل باستخدام",
+  "already_have_account": "لديك حساب بالفعل؟ ",
+  "new_to_finyx": "جديد على Finyx؟ ",
+  "register_now": "سجل الآن",
+  "company_name": "Company Name",
+"company_location": "Company Location",
+"number_of_employees": "Number of Employees",
+"enter_number_of_employees": "Enter the number of employees",
+  "chat_bot_title": "Chat Bot",
+  "chat_start_message": "Press start to begin...",
+  "start_button": "Start"
 
 
 }

@@ -30,7 +30,8 @@ class HomepageBody extends StatelessWidget {
           children: [
             BlocBuilder<ProfileCubit, ProfileState>(
               builder: (context, profileState) {
-                final userName = profileState.name.isNotEmpty ? profileState.name : '...';
+                final userName =
+                    profileState.name.isNotEmpty ? profileState.name : '...';
 
                 return Row(
                   children: [
@@ -75,7 +76,7 @@ class HomepageBody extends StatelessWidget {
               create: (_) => ChartCubit(userType: userType),
               child: PieChartWidget(userType: userType),
             ),
-            SizedBox(height: screenWidth * 0.06),
+            SizedBox(height: screenWidth * 0.001),
             Text(
               loc.translate("information_list"),
               style: TextStyle(

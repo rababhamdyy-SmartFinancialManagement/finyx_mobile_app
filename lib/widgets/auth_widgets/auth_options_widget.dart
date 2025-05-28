@@ -1,16 +1,23 @@
+import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:flutter/material.dart';
 import 'auth_footer_text_widget.dart';
 import '../buttons_widgets/social_icon_button_widget.dart';
 import '../../models/login_model.dart';
 
-class SocialAuthButtons extends StatelessWidget {
+class SocialAuthButtons extends StatefulWidget {
   final bool isSignup;
 
   const SocialAuthButtons({super.key, this.isSignup = true});
 
   @override
+  State<SocialAuthButtons> createState() => _SocialAuthButtonsState();
+}
+
+class _SocialAuthButtonsState extends State<SocialAuthButtons> {
+  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    final loc = AppLocalizations.of(context)!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -27,18 +34,18 @@ class SocialAuthButtons extends StatelessWidget {
                   thickness: 0.7,
                   color: Theme.of(
                     context,
-                  ).textTheme.bodyMedium!.color!.withValues(alpha: 0.6),
+                  ).textTheme.bodyMedium!.color!.withAlpha(150),
                 ),
               ),
               Text(
-                " Or Register with ",
+                loc.translate("RegisterWith"),
                 style: TextStyle(
                   fontSize: screenWidth * 0.04,
                   fontWeight: FontWeight.w500,
                   fontFamily: "Poppins",
                   color: Theme.of(
                     context,
-                  ).textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
+                  ).textTheme.bodyMedium!.color!.withAlpha(200),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -48,7 +55,7 @@ class SocialAuthButtons extends StatelessWidget {
                   thickness: 0.7,
                   color: Theme.of(
                     context,
-                  ).textTheme.bodyMedium!.color!.withValues(alpha: 0.6),
+                  ).textTheme.bodyMedium!.color!.withAlpha(150),
                 ),
               ),
             ],
@@ -92,7 +99,7 @@ class SocialAuthButtons extends StatelessWidget {
           ],
         ),
         SizedBox(height: screenWidth * 0.07),
-        AuthFooterText(isSignup: isSignup, screenWidth: screenWidth),
+        AuthFooterText(isSignup: widget.isSignup, screenWidth: screenWidth),
       ],
     );
   }

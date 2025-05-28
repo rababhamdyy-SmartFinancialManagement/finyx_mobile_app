@@ -4,6 +4,7 @@ import 'package:finyx_mobile_app/widgets/auth_widgets/auth_options_widget.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_textfield_widget.dart';
 import 'package:finyx_mobile_app/widgets/shared/button_widget.dart';
 import 'package:finyx_mobile_app/widgets/splash/finyx_widget.dart';
+import 'package:finyx_mobile_app/models/applocalization.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -19,6 +20,7 @@ class _SignUpScreen extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: SafeArea(
@@ -52,58 +54,51 @@ class _SignUpScreen extends State<SignUpScreen> {
                     minWidth: screenWidth * 0.37,
                     minHeight: screenHeight * 0.05,
                   ),
-                  children: const [
+                  children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 8,
-                      ),
-                      child: Text("Individual"),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                      child: Text(loc.translate("individual")),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 8,
-                      ),
-                      child: Text("Business"),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                      child: Text(loc.translate("business")),
                     ),
                   ],
                 ),
                 SizedBox(height: screenHeight * 0.04),
                 CustomTextField(
-                  label: "Email",
-                  hint: "Enter your email",
+                  label: loc.translate("email"),
+                  hint: loc.translate("enter_email"),
                   controller: signUpModel.emailController,
                   keyboardType: TextInputType.emailAddress,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
-                  label: "Password",
-                  hint: "Enter your password",
+                  label: loc.translate("password"),
+                  hint: loc.translate("enter_password"),
                   controller: signUpModel.passwordController,
                   obscureText: true,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
-                  label: "Confirm Password",
-                  hint: "Enter your password",
+                  label: loc.translate("confirm_password"),
+                  hint: loc.translate("enter_password"),
                   controller: signUpModel.confirmPasswordController,
                   obscureText: true,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
-                  label: "Phone Number",
-                  hint: "Enter your phone number",
+                  label: loc.translate("phone_number"),
+                  hint: loc.translate("enter_phone_number"),
                   controller: signUpModel.phoneNumberController,
                   keyboardType: TextInputType.phone,
                 ),
                 SizedBox(height: screenHeight * 0.03),
                 ButtonWidget(
-                  text: "Sign Up",
+                  text: loc.translate("sign_up"),
                   onPressed: () async {
                     final result = await signUpModel.registerUser(context);
                     if (result == null) {
-                      // Error handling is already done in registerUser
                       return;
                     }
                   },

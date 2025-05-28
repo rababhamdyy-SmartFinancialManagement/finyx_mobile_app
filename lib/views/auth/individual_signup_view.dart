@@ -5,6 +5,7 @@ import '../../widgets/auth_widgets/auth_options_widget.dart';
 import '../../widgets/shared/button_widget.dart';
 import '../../widgets/custom_widgets/custom_textfield_widget.dart';
 import '../../widgets/splash/finyx_widget.dart';
+import '../../models/applocalization.dart';
 
 class IndividualSignupView extends StatefulWidget {
   const IndividualSignupView({super.key});
@@ -26,6 +27,7 @@ class _IndividualSignupViewState extends State<IndividualSignupView> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: SafeArea(
@@ -42,42 +44,42 @@ class _IndividualSignupViewState extends State<IndividualSignupView> {
                 FinyxWidget(fontSize: screenWidth * 0.14),
                 SizedBox(height: screenHeight * 0.04),
                 CustomTextField(
-                  label: "Full Name",
-                  hint: "Enter your full name",
+                  label: loc.translate("full_name"),
+                  hint: loc.translate("enter_full_name"),
                   controller: signupModel.fullNameController,
                   keyboardType: TextInputType.name,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
-                  label: "Date of Birth",
-                  hint: "DD/MM/YYYY",
+                  label: loc.translate("dob"),
+                  hint: loc.translate("dob_format"),
                   controller: signupModel.dobController,
                   keyboardType: TextInputType.datetime,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
-                  label: "Address",
-                  hint: "Enter your address",
+                  label: loc.translate("address"),
+                  hint: loc.translate("enter_address"),
                   controller: signupModel.addressController,
                   keyboardType: TextInputType.streetAddress,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
-                  label: "Monthly Income",
-                  hint: "Enter your monthly salary",
+                  label: loc.translate("monthly_income"),
+                  hint: loc.translate("enter_income"),
                   controller: signupModel.incomeController,
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
-                  label: "National ID",
-                  hint: "Enter your national ID",
+                  label: loc.translate("national_id"),
+                  hint: loc.translate("enter_national_id"),
                   controller: signupModel.nationalIdController,
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: screenHeight * 0.03),
                 ButtonWidget(
-                  text: "Sign Up",
+                  text: loc.translate("sign_up"),
                   onPressed: () async {
                     bool success = await signupModel.saveIndividualData(
                       context,

@@ -5,6 +5,7 @@ import '../../widgets/auth_widgets/auth_options_widget.dart';
 import '../../widgets/shared/button_widget.dart';
 import '../../widgets/custom_widgets/custom_textfield_widget.dart';
 import '../../widgets/splash/finyx_widget.dart';
+import '../../models/applocalization.dart';
 
 class BusinessSignUpView extends StatefulWidget {
   const BusinessSignUpView({super.key});
@@ -26,6 +27,7 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: SafeArea(
@@ -42,42 +44,42 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
                 FinyxWidget(fontSize: screenWidth * 0.14),
                 SizedBox(height: screenHeight * 0.04),
                 CustomTextField(
-                  label: "Full Name",
-                  hint: "Enter your full name",
+                  label: loc.translate("full_name"),
+                  hint: loc.translate("enter_full_name"),
                   controller: signUpModel.fullNameController,
                   keyboardType: TextInputType.name,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
-                  label: "Company Name",
+                  label: loc.translate("company_name"),
                   hint: "com.example.company",
                   controller: signUpModel.companyNameController,
                   keyboardType: TextInputType.name,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
-                  label: "Company Location",
+                  label: loc.translate("company_location"),
                   hint: "Egypt",
                   controller: signUpModel.companyLocationController,
                   keyboardType: TextInputType.streetAddress,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
-                  label: "Budget",
-                  hint: "Enter your monthly salary",
+                  label: loc.translate("monthly_income"),
+                  hint: loc.translate("enter_income"),
                   controller: signUpModel.budgetController,
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
-                  label: "Number of Employees",
-                  hint: "Enter the number of employees",
+                  label: loc.translate("number_of_employees"),
+                  hint: loc.translate("enter_number_of_employees"),
                   controller: signUpModel.numberOfEmployeesController,
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: screenHeight * 0.03),
                 ButtonWidget(
-                  text: "Sign Up",
+                  text: loc.translate("sign_up"),
                   onPressed: () async {
                     bool success = await signUpModel.saveBusinessData(context);
                     if (success) {

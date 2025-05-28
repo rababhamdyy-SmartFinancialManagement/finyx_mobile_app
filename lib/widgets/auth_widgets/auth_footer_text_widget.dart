@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:finyx_mobile_app/models/applocalization.dart'; // تأكد أنك مستورد AppLocalizations
 
 class AuthFooterText extends StatelessWidget {
   final bool isSignup;
@@ -13,6 +14,8 @@ class AuthFooterText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
@@ -20,16 +23,20 @@ class AuthFooterText extends StatelessWidget {
           fontSize: screenWidth * 0.04,
           fontWeight: FontWeight.w500,
           fontFamily: "Poppins",
-          color: Theme.of(
-            context,
-          ).textTheme.bodyMedium!.color!.withValues(alpha: 0.6),
+          color: Theme.of(context).textTheme.bodyMedium!.color!.withAlpha(150),
         ),
         children: [
           TextSpan(
-            text: isSignup ? "Already have an account? " : "New to Finyx? ",
+            text:
+                isSignup
+                    ? loc.translate("already_have_account")
+                    : loc.translate("new_to_finyx"),
           ),
           TextSpan(
-            text: isSignup ? "Log in" : "Register Now",
+            text:
+                isSignup
+                    ? loc.translate("login")
+                    : loc.translate("register_now"),
             style: TextStyle(
               fontSize: screenWidth * 0.04,
               fontWeight: FontWeight.bold,
