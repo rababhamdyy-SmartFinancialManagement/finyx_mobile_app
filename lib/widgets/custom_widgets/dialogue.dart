@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart'; // ✅ استيراد Google Sign-In
 import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
 
 import '../../cubits/profile/profile_cubit.dart';
@@ -11,7 +12,7 @@ class Dialogue extends StatefulWidget {
   final String actionType;
 
   const Dialogue({Key? key, required this.message, required this.actionType})
-      : super(key: key);
+    : super(key: key);
 
   @override
   State<Dialogue> createState() => _DialogueState();
@@ -39,13 +40,17 @@ class _DialogueState extends State<Dialogue> {
 
     try {
       if (widget.actionType == 'logout') {
-        await FirebaseAuth.instance.signOut();
+        final googleSignIn = GoogleSignIn();
+        await googleSignIn.signOut(); // ✅ تسجيل الخروج من Google
+
+        await FirebaseAuth.instance.signOut(); // تسجيل الخروج من Firebase
         await SharedPrefsHelper.saveLoginState(false);
+
         if (mounted) {
           Navigator.pushNamedAndRemoveUntil(
             context,
             '/login',
-                (route) => false,
+            (route) => false,
           );
         }
       } else if (widget.actionType == 'delete') {
@@ -63,7 +68,7 @@ class _DialogueState extends State<Dialogue> {
             Navigator.pushNamedAndRemoveUntil(
               context,
               '/sign_up',
-                  (route) => false,
+              (route) => false,
             );
           }
         } else {
@@ -103,37 +108,38 @@ class _DialogueState extends State<Dialogue> {
             textAlign: TextAlign.center,
             style: const TextStyle(fontFamily: 'Poppins', fontSize: 20),
           ),
-          content: isDelete
-              ? Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                loc.translate("delete_warning"),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 16,
-                  color: Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .color!
-                      .withAlpha(150),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: loc.translate("enter_password"),
-                  border: const OutlineInputBorder(),
-                  errorText:
-                  _showError ? loc.translate("incorrect_password") : null,
-                ),
-              ),
-            ],
-          )
-              : null,
+          content:
+              isDelete
+                  ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        loc.translate("delete_warning"),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 16,
+                          color: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium!.color!.withAlpha(150),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: loc.translate("enter_password"),
+                          border: const OutlineInputBorder(),
+                          errorText:
+                              _showError
+                                  ? loc.translate("incorrect_password")
+                                  : null,
+                        ),
+                      ),
+                    ],
+                  )
+                  : null,
           actionsAlignment: MainAxisAlignment.spaceAround,
           actions: [
             SizedBox(
@@ -169,16 +175,17 @@ class _DialogueState extends State<Dialogue> {
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
-                child: _isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : Text(
-                  loc.translate("yes"),
-                  style: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20,
-                  ),
-                ),
+                child:
+                    _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                          loc.translate("yes"),
+                          style: const TextStyle(
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20,
+                          ),
+                        ),
               ),
             ),
           ],

@@ -182,7 +182,9 @@
   "enter_number_of_employees": "أدخل عدد الموظفين",
   "chat_bot_title": "روبوت الدردشة",
   "chat_start_message": "اضغط على ابدأ لبدء المحادثة...",
-  "start_button": "ابدأ"
-
+  "start_button": "ابدأ",
+  "select_user_type": "اختر نوع الحساب",
+  "account_already_exists_as_individual": "هذا الحساب موجود مسبقًا كـ فرد.",
+"account_already_exists_as_business": "هذا الحساب موجود مسبقًا كشركة."
 
 }

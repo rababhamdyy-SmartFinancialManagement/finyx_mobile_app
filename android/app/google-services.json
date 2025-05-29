@@ -12,7 +12,20 @@
           "package_name": "com.example.finyx_mobile_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "63018309040-387mg5ccso4g6cpjjks9hik91ib0pj6q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.finyx_mobile_app",
+            "certificate_hash": "5b0e18772d954f18805266b73cef3ecc4134865f"
+          }
+        },
+        {
+          "client_id": "63018309040-fr6q6a8pd09dmv2slrg281ucj5a83u29.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAuy5G29-PvEo4ocOcaXJX_OdPwA7a4aBc"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "63018309040-fr6q6a8pd09dmv2slrg281ucj5a83u29.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "63018309040-evlopi5qfb4a7h88vibi2gdf5seru8m4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.finyxMobileApp"
+              }
+            }
+          ]
         }
       }
     }

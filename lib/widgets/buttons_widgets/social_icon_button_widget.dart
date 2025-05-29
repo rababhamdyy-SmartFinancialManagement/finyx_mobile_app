@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class SocialIconButton extends StatelessWidget {
   final String asset;
-  final VoidCallback? onTap;
+  final Future<void> Function()? onTap;  // عشان نستخدم await جواها
   final double screenWidth;
 
   const SocialIconButton({
@@ -15,19 +15,23 @@ class SocialIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () async {
+        if (onTap != null) {
+          await onTap!();
+        }
+      },
       child: Container(
         width: screenWidth * 0.12,
         height: screenWidth * 0.12,
         decoration: BoxDecoration(
           color: Colors.white,
-          shape: BoxShape.circle, 
-          boxShadow: [
+          shape: BoxShape.circle,
+          boxShadow: const [
             BoxShadow(
               color: Colors.black12,
               blurRadius: 6,
               spreadRadius: 2,
-              offset: Offset(0, 3), 
+              offset: Offset(0, 3),
             ),
           ],
         ),

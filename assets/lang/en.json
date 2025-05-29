@@ -172,17 +172,20 @@
   "enter_income": "Enter your monthly salary",
   "national_id": "National ID",
   "enter_national_id": "Enter your national ID",
-  "RegisterWith": "أو سجل باستخدام",
-  "already_have_account": "لديك حساب بالفعل؟ ",
-  "new_to_finyx": "جديد على Finyx؟ ",
-  "register_now": "سجل الآن",
+  "RegisterWith": "Or register using",
+  "already_have_account": "Already have an account?",
+  "new_to_finyx": "New to Finyx?",
+  "register_now": "Register now",
   "company_name": "Company Name",
-"company_location": "Company Location",
-"number_of_employees": "Number of Employees",
-"enter_number_of_employees": "Enter the number of employees",
+  "company_location": "Company Location",
+  "number_of_employees": "Number of Employees",
+  "enter_number_of_employees": "Enter the number of employees",
   "chat_bot_title": "Chat Bot",
   "chat_start_message": "Press start to begin...",
-  "start_button": "Start"
+  "start_button": "Start",
+  "select_user_type": "Select Account Type",
+  "account_already_exists_as_individual": "This account already exists as an Individual.",
+"account_already_exists_as_business": "This account already exists as a Business."
 
 
 }
