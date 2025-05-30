@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_sign_in/google_sign_in.dart'; // ✅ استيراد Google Sign-In
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
-
 import '../../cubits/profile/profile_cubit.dart';
 import '../../models/applocalization.dart';
 
@@ -35,15 +34,17 @@ class _DialogueState extends State<Dialogue> {
       _showError = false;
     });
 
-    final scaffold = ScaffoldMessenger.of(context);
     final loc = AppLocalizations.of(context)!;
+    final scaffold = ScaffoldMessenger.of(context);
 
     try {
       if (widget.actionType == 'logout') {
         final googleSignIn = GoogleSignIn();
-        await googleSignIn.signOut(); // ✅ تسجيل الخروج من Google
-
-        await FirebaseAuth.instance.signOut(); // تسجيل الخروج من Firebase
+        try {
+          await googleSignIn.disconnect();
+        } catch (_) {}
+        await googleSignIn.signOut();
+        await FirebaseAuth.instance.signOut();
         await SharedPrefsHelper.saveLoginState(false);
 
         if (mounted) {
@@ -54,8 +55,9 @@ class _DialogueState extends State<Dialogue> {
           );
         }
       } else if (widget.actionType == 'delete') {
-        final cubit = BlocProvider.of<ProfileCubit>(context);
+        final cubit = context.read<ProfileCubit>();
         final isValid = await cubit.reauthenticate(_passwordController.text);
+
         if (isValid) {
           await cubit.deleteAccount();
           scaffold.showSnackBar(
@@ -81,7 +83,7 @@ class _DialogueState extends State<Dialogue> {
     } catch (e) {
       scaffold.showSnackBar(
         SnackBar(
-          content: Text(loc.translate("error_occurred") + e.toString()),
+          content: Text('${loc.translate("error_occurred")}: $e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -92,104 +94,99 @@ class _DialogueState extends State<Dialogue> {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    final bool isDelete = widget.actionType == 'delete';
+    final isDelete = widget.actionType == 'delete';
 
     return Center(
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.99,
-        height: MediaQuery.of(context).size.height * 0.99,
-        child: AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
-            side: const BorderSide(color: Colors.grey, width: 5),
-          ),
-          title: Text(
-            widget.message,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontFamily: 'Poppins', fontSize: 20),
-          ),
-          content:
-              isDelete
-                  ? Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        loc.translate("delete_warning"),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 16,
-                          color: Theme.of(
-                            context,
-                          ).textTheme.bodyMedium!.color!.withAlpha(150),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: loc.translate("enter_password"),
-                          border: const OutlineInputBorder(),
-                          errorText:
-                              _showError
-                                  ? loc.translate("incorrect_password")
-                                  : null,
-                        ),
-                      ),
-                    ],
-                  )
-                  : null,
-          actionsAlignment: MainAxisAlignment.spaceAround,
-          actions: [
-            SizedBox(
-              width: 110,
-              child: TextButton(
-                onPressed: _isLoading ? null : () => Navigator.pop(context),
-                style: TextButton.styleFrom(
-                  backgroundColor: const Color(0xFFFBBC05),
-                  foregroundColor: const Color(0xffB6B6B6),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-                child: Text(
-                  loc.translate("cancel"),
-                  style: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20,
-                    color: Color(0xFF3E0555),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 110,
-              child: TextButton(
-                onPressed: _isLoading ? null : () => _handleAction(context),
-                style: TextButton.styleFrom(
-                  backgroundColor: const Color(0xFF3E0555),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-                child:
-                    _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : Text(
-                          loc.translate("yes"),
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w700,
-                            fontSize: 20,
-                          ),
-                        ),
-              ),
-            ),
-          ],
+      child: AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
+          side: const BorderSide(color: Colors.grey, width: 5),
         ),
+        title: Text(
+          widget.message,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontFamily: 'Poppins', fontSize: 20),
+        ),
+        content:
+            isDelete
+                ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      loc.translate("delete_warning"),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 16,
+                        color: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.color?.withAlpha(150),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: loc.translate("enter_password"),
+                        border: const OutlineInputBorder(),
+                        errorText:
+                            _showError
+                                ? loc.translate("incorrect_password")
+                                : null,
+                      ),
+                    ),
+                  ],
+                )
+                : null,
+        actionsAlignment: MainAxisAlignment.spaceAround,
+        actions: [
+          SizedBox(
+            width: 110,
+            child: TextButton(
+              onPressed: _isLoading ? null : () => Navigator.pop(context),
+              style: TextButton.styleFrom(
+                backgroundColor: const Color(0xFFFBBC05),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              child: Text(
+                loc.translate("cancel"),
+                style: const TextStyle(
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                  color: Color(0xFF3E0555),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 110,
+            child: TextButton(
+              onPressed: _isLoading ? null : () => _handleAction(context),
+              style: TextButton.styleFrom(
+                backgroundColor: const Color(0xFF3E0555),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              child:
+                  _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : Text(
+                        loc.translate("yes"),
+                        style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 20,
+                        ),
+                      ),
+            ),
+          ),
+        ],
       ),
     );
   }

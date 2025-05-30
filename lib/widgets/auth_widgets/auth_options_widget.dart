@@ -175,21 +175,19 @@ class _SocialAuthButtonsState extends State<SocialAuthButtons> {
             SocialIconButton(
               asset: "assets/images/icons/google.png",
               onTap: () async {
-                final selectedUserType = await showUserTypeDialog(context);
-                if (selectedUserType != null) {
-                  final loginModel = LoginModel();
-                  final userType = await loginModel.signInWithGoogle(context);
-                  if (userType != null) {
-                    Navigator.pushReplacementNamed(
-                      context,
-                      '/homepage',
-                      arguments: userType,
-                    );
-                  }
+                final loginModel = LoginModel();
+                final userType = await loginModel.signInWithGoogle(context);
+                if (userType != null) {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    '/homepage',
+                    arguments: userType,
+                  );
                 }
               },
               screenWidth: screenWidth,
             ),
+
             SocialIconButton(
               asset: "assets/images/icons/apple.png",
               onTap: () async {

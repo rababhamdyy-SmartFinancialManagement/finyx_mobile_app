@@ -184,8 +184,6 @@
   "chat_start_message": "Press start to begin...",
   "start_button": "Start",
   "select_user_type": "Select Account Type",
-  "account_already_exists_as_individual": "This account already exists as an Individual.",
-"account_already_exists_as_business": "This account already exists as a Business."
-
+  "user_type_not_selected": "User type not selected."
 
 }

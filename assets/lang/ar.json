@@ -184,7 +184,6 @@
   "chat_start_message": "اضغط على ابدأ لبدء المحادثة...",
   "start_button": "ابدأ",
   "select_user_type": "اختر نوع الحساب",
-  "account_already_exists_as_individual": "هذا الحساب موجود مسبقًا كـ فرد.",
-"account_already_exists_as_business": "هذا الحساب موجود مسبقًا كشركة."
+"user_type_not_selected": "لم يتم اختيار نوع المستخدم."
 
 }

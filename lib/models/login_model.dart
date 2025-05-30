@@ -127,11 +127,9 @@ class LoginModel {
     final loc = AppLocalizations.of(context)!;
 
     try {
-      print("📌 Starting Google Sign-In");
-
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
       if (googleUser == null) {
-        print("❌ googleUser is null");
         CustomSnackbar.show(
           context,
           loc.translate("google_sign_in_cancelled"),
@@ -164,26 +162,26 @@ class LoginModel {
       final userRef = FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid);
-      final userDoc = await userRef.get();
+      final userSnapshot = await userRef.get();
 
-      if (userDoc.exists) {
-        // المستخدم موجود بالفعل → انتقل للـ home حسب نوع المستخدم المحفوظ
-        final userType = userDoc.data()?['userType'];
-
-        await SharedPrefsHelper.saveLoginState(true);
-        await SharedPrefsHelper.saveUserType(userType);
+      if (userSnapshot.exists) {
+        final userType = userSnapshot.data()?['userType'];
 
         if (userType == "individual") {
+          await SharedPrefsHelper.saveUserType("individual");
+          await SharedPrefsHelper.saveLoginState(true);
           CustomSnackbar.show(
             context,
-            loc.translate("logged_in_google_individual"),
+            loc.translate("logged_in_individual"),
             isError: false,
           );
           return UserType.individual;
         } else if (userType == "business") {
+          await SharedPrefsHelper.saveUserType("business");
+          await SharedPrefsHelper.saveLoginState(true);
           CustomSnackbar.show(
             context,
-            loc.translate("logged_in_google_business"),
+            loc.translate("logged_in_business"),
             isError: false,
           );
           return UserType.business;
@@ -195,70 +193,144 @@ class LoginModel {
           );
           return null;
         }
-      } else {
-        // المستخدم جديد → أظهر حوار لاختيار نوع المستخدم
-        String? selectedUserType = await showDialog<String>(
-          context: context,
-          builder: (BuildContext dialogContext) {
-            return AlertDialog(
-              title: Text(loc.translate("select_user_type")),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ElevatedButton(
-                    onPressed:
-                        () => Navigator.of(dialogContext).pop("individual"),
-                    child: Text(loc.translate("individual")),
+      }
+
+      // Dialog to choose userType
+      UserType? selectedType = await showDialog<UserType>(
+        context: context,
+        builder: (BuildContext context) {
+          return Center(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.95,
+              child: AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                  side: const BorderSide(color: Colors.grey, width: 3),
+                ),
+                title: Text(
+                  loc.translate("select_user_type"),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                  ElevatedButton(
-                    onPressed:
-                        () => Navigator.of(dialogContext).pop("business"),
-                    child: Text(loc.translate("business")),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: 200,
+                      child: TextButton(
+                        onPressed:
+                            () => Navigator.pop(context, UserType.individual),
+                        style: TextButton.styleFrom(
+                          backgroundColor: const Color(0xFF3E0555),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        child: Text(
+                          loc.translate("individual"),
+                          style: const TextStyle(
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: 200,
+                      child: TextButton(
+                        onPressed:
+                            () => Navigator.pop(context, UserType.business),
+                        style: TextButton.styleFrom(
+                          backgroundColor: const Color(0xFF3E0555),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        child: Text(
+                          loc.translate("business"),
+                          style: const TextStyle(
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                actionsAlignment: MainAxisAlignment.center,
+                actions: [
+                  SizedBox(
+                    width: 200,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: const Color(0xFFFBBC05),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(
+                        loc.translate("cancel"),
+                        style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-            );
-          },
+            ),
+          );
+        },
+      );
+
+      if (selectedType == null) {
+        CustomSnackbar.show(
+          context,
+          loc.translate("user_type_not_selected"),
+          isError: true,
         );
-
-        if (selectedUserType == null) {
-          CustomSnackbar.show(
-            context,
-            loc.translate("user_type_not_selected"),
-            isError: true,
-          );
-          return null;
-        }
-
-        // حفظ البيانات لأول مرة
-        await userRef.set({
-          'userType': selectedUserType,
-          'name': user.displayName ?? googleUser.displayName ?? '',
-          'email': user.email ?? googleUser.email ?? '',
-          'photoURL': user.photoURL ?? googleUser.photoUrl ?? '',
-        }, SetOptions(merge: true));
-
-        await SharedPrefsHelper.saveLoginState(true);
-        await SharedPrefsHelper.saveUserType(selectedUserType);
-
-        if (selectedUserType == "individual") {
-          CustomSnackbar.show(
-            context,
-            loc.translate("logged_in_google_individual"),
-            isError: false,
-          );
-          return UserType.individual;
-        } else {
-          CustomSnackbar.show(
-            context,
-            loc.translate("logged_in_google_business"),
-            isError: false,
-          );
-          return UserType.business;
-        }
+        await GoogleSignIn().signOut();
+        return null;
       }
+
+      final userData = {
+        "userType":
+            selectedType == UserType.individual ? "individual" : "business",
+        "email": user.email,
+        "name": user.displayName,
+        "photoUrl": user.photoURL,
+        "createdAt": FieldValue.serverTimestamp(),
+      };
+
+      await userRef.set(userData);
+
+      final userTypeString = userData["userType"] as String;
+
+      await SharedPrefsHelper.saveUserType(userTypeString);
+      await SharedPrefsHelper.saveLoginState(true);
+
+      CustomSnackbar.show(
+        context,
+        loc.translate("account_created_successfully"),
+        isError: false,
+      );
+
+      return selectedType;
     } catch (e) {
-      print("❌ Exception during Google sign in: $e");
       CustomSnackbar.show(
         context,
         "${loc.translate("google_sign_in_error")}: $e",
