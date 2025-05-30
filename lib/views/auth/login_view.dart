@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               loginModel.toggleRememberMe(value);
                             });
                           },
-                          activeColor: const Color(0xFF3E0555),
+                          activeColor: const Color(0xFFDA9220),
                         ),
                         Text(
                           loc.translate("remember_me"),
@@ -94,9 +94,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ForgetPasswordView(
-                              pageType: PasswordPageType.forget,
-                            ),
+                            builder:
+                                (context) => ForgetPasswordView(
+                                  pageType: PasswordPageType.forget,
+                                ),
                           ),
                         );
                       },
@@ -117,9 +118,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.pushReplacementNamed(
                           context,
                           '/homepage',
-                          arguments: userType == 'individual'
-                              ? UserType.individual
-                              : UserType.business,
+                          arguments:
+                              userType == 'individual'
+                                  ? UserType.individual
+                                  : UserType.business,
                         );
                       } else {
                         CustomSnackbar.show(
