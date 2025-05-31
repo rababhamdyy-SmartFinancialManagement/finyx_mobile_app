@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,7 +74,7 @@ class HomepageBody extends StatelessWidget {
             const BalanceCard(),
             SizedBox(height: screenWidth * 0.01),
             BlocProvider(
-              create: (_) => ChartCubit(userType: userType),
+              create: (_) => ChartCubit(userType: userType,priceCubit: context.read<PriceCubit>(),),
               child: PieChartWidget(userType: userType),
             ),
             SizedBox(height: screenWidth * 0.001),

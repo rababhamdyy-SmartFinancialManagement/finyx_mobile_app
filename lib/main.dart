@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => NavigationCubit()),
-        BlocProvider(create: (_) => ChartCubit(userType: UserType.individual)),
+        BlocProvider(create: (_) => ChartCubit(userType: UserType.individual, priceCubit: context.read<PriceCubit>(),)),
         BlocProvider(create: (_) => PriceCubit(notificationsPlugin)),
         BlocProvider(create: (_) => ProfileCubit(notificationsPlugin)),
         BlocProvider(
