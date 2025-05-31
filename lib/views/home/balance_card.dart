@@ -49,7 +49,7 @@ class _BalanceCardState extends State<BalanceCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          loc.translate("today_change"),
+                          loc.translate("monthly_income"),
                           style: const TextStyle(
                             color: Colors.pinkAccent,
                             fontSize: 12,
@@ -61,9 +61,9 @@ class _BalanceCardState extends State<BalanceCard> {
                           builder: (context, profileState) {
                             final salary = profileState.salary.isNotEmpty
                                 ? profileState.salary
-                                : "\$0.00";
+                                : "\EGP 0.00";
                             return Text(
-                              "\$$salary",
+                              "\EGP $salary",
                               style: const TextStyle(
                                 fontSize: 26,
                                 color: Colors.white,

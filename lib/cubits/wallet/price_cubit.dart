@@ -89,7 +89,7 @@ class PriceCubit extends Cubit<PriceState> {
           importance: Importance.high,
           priority: Priority.high,
           channelShowBadge: true,
-           styleInformation: BigTextStyleInformation(''), 
+          styleInformation: BigTextStyleInformation(''),
         );
 
     const NotificationDetails notificationDetails = NotificationDetails(
@@ -102,5 +102,31 @@ class PriceCubit extends Cubit<PriceState> {
       message,
       notificationDetails,
     );
+  }
+
+  // Checks if the monthly prices need to be reset and resets them if necessary
+  Future<void> checkAndResetMonthlyPrices() async {
+    final now = DateTime.now();
+    final lastResetDate = await SharedPrefsHelper.getLastResetDate();
+
+
+    if (lastResetDate == null ||
+        now.month != lastResetDate.month ||
+        now.year != lastResetDate.year) {
+      await SharedPrefsHelper.resetAllPrices();
+      await SharedPrefsHelper.setLastResetDate(now);
+
+      _showPriceNotification(
+        'Monthly Reset',
+        'All prices have been reset for the new month',
+      );
+
+      emit(PriceState(prices: {}));
+    }
+  }
+
+  Future<void> initialize() async {
+    await _loadPrices();
+    await checkAndResetMonthlyPrices();
   }
 }

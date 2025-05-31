@@ -53,20 +53,34 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => NavigationCubit()),
-        BlocProvider(create: (_) => ChartCubit(userType: UserType.individual)),
-        BlocProvider(create: (_) => PriceCubit(notificationsPlugin)),
+        BlocProvider(
+          create:
+              (_) => ChartCubit(
+                userType: UserType.individual,
+                priceCubit: context.read<PriceCubit>(),
+              ),
+        ),
+        BlocProvider(
+          create: (_) {
+            final cubit = PriceCubit(notificationsPlugin);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              cubit.checkAndResetMonthlyPrices();
+            });
+            return cubit;
+          },
+        ),
         BlocProvider(create: (_) => ProfileCubit(notificationsPlugin)),
         BlocProvider(
           create: (_) => AppThemeCubit()..changeTheme(ThemeStateEnum.initial),
         ),
-          BlocProvider(
+        BlocProvider(
           create:
               (_) =>
                   AppLanguageCubit()
                     ..AppLanguageFunc(LangaugeEventEnums.IntialLangauge),
         ),
       ],
-child: BlocBuilder<AppThemeCubit, AppThemeState>(
+      child: BlocBuilder<AppThemeCubit, AppThemeState>(
         builder: (context, themeState) {
           ThemeData? themeData;
           if (themeState is AppDarkTheme) {

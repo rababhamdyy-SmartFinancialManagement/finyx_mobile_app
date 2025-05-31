@@ -45,12 +45,12 @@ class SharedPrefsHelper {
 
   static Future<void> saveUserType(String userType) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('user_type', userType); 
+    prefs.setString('user_type', userType);
   }
 
   static Future<String?> getUserType() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('user_type'); 
+    return prefs.getString('user_type');
   }
 
   static Future<void> saveLoginState(bool loggedIn) async {
@@ -61,5 +61,27 @@ class SharedPrefsHelper {
   static Future<bool> getLoginState() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('is_logged_in') ?? false;
+  }
+
+  static Future<void> resetAllPrices() async {
+    final prefs = await SharedPreferences.getInstance();
+    final allKeys = prefs.getKeys();
+
+    for (var key in allKeys) {
+      if (prefs.get(key) is double) {
+        await prefs.remove(key);
+      }
+    }
+  }
+
+  static Future<void> setLastResetDate(DateTime date) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('last_reset_date', date.toIso8601String());
+  }
+
+  static Future<DateTime?> getLastResetDate() async {
+    final prefs = await SharedPreferences.getInstance();
+    final dateString = prefs.getString('last_reset_date');
+    return dateString != null ? DateTime.parse(dateString) : null;
   }
 }
