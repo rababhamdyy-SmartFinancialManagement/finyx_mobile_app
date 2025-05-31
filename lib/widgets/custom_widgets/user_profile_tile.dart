@@ -1,56 +1,76 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../cubits/profile/profile_cubit.dart';
 import '../../cubits/profile/profile_state.dart';
 
 class UserProfileCard extends StatelessWidget {
-  const UserProfileCard({super.key});
+  const UserProfileCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final user = FirebaseAuth.instance.currentUser;
 
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
-        final image =
-            state.imagePath != null && state.imagePath!.isNotEmpty
-                ? FileImage(File(state.imagePath!))
-                : const AssetImage('assets/images/profile/profile.png')
-                    as ImageProvider;
-
+        final imageUrl = state.imagePath ?? user?.photoURL;
+        
         return Column(
           children: [
-            Container(
-              padding: const EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(width: 2, color: Color(0xFF3E0555)),
-              ),
-              child: CircleAvatar(backgroundImage: image, radius: width * 0.19),
-            ),
+            _buildProfileImage(width, imageUrl),
             const SizedBox(height: 12),
             Text(
-              state.name,
+              state.name.isNotEmpty ? state.name : user?.displayName ?? 'User',
               style: TextStyle(
                 fontSize: width * 0.045,
                 fontWeight: FontWeight.w500,
-                // color: ,
                 fontFamily: 'Poppins',
               ),
             ),
             const SizedBox(height: 6),
-            Text(
-              state.email,
-              style: TextStyle(
-                fontSize: width * 0.04,
-                color: Colors.grey[600],
-                fontFamily: 'Poppins',
+            if ((state.email.isNotEmpty ? state.email : user?.email) != null)
+              Text(
+                state.email.isNotEmpty ? state.email : user!.email!,
+                style: TextStyle(
+                  fontSize: width * 0.04,
+                  color: Colors.grey[600],
+                  fontFamily: 'Poppins',
+                ),
               ),
-            ),
           ],
         );
       },
     );
+  }
+
+  Widget _buildProfileImage(double width, String? imageUrl) {
+    return Container(
+      padding: const EdgeInsets.all(1),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(width: 2, color: const Color(0xFF3E0555)),
+      ),
+      child: CircleAvatar(
+        radius: width * 0.19,
+        backgroundImage: _getImageProvider(imageUrl),
+        child: imageUrl == null 
+            ? const Icon(Icons.person, size: 40)
+            : null,
+      ),
+    );
+  }
+
+  ImageProvider _getImageProvider(String? imageUrl) {
+    if (imageUrl == null) {
+      return const AssetImage('assets/images/profile/profile2.png');
+    }
+    
+    if (imageUrl.startsWith('http')) {
+      return NetworkImage(imageUrl);
+    } else {
+      return FileImage(File(imageUrl));
+    }
   }
 }

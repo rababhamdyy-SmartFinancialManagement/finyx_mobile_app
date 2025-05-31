@@ -4,6 +4,7 @@ import 'package:finyx_mobile_app/cubits/profile/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class EditProfileHeader extends StatelessWidget {
   final String? name;
@@ -13,16 +14,13 @@ class EditProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final user = FirebaseAuth.instance.currentUser;
 
     return Column(
       children: [
         BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
-            final image =
-                state.imagePath != null && state.imagePath!.isNotEmpty
-                    ? FileImage(File(state.imagePath!))
-                    : const AssetImage('assets/images/profile/profile.png')
-                        as ImageProvider;
+            final imageUrl = state.imagePath ?? user?.photoURL;
 
             return Stack(
               alignment: Alignment.bottomRight,
@@ -31,11 +29,18 @@ class EditProfileHeader extends StatelessWidget {
                   padding: const EdgeInsets.all(1),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(width: 2, color: Color(0xFF3E0555)),
+                    border: Border.all(
+                      width: 2,
+                      color: const Color(0xFF3E0555),
+                    ),
                   ),
                   child: CircleAvatar(
-                    backgroundImage: image,
                     radius: width * 0.19,
+                    backgroundImage: _getImageProvider(imageUrl),
+                    child:
+                        imageUrl == null
+                            ? const Icon(Icons.person, size: 40)
+                            : null,
                   ),
                 ),
                 Positioned(
@@ -69,7 +74,9 @@ class EditProfileHeader extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.only(top: 12.0),
               child: Text(
-                state.name,
+                state.name.isNotEmpty
+                    ? state.name
+                    : user?.displayName ?? 'User',
                 style: TextStyle(
                   fontSize: width * 0.045,
                   fontWeight: FontWeight.w500,
@@ -81,6 +88,18 @@ class EditProfileHeader extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  ImageProvider _getImageProvider(String? imageUrl) {
+    if (imageUrl == null) {
+      return const AssetImage('assets/images/profile/profile2.png');
+    }
+
+    if (imageUrl.startsWith('http')) {
+      return NetworkImage(imageUrl);
+    } else {
+      return FileImage(File(imageUrl));
+    }
   }
 
   Widget _imagePickerBottomSheetWidget(BuildContext context) {
@@ -100,7 +119,7 @@ class EditProfileHeader extends StatelessWidget {
                   ImageSource.gallery,
                 );
               },
-              icon: Icon(Icons.image, color: Colors.blue, size: 50),
+              icon: const Icon(Icons.image, color: Colors.blue, size: 50),
             ),
           ),
           Padding(
@@ -112,7 +131,7 @@ class EditProfileHeader extends StatelessWidget {
                   ImageSource.camera,
                 );
               },
-              icon: Icon(Icons.camera, color: Colors.blue, size: 50),
+              icon: const Icon(Icons.camera, color: Colors.blue, size: 50),
             ),
           ),
         ],

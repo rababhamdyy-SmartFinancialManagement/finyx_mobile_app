@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finyx_mobile_app/cubits/profile/profile_state.dart';
 import 'package:finyx_mobile_app/models/notification/notification_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:image_picker/image_picker.dart';
@@ -115,19 +116,80 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  // Future<void> _loadUserData() async {
+  //   try {
+  //     final user = FirebaseAuth.instance.currentUser;
+  //     if (user == null) return;
+
+  //     final prefs = await SharedPreferences.getInstance();
+  //     final cachedImagePath = prefs.getString('imagePath');
+
+  //     final userDoc =
+  //         await FirebaseFirestore.instance
+  //             .collection('users')
+  //             .doc(user.uid)
+  //             .get();
+
+  //     if (userDoc.exists) {
+  //       final userType = userDoc.data()?['userType'] ?? 'individual';
+  //       final collectionName =
+  //           userType == 'individual' ? 'individuals' : 'businesses';
+
+  //       final detailsDoc =
+  //           await FirebaseFirestore.instance
+  //               .collection(collectionName)
+  //               .doc(user.uid)
+  //               .get();
+
+  //       if (detailsDoc.exists) {
+  //         final data = detailsDoc.data()!;
+  //         final firestoreImagePath = data['profileImage'] as String?;
+  //         final imagePath = firestoreImagePath ?? cachedImagePath;
+
+  //         emit(
+  //           state.copyWith(
+  //             name: data['fullName'] ?? '',
+  //             email: userDoc.data()?['email'] ?? '',
+  //             birthDate: data['dob'] ?? data['budget'] ?? '',
+  //             location: data['address'] ?? data['companyLocation'] ?? '',
+  //             idNumber: data['nationalId'] ?? data['numberOfEmployees'] ?? '',
+  //             salary: data['income'] ?? data['budget'] ?? '',
+  //             imagePath: imagePath,
+  //           ),
+  //         );
+
+  //         if (firestoreImagePath != null &&
+  //             firestoreImagePath != cachedImagePath) {
+  //           await prefs.setString('imagePath', firestoreImagePath);
+  //         }
+  //       }
+  //     } else {
+  //       emit(state.copyWith(imagePath: cachedImagePath));
+  //     }
+  //   } catch (e) {
+  //     // print('Error loading user data: $e');
+  //     emit(state.copyWith());
+  //   }
+  // }
+
   Future<void> _loadUserData() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
-
-      final prefs = await SharedPreferences.getInstance();
-      final cachedImagePath = prefs.getString('imagePath');
 
       final userDoc =
           await FirebaseFirestore.instance
               .collection('users')
               .doc(user.uid)
               .get();
+
+      String? imageUrl = user.photoURL;
+      String? name = user.displayName;
+      String? email = user.email;
+      String birthDate = '';
+      String location = '';
+      String idNumber = '';
+      String salary = '';
 
       if (userDoc.exists) {
         final userType = userDoc.data()?['userType'] ?? 'individual';
@@ -142,31 +204,30 @@ class ProfileCubit extends Cubit<ProfileState> {
 
         if (detailsDoc.exists) {
           final data = detailsDoc.data()!;
-          final firestoreImagePath = data['profileImage'] as String?;
-          final imagePath = firestoreImagePath ?? cachedImagePath;
-
-          emit(
-            state.copyWith(
-              name: data['fullName'] ?? '',
-              email: userDoc.data()?['email'] ?? '',
-              birthDate: data['dob'] ?? data['budget'] ?? '',
-              location: data['address'] ?? data['companyLocation'] ?? '',
-              idNumber: data['nationalId'] ?? data['numberOfEmployees'] ?? '',
-              salary: data['income'] ?? data['budget'] ?? '',
-              imagePath: imagePath,
-            ),
-          );
-
-          if (firestoreImagePath != null &&
-              firestoreImagePath != cachedImagePath) {
-            await prefs.setString('imagePath', firestoreImagePath);
-          }
+          imageUrl = data['profileImage'] ?? imageUrl;
+          name = data['fullName'] ?? name;
+          email = data['email'] ?? email;
+          birthDate = data['dob'] ?? data['budget'] ?? '';
+          location = data['address'] ?? data['companyLocation'] ?? '';
+          idNumber = data['nationalId'] ?? data['numberOfEmployees'] ?? '';
+          salary = data['income'] ?? data['budget'] ?? '';
         }
-      } else {
-        emit(state.copyWith(imagePath: cachedImagePath));
       }
+
+      emit(
+        state.copyWith(
+          name: name ?? '',
+          email: email ?? '',
+          birthDate: birthDate,
+          location: location,
+          idNumber: idNumber,
+          salary: salary,
+          imagePath: imageUrl,
+        ),
+      );
+
     } catch (e) {
-      // print('Error loading user data: $e');
+      debugPrint('Error loading user data: $e');
       emit(state.copyWith());
     }
   }

@@ -128,74 +128,36 @@ class LoginModel {
 
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-      if (googleUser == null) {
-        CustomSnackbar.show(
-          context,
-          loc.translate("google_sign_in_cancelled"),
-          isError: true,
-        );
-        return null;
-      }
+      if (googleUser == null) return null;
 
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
+      final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final userCredential = await FirebaseAuth.instance.signInWithCredential(
-        credential,
-      );
-      final user = userCredential.user;
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
+      final User? user = userCredential.user;
+      if (user == null) return null;
 
-      if (user == null) {
-        CustomSnackbar.show(
-          context,
-          loc.translate("google_sign_in_failed"),
-          isError: true,
-        );
-        return null;
+      final DocumentSnapshot userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
+
+      // إذا كان المستخدم موجودًا سابقًا
+      if (userDoc.exists) {
+        final userType = userDoc.get('userType');
+        await _updateProfileData(user); // تحديث البيانات إذا تغيرت في جوجل
+        return userType == 'individual'
+            ? UserType.individual
+            : UserType.business;
       }
 
-      final userRef = FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid);
-      final userSnapshot = await userRef.get();
-
-      if (userSnapshot.exists) {
-        final userType = userSnapshot.data()?['userType'];
-
-        if (userType == "individual") {
-          await SharedPrefsHelper.saveUserType("individual");
-          await SharedPrefsHelper.saveLoginState(true);
-          CustomSnackbar.show(
-            context,
-            loc.translate("welcome_back_individual"),
-            isError: false,
-          );
-          return UserType.individual;
-        } else if (userType == "business") {
-          await SharedPrefsHelper.saveUserType("business");
-          await SharedPrefsHelper.saveLoginState(true);
-          CustomSnackbar.show(
-            context,
-            loc.translate("welcome_back_business"),
-            isError: false,
-          );
-          return UserType.business;
-        } else {
-          CustomSnackbar.show(
-            context,
-            loc.translate("unknown_user_type"),
-            isError: true,
-          );
-          return null;
-        }
-      }
-
-      // المستخدم جديد - اختر النوع من الديالوج
+      // New user - show dialog to select type
       UserType? selectedType = await showDialog<UserType>(
         context: context,
         builder: (BuildContext context) {
@@ -298,38 +260,20 @@ class LoginModel {
       );
 
       if (selectedType == null) {
-        CustomSnackbar.show(
-          context,
-          loc.translate("user_type_not_selected"),
-          isError: true,
-        );
         await GoogleSignIn().signOut();
         return null;
       }
 
-      final userData = {
-        "userType":
-            selectedType == UserType.individual ? "individual" : "business",
-        "email": user.email,
-        "name": user.displayName,
-        "photoUrl": user.photoURL,
-        "createdAt": FieldValue.serverTimestamp(),
-      };
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'userType':
+            selectedType == UserType.individual ? 'individual' : 'business',
+        'email': user.email,
+        'fullName': user.displayName ?? 'Google User', // استخدام اسم جوجل
+        'photoUrl': user.photoURL,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+      await _updateProfileData(user);
 
-      await userRef.set(userData);
-
-      final userTypeString = userData["userType"] as String;
-
-      await SharedPrefsHelper.saveUserType(userTypeString);
-      await SharedPrefsHelper.saveLoginState(true);
-
-      CustomSnackbar.show(
-        context,
-        loc.translate("account_created_successfully_first_time_google"),
-        isError: false,
-      );
-
-      // لا تنقل هنا — التنقل في الزر فقط
       return selectedType;
     } catch (e) {
       CustomSnackbar.show(
@@ -339,5 +283,22 @@ class LoginModel {
       );
       return null;
     }
+  }
+
+  Future<void> _updateProfileData(User user) async {
+    final userDoc =
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+    final userType = userDoc.get('userType') ?? 'individual';
+    final collection = userType == 'individual' ? 'individuals' : 'businesses';
+
+    await FirebaseFirestore.instance.collection(collection).doc(user.uid).set({
+      'fullName': user.displayName ?? 'Google User',
+      'profileImage': user.photoURL?.replaceAll('s96-c', 's400-c'),
+      'email': user.email,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true)); // merge للحفاظ على البيانات الأخرى
   }
 }
