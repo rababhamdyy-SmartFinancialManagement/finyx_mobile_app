@@ -11,7 +11,6 @@ class ChartCubit extends Cubit<ChartState> {
 
   ChartCubit({required this.userType, required this.priceCubit})
     : super(ChartState([])) {
-    // Listen to price changes
     priceCubit.stream.listen((priceState) {
       _updateSectionsBasedOnPrices(priceState.prices);
     });
@@ -53,14 +52,11 @@ class ChartCubit extends Cubit<ChartState> {
       return;
     }
 
-    // تحويل الخريطة إلى قائمة وترتيبها تنازلياً
     var sortedEntries =
         prices.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
 
-    // أخذ أعلى 5 عناصر
     var topEntries = sortedEntries.take(5).toList();
 
-    // حساب مجموع الباقي
     double othersValue = 0;
     if (sortedEntries.length > 5) {
       othersValue = sortedEntries
@@ -68,21 +64,18 @@ class ChartCubit extends Cubit<ChartState> {
           .fold(0.0, (sum, entry) => sum + entry.value);
     }
 
-    // إنشاء أقسام الشارت
     List<ChartSection> sections = [];
 
-    // إضافة أعلى 5 عناصر
     for (var entry in topEntries) {
       sections.add(
         ChartSection(
-          entry.key, // استخدام الاسم الذي أدخله المستخدم
+          entry.key,
           (entry.value / total) * 100,
           _getColorForSection(entry.key, sections.length),
         ),
       );
     }
 
-    // إضافة قسم Others إذا كان هناك أكثر من 5 عناصر
     if (othersValue > 0) {
       sections.add(
         ChartSection("Others", (othersValue / total) * 100, Colors.grey),

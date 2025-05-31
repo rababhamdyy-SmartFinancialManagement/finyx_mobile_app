@@ -67,6 +67,7 @@ class HomePageView extends StatelessWidget {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: const CustomBottomNavbar(),
+          
         );
       },
     );
