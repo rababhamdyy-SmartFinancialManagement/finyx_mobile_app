@@ -56,16 +56,29 @@ class _SignUpScreen extends State<SignUpScreen> {
                   ),
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 8,
+                      ),
                       child: Text(loc.translate("individual")),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 8,
+                      ),
                       child: Text(loc.translate("business")),
                     ),
                   ],
                 ),
                 SizedBox(height: screenHeight * 0.04),
+                CustomTextField(
+                  label: loc.translate("full_name"),
+                  hint: loc.translate("enter_full_name"),
+                  controller: signUpModel.fullNameController,
+                  keyboardType: TextInputType.name,
+                ),
+                SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
                   label: loc.translate("email"),
                   hint: loc.translate("enter_email"),
@@ -85,13 +98,6 @@ class _SignUpScreen extends State<SignUpScreen> {
                   hint: loc.translate("enter_password"),
                   controller: signUpModel.confirmPasswordController,
                   obscureText: true,
-                ),
-                SizedBox(height: screenHeight * 0.01),
-                CustomTextField(
-                  label: loc.translate("phone_number"),
-                  hint: loc.translate("enter_phone_number"),
-                  controller: signUpModel.phoneNumberController,
-                  keyboardType: TextInputType.phone,
                 ),
                 SizedBox(height: screenHeight * 0.03),
                 ButtonWidget(
