@@ -25,11 +25,18 @@ class PieChartWidget extends StatelessWidget {
 
     return BlocBuilder<ChartCubit, ChartState>(
       builder: (context, state) {
-
+        return BlocBuilder<PriceCubit, PriceState>(
+        builder: (context, priceState) {
         return BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, profileState) {
             double totalSalary = double.tryParse(profileState.salary) ?? 0.00;
-            double availableBudget = totalSalary; // استخدام الراتب الكلي مباشرة
+
+            // حساب إجمالي المصروفات المدخلة
+            double totalExpenses = priceState.prices.values.fold(
+              0.0,
+              (sum, value) => sum + value,
+            );
+            double availableBudget = totalSalary - totalExpenses;
             final isEmpty =
                 state.sections.isNotEmpty &&
                 state.sections[0].color == Colors.grey[400] &&
@@ -86,7 +93,7 @@ class PieChartWidget extends StatelessWidget {
 
                     // Salary text section
                     Positioned(
-                      top: chartSize * 0.45,
+                      top: chartSize * 0.40,
                       child: Align(
                         alignment: Alignment.center,
                         child: Column(
@@ -101,6 +108,7 @@ class PieChartWidget extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: screenWidth * 0.045,
                                 fontFamily: 'Righteous',
+                                color: availableBudget < 0 ? Colors.red : null,
                               ),
                             ),
                             SizedBox(height: 4),
@@ -112,11 +120,21 @@ class PieChartWidget extends StatelessWidget {
                                 fontFamily: 'REM',
                               ),
                             ),
+                            if (totalExpenses > 0) ...[
+                              SizedBox(height: 4),
+                              Text(
+                                "Total Expenses(${totalExpenses.toStringAsFixed(2)})",
+                                style: TextStyle(
+                                  fontSize: screenWidth * 0.025,
+                                  color: Colors.grey,
+                                  fontFamily: 'REM',
+                                ),
+                              ),
+                            ],
                           ],
                         ),
                       ),
                     ),
-
                     // Section labels section
                     Positioned(
                       bottom: 30,
@@ -202,6 +220,8 @@ class PieChartWidget extends StatelessWidget {
         );
       },
     );
+  });
+      }
   }
 
   void _showOthersDetails(BuildContext context, List<ChartSection> sections) {
@@ -316,4 +336,3 @@ class PieChartWidget extends StatelessWidget {
 
     return midAngle * math.pi / 180;
   }
-}

@@ -33,13 +33,7 @@ class ChartCubit extends Cubit<ChartState> {
       emit(
         ChartState(
           suggestedCategories
-              .map(
-                (category) => ChartSection(
-                  category,
-                  0, 
-                  Colors.grey[400]!, 
-                ),
-              )
+              .map((category) => ChartSection(category, 0, Colors.grey[400]!))
               .toList(),
         ),
       );
@@ -48,6 +42,13 @@ class ChartCubit extends Cubit<ChartState> {
 
     final total = prices.values.fold(0.0, (sum, value) => sum + value);
     if (total == 0) {
+      emit(ChartState([]));
+      return;
+    }
+
+    final totalExpenses = prices.values.fold(0.0, (sum, value) => sum + value);
+
+    if (totalExpenses == 0) {
       emit(ChartState([]));
       return;
     }
