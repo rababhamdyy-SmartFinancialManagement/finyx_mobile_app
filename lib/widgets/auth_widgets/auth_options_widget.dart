@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'auth_footer_text_widget.dart';
@@ -166,18 +167,16 @@ class _SocialAuthButtonsState extends State<SocialAuthButtons> {
           runSpacing: 10,
           children: [
             SocialIconButton(
-              asset: "assets/images/icons/facebook.png",
-              onTap: () async {
-                // إضافة تسجيل الدخول بالفيسبوك لاحقًا
-              },
-              screenWidth: screenWidth,
-            ),
-            SocialIconButton(
               asset: "assets/images/icons/google.png",
               onTap: () async {
                 final loginModel = LoginModel();
                 final userType = await loginModel.signInWithGoogle(context);
-                if (userType != null) {
+
+                if (userType == UserType.individual) {
+                  Navigator.pushReplacementNamed(context, '/individual_signup');
+                } else if (userType == UserType.business) {
+                  Navigator.pushReplacementNamed(context, '/business_signup');
+                } else if (userType != null) {
                   Navigator.pushReplacementNamed(
                     context,
                     '/homepage',
@@ -189,9 +188,9 @@ class _SocialAuthButtonsState extends State<SocialAuthButtons> {
             ),
 
             SocialIconButton(
-              asset: "assets/images/icons/apple.png",
+              asset: "assets/images/icons/facebook.png",
               onTap: () async {
-                // إضافة تسجيل الدخول بأبل لاحقًا
+                // إضافة تسجيل الدخول بالفيسبوك لاحقًا
               },
               screenWidth: screenWidth,
             ),

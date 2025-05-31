@@ -1,7 +1,6 @@
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:flutter/material.dart';
 import '../../models/individual_signup_model.dart';
-import '../../widgets/auth_widgets/auth_options_widget.dart';
 import '../../widgets/shared/button_widget.dart';
 import '../../widgets/custom_widgets/custom_textfield_widget.dart';
 import '../../widgets/splash/finyx_widget.dart';
@@ -43,18 +42,53 @@ class _IndividualSignupViewState extends State<IndividualSignupView> {
                 SizedBox(height: screenHeight * 0.01),
                 FinyxWidget(fontSize: screenWidth * 0.14),
                 SizedBox(height: screenHeight * 0.04),
-                CustomTextField(
-                  label: loc.translate("full_name"),
-                  hint: loc.translate("enter_full_name"),
-                  controller: signupModel.fullNameController,
-                  keyboardType: TextInputType.name,
+                Row(
+                  children: [
+                    SizedBox(
+                      height: screenHeight * 0.066,
+                      width: screenWidth * 0.25,
+                      child: TextFormField(
+                        initialValue: "+20",
+                        textAlign: TextAlign.center,
+                        enabled: false,
+                        decoration: InputDecoration(
+                          labelText: loc.translate("country_code"),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          filled: true,
+                          fillColor: Colors.black.withAlpha(20),
+                          isDense: false,
+                          disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: screenWidth * 0.02),
+                    Expanded(
+                      child: CustomTextField(
+                        label: loc.translate("phone_number"),
+                        hint: loc.translate("enter_phone_number"),
+                        controller: signupModel.phoneNumberController,
+                        keyboardType: TextInputType.phone,
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
                   label: loc.translate("dob"),
                   hint: loc.translate("dob_format"),
                   controller: signupModel.dobController,
-                  keyboardType: TextInputType.datetime,
+                  readOnly: true,
+                  keyboardType: TextInputType.none,
+                  onTap: () => signupModel.pickDOB(context),
                 ),
                 SizedBox(height: screenHeight * 0.01),
                 CustomTextField(
@@ -77,7 +111,7 @@ class _IndividualSignupViewState extends State<IndividualSignupView> {
                   controller: signupModel.nationalIdController,
                   keyboardType: TextInputType.number,
                 ),
-                SizedBox(height: screenHeight * 0.03),
+                SizedBox(height: screenHeight * 0.06),
                 ButtonWidget(
                   text: loc.translate("sign_up"),
                   onPressed: () async {
@@ -95,8 +129,6 @@ class _IndividualSignupViewState extends State<IndividualSignupView> {
                   width: screenWidth * 0.7,
                   height: screenHeight * 0.06,
                 ),
-                SizedBox(height: screenHeight * 0.04),
-                SocialAuthButtons(isSignup: true),
               ],
             ),
           ),

@@ -172,7 +172,7 @@ class LoginModel {
           await SharedPrefsHelper.saveLoginState(true);
           CustomSnackbar.show(
             context,
-            loc.translate("logged_in_individual"),
+            loc.translate("welcome_back_individual"),
             isError: false,
           );
           return UserType.individual;
@@ -181,7 +181,7 @@ class LoginModel {
           await SharedPrefsHelper.saveLoginState(true);
           CustomSnackbar.show(
             context,
-            loc.translate("logged_in_business"),
+            loc.translate("welcome_back_business"),
             isError: false,
           );
           return UserType.business;
@@ -195,7 +195,7 @@ class LoginModel {
         }
       }
 
-      // Dialog to choose userType
+      // المستخدم جديد - اختر النوع من الديالوج
       UserType? selectedType = await showDialog<UserType>(
         context: context,
         builder: (BuildContext context) {
@@ -325,10 +325,11 @@ class LoginModel {
 
       CustomSnackbar.show(
         context,
-        loc.translate("account_created_successfully"),
+        loc.translate("account_created_successfully_first_time_google"),
         isError: false,
       );
 
+      // لا تنقل هنا — التنقل في الزر فقط
       return selectedType;
     } catch (e) {
       CustomSnackbar.show(

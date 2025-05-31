@@ -9,6 +9,8 @@ class CustomTextField extends StatefulWidget {
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
+  final bool readOnly;
+  final VoidCallback? onTap;
 
   const CustomTextField({
     super.key,
@@ -20,6 +22,8 @@ class CustomTextField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.validator,
     this.suffixIcon,
+    this.readOnly = false,
+    this.onTap,
   });
 
   @override
@@ -38,6 +42,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
         obscureText: widget.obscureText && !isPasswordVisible,
         keyboardType: widget.keyboardType,
         validator: widget.validator,
+        readOnly: widget.readOnly,
+        onTap: widget.onTap,
         decoration: InputDecoration(
           labelText: widget.label,
           hintText: widget.hint,
@@ -46,21 +52,20 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
           hintStyle: TextStyle(color: Theme.of(context).hintColor),
           prefixIcon: widget.icon != null ? Icon(widget.icon) : null,
-          suffixIcon:
-              widget.obscureText
-                  ? IconButton(
-                    icon: Icon(
-                      isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        isPasswordVisible = !isPasswordVisible;
-                      });
-                    },
-                  )
-                  : widget.suffixIcon,
+          suffixIcon: widget.obscureText
+              ? IconButton(
+                  icon: Icon(
+                    isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isPasswordVisible = !isPasswordVisible;
+                    });
+                  },
+                )
+              : widget.suffixIcon,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           filled: true,
           fillColor: Colors.black.withAlpha(20),

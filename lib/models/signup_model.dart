@@ -1,4 +1,5 @@
 import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
+import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/widgets/shared/custom_snack_bar_widget.dart';
 import 'package:flutter/material.dart';
@@ -11,31 +12,76 @@ class SignUpModel {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
-  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController fullNameController = TextEditingController();
 
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
-    phoneNumberController.dispose();
+    fullNameController.dispose();
+  }
+
+  bool validatePassword(String password) {
+    final hasUppercase = RegExp(r'[A-Z]').hasMatch(password);
+    final hasLowercase = RegExp(r'[a-z]').hasMatch(password);
+    final hasDigit = RegExp(r'\d').hasMatch(password);
+    return hasUppercase && hasLowercase && hasDigit && password.length >= 6;
   }
 
   Future<UserType?> registerUser(BuildContext context) async {
+    final loc = AppLocalizations.of(context)!;
+
     final email = emailController.text.trim();
     final password = passwordController.text;
     final confirmPassword = confirmPasswordController.text;
-    final phoneNumber = phoneNumberController.text.trim();
+    final fullName = fullNameController.text.trim();
 
     if (email.isEmpty ||
         password.isEmpty ||
         confirmPassword.isEmpty ||
-        phoneNumber.isEmpty) {
-      CustomSnackbar.show(context, "All fields must be filled", isError: true);
+        fullName.isEmpty) {
+      CustomSnackbar.show(
+        context,
+        loc.translate("allFieldsRequired"),
+        isError: true,
+      );
+      return null;
+    }
+
+    if (fullName.length > 20) {
+      CustomSnackbar.show(
+        context,
+        loc.translate("fullNameTooLong"),
+        isError: true,
+      );
+      return null;
+    }
+
+    final containsNumber = RegExp(r'\d').hasMatch(fullName);
+    if (containsNumber) {
+      CustomSnackbar.show(
+        context,
+        loc.translate("fullNameNoNumbers"),
+        isError: true,
+      );
       return null;
     }
 
     if (password != confirmPassword) {
-      CustomSnackbar.show(context, "Passwords do not match", isError: true);
+      CustomSnackbar.show(
+        context,
+        loc.translate("passwordsNotMatch"),
+        isError: true,
+      );
+      return null;
+    }
+
+    if (!validatePassword(password)) {
+      CustomSnackbar.show(
+        context,
+        loc.translate("passwordRequirements"), // لازم تضيفي النص ده في ملف اللغات
+        isError: true,
+      );
       return null;
     }
 
@@ -47,17 +93,14 @@ class SignUpModel {
       if (user != null) {
         final userType = isIndividual ? 'individual' : 'business';
 
-        // Save basic user info in 'users' collection
         await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
           'email': email,
-          'phoneNumber': phoneNumber,
+          'fullName': fullName,
           'userType': userType,
         });
 
-        // Save userType in SharedPreferences
         await SharedPrefsHelper.saveUserType(userType);
 
-        // Navigate to the respective signup page
         if (isIndividual) {
           Navigator.pushNamed(
             context,
@@ -72,20 +115,20 @@ class SignUpModel {
       } else {
         CustomSnackbar.show(
           context,
-          "Error: User registration failed",
+          loc.translate("userRegistrationFailed"),
           isError: true,
         );
       }
     } on FirebaseAuthException catch (e) {
       CustomSnackbar.show(
         context,
-        "Error during registration: ${e.message}",
+        "${loc.translate("registrationError")}: ${e.message}",
         isError: true,
       );
     } catch (e) {
       CustomSnackbar.show(
         context,
-        "Error during registration: $e",
+        "${loc.translate("registrationError")}: $e",
         isError: true,
       );
     }
