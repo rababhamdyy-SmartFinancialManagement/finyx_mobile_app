@@ -11,12 +11,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   final FlutterLocalNotificationsPlugin notificationsPlugin;
-
+  
   ProfileCubit(this.notificationsPlugin) : super(ProfileState()) {
-    _loadUserData();
-    _setupNotifications();
+    _init();
   }
 
+  void _init() {
+    loadUserData();
+    _setupNotifications();
+    listenToAuthChanges(); // بدء الاستماع لتغييرات حالة المصادقة
+  }
   Future<void> _setupNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -58,6 +62,20 @@ class ProfileCubit extends Cubit<ProfileState> {
       notificationDetails,
     );
   }
+  // في ملف profile_cubit.dart
+void resetState() {
+  emit(ProfileState()); // إعادة تعيين الحالة إلى الحالة الأولية
+}
+
+void listenToAuthChanges() {
+  FirebaseAuth.instance.authStateChanges().listen((user) async {
+    if (user != null) {
+      await loadUserData(); // جلب بيانات المستخدم الجديد
+    } else {
+      resetState(); // إعادة تعيين الحالة إذا لم يكن هناك مستخدم مسجل دخول
+    }
+  });
+}
 
   Future<void> updateProfileField(String field, String value) async {
     try {
@@ -173,7 +191,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   //   }
   // }
 
-  Future<void> _loadUserData() async {
+  Future<void> loadUserData() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
@@ -394,8 +412,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     return false;
   }
 }
-
-
 
   String _getFirestoreFieldName(String field, String userType) {
     switch (field) {
