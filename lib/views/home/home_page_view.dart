@@ -1,5 +1,6 @@
 import 'package:finyx_mobile_app/cubits/bottom%20nav/navigation_cubit.dart';
 import 'package:finyx_mobile_app/cubits/bottom%20nav/navigation_state.dart';
+import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/views/home/homepage_body.dart';
 import 'package:finyx_mobile_app/views/profile/profile_view.dart';
@@ -40,11 +41,12 @@ class HomePageView extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return ChatDialog(
-                      onPressed: () {
-                        Navigator.of(
-                          context,
-                        ).pop(); // Close the Dialog when the button is pressed
+                    return BlocBuilder<PriceCubit, PriceState>(
+                      builder: (context, state) {
+                        return ChatDialog(
+                          onPressed: () => Navigator.pop(context),
+                          userType: userType,
+                        );
                       },
                     );
                   },
@@ -67,7 +69,6 @@ class HomePageView extends StatelessWidget {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: const CustomBottomNavbar(),
-          
         );
       },
     );
