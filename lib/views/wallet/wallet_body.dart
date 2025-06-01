@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 
-
 class WalletBody extends StatelessWidget {
   final UserType userType;
 
@@ -16,7 +15,6 @@ class WalletBody extends StatelessWidget {
     required this.userType,
   });
 
-  // List of colors for icons
   final List<Color> iconColors = [
     Colors.orange,
     Colors.blue,
@@ -31,37 +29,40 @@ class WalletBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
 
-    // Default items for individual users
-    final List<Map<String, dynamic>> defaultItemsIndividual = [
-      {'icon': Icons.flash_on, 'label': loc.translate('electricity')},
-      {'icon': Icons.wifi, 'label': loc.translate('internet')},
-      {'icon': Icons.fastfood_outlined, 'label': loc.translate('food')},
-      {'icon': Icons.money, 'label': loc.translate('zakat')},
-      {'icon': Icons.shopping_cart, 'label': loc.translate('shopping')},
-      {'icon': Icons.local_gas_station, 'label': loc.translate('gas')},
-      {'icon': Icons.water_drop, 'label': loc.translate('waterBill')},
-    ];
+    List<Map<String, dynamic>> getDefaultItems() {
+      if (userType == UserType.individual) {
+        return [
+          {'icon': Icons.flash_on, 'label': 'electricity'},
+          {'icon': Icons.wifi, 'label': 'internet'},
+          {'icon': Icons.fastfood_outlined, 'label': 'food'},
+          {'icon': Icons.money, 'label': 'zakat'},
+          {'icon': Icons.shopping_cart, 'label': 'shopping'},
+          {'icon': Icons.local_gas_station, 'label': 'gas'},
+          {'icon': Icons.water_drop, 'label': 'waterBill'},
+        ];
+      } else {
+        return [
+          {'icon': Icons.bar_chart, 'label': 'tRevenue'},
+          {'icon': Icons.stacked_line_chart, 'label': 'tExpenses'},
+          {'icon': Icons.trending_up, 'label': 'profits'},
+          {'icon': Icons.trending_down, 'label': 'losses'},
+          {'icon': Icons.multiple_stop_rounded, 'label': 'transfer'},
+          {'icon': Icons.monetization_on_rounded, 'label': 'eSalaries'},
+          {'icon': Icons.account_balance_wallet, 'label': 'loan'},
+        ];
+      }
+    }
 
-    // Default items for business users
-    final List<Map<String, dynamic>> defaultItemsBusiness = [
-      {'icon': Icons.bar_chart, 'label': loc.translate('tRevenue')},
-      {'icon': Icons.stacked_line_chart, 'label': loc.translate('tExpenses')},
-      {'icon': Icons.trending_up, 'label': loc.translate('profits')},
-      {'icon': Icons.trending_down, 'label': loc.translate('losses')},
-      {'icon': Icons.multiple_stop_rounded, 'label': loc.translate('transfer')},
-      {'icon': Icons.monetization_on_rounded, 'label': loc.translate('eSalaries')},
-      {'icon': Icons.account_balance_wallet, 'label': loc.translate('loan')},
-    ];
-
-    final defaultItems = userType == UserType.individual
-        ? defaultItemsIndividual
-        : defaultItemsBusiness;
+    String _getTranslatedLabel(String originalLabel) {
+      return loc.translate(originalLabel) ?? originalLabel;
+    }
 
     bool _isDefaultItem(String label) {
-      return defaultItems.any((item) => item['label'] == label);
+      return getDefaultItems().any((item) => item['label'] == label);
     }
 
     Color _getIconColor(String label, PriceCubit cubit, IconData icon) {
+      final defaultItems = getDefaultItems();
       int index = defaultItems.indexWhere((item) => item['label'] == label);
       if (index != -1) {
         return iconColors[index % iconColors.length];
@@ -103,15 +104,18 @@ class WalletBody extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: BlocBuilder<PriceCubit, PriceState>(
         builder: (context, state) {
+          final defaultItems = getDefaultItems();
           final entries = state.prices.entries.toList();
+          
           return ListView.builder(
             itemCount: defaultItems.length + entries.length,
             itemBuilder: (context, index) {
               if (index < defaultItems.length) {
                 final item = defaultItems[index];
-                final label = item['label'];
+                final originalLabel = item['label'];
+                final label = _getTranslatedLabel(originalLabel);
                 final icon = item['icon'];
-                final price = state.prices[label];
+                final price = state.prices[originalLabel] ?? state.prices[label];
                 final iconColor = iconColors[index % iconColors.length];
                 final bgColor = iconColor.withAlpha(15);
 
@@ -120,7 +124,7 @@ class WalletBody extends StatelessWidget {
                   label: label,
                   price: price,
                   context: context,
-                  onTap: () => _showModal(context, label, icon),
+                  onTap: () => _showModal(context, originalLabel, icon),
                   isDeletable: false,
                   backgroundColor: bgColor,
                   iconColor: iconColor,
@@ -146,7 +150,6 @@ class WalletBody extends StatelessWidget {
                   ),
                   onDismissed: (_) {
                     context.read<PriceCubit>().removePrice(label);
-                    SharedPrefsHelper.savePrices(state.prices);
                   },
                   child: WalletListTile(
                     icon: Icons.add,
