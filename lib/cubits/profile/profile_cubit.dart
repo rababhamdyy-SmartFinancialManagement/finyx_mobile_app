@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -338,57 +339,63 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> deleteAccount() async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) return;
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) return;
 
-      final userDoc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
+  try {
+    final userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
 
-      if (userDoc.exists) {
-        final userType = userDoc.data()?['userType'] ?? 'individual';
-        final collectionName =
-            userType == 'individual' ? 'individuals' : 'businesses';
+    if (userDoc.exists) {
+      final userType = userDoc.data()?['userType'] ?? 'individual';
+      final collectionName =
+          userType == 'individual' ? 'individuals' : 'businesses';
 
-        await FirebaseFirestore.instance
-            .collection(collectionName)
-            .doc(user.uid)
-            .delete();
-
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .delete();
-      }
-
-      await user.delete();
-
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.clear();
-    } catch (e) {
-      rethrow;
+      await FirebaseFirestore.instance.collection(collectionName).doc(user.uid).delete();
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
     }
+
+    await user.delete();
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  } catch (e) {
+    rethrow;
   }
+}
 
-  Future<bool> reauthenticate(String password) async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null || user.email == null) return false;
+ Future<bool> reauthenticate(String credentialInput) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) return false;
 
-      final credential = EmailAuthProvider.credential(
-        email: user.email!,
-        password: password,
+  final providerId = user.providerData.first.providerId;
+
+  try {
+    if (providerId == 'google.com') {
+      final googleUser = await GoogleSignIn().signIn();
+      final googleAuth = await googleUser?.authentication;
+      if (googleAuth == null) return false;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
-
       await user.reauthenticateWithCredential(credential);
       return true;
-    } catch (e) {
-      return false;
+    } else {
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: credentialInput,
+      );
+      await user.reauthenticateWithCredential(credential);
+      return true;
     }
+  } catch (_) {
+    return false;
   }
+}
+
+
 
   String _getFirestoreFieldName(String field, String userType) {
     switch (field) {

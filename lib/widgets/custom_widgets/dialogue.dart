@@ -18,13 +18,13 @@ class Dialogue extends StatefulWidget {
 }
 
 class _DialogueState extends State<Dialogue> {
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _inputController = TextEditingController();
   bool _isLoading = false;
   bool _showError = false;
 
   @override
   void dispose() {
-    _passwordController.dispose();
+    _inputController.dispose();
     super.dispose();
   }
 
@@ -36,6 +36,7 @@ class _DialogueState extends State<Dialogue> {
 
     final loc = AppLocalizations.of(context)!;
     final scaffold = ScaffoldMessenger.of(context);
+    final user = FirebaseAuth.instance.currentUser;
 
     try {
       if (widget.actionType == 'logout') {
@@ -48,36 +49,38 @@ class _DialogueState extends State<Dialogue> {
         await SharedPrefsHelper.saveLoginState(false);
 
         if (mounted) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/login',
-            (route) => false,
-          );
+          Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
         }
       } else if (widget.actionType == 'delete') {
         final cubit = context.read<ProfileCubit>();
-        final isValid = await cubit.reauthenticate(_passwordController.text);
+        final isGoogle = user?.providerData.first.providerId == 'google.com';
+        bool isValid = false;
 
-        if (isValid) {
-          await cubit.deleteAccount();
-          scaffold.showSnackBar(
-            SnackBar(
-              content: Text(loc.translate("account_deleted_successfully")),
-              backgroundColor: Colors.green,
-            ),
-          );
-          if (mounted) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/sign_up',
-              (route) => false,
-            );
-          }
+        if (isGoogle) {
+          isValid = _inputController.text.trim() == user?.email;
         } else {
+          isValid = await cubit.reauthenticate(_inputController.text);
+        }
+
+        if (!isValid) {
           setState(() {
             _showError = true;
             _isLoading = false;
           });
+          return;
+        }
+
+        await cubit.deleteAccount();
+
+        scaffold.showSnackBar(
+          SnackBar(
+            content: Text(loc.translate("account_deleted_successfully")),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        if (mounted) {
+          Navigator.pushNamedAndRemoveUntil(context, '/sign_up', (_) => false);
         }
       }
     } catch (e) {
@@ -87,6 +90,7 @@ class _DialogueState extends State<Dialogue> {
           backgroundColor: Colors.red,
         ),
       );
+    } finally {
       setState(() => _isLoading = false);
     }
   }
@@ -95,6 +99,9 @@ class _DialogueState extends State<Dialogue> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final isDelete = widget.actionType == 'delete';
+    final user = FirebaseAuth.instance.currentUser;
+    final providerId = user?.providerData.first.providerId;
+    final isGoogle = providerId == 'google.com';
 
     return Center(
       child: AlertDialog(
@@ -124,18 +131,25 @@ class _DialogueState extends State<Dialogue> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    TextField(
-                      controller: _passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: loc.translate("enter_password"),
-                        border: const OutlineInputBorder(),
-                        errorText:
-                            _showError
-                                ? loc.translate("incorrect_password")
-                                : null,
+                    if (widget.actionType == 'delete')
+                      TextField(
+                        controller: _inputController,
+                        obscureText: !isGoogle,
+                        keyboardType:
+                            isGoogle
+                                ? TextInputType.emailAddress
+                                : TextInputType.text,
+                        decoration: InputDecoration(
+                          labelText:
+                              isGoogle
+                                  ? loc.translate("enter_email_to_confirm")
+                                  : loc.translate("enter_password_to_confirm"),
+                          errorText:
+                              _showError
+                                  ? loc.translate("invalid_input")
+                                  : null,
+                        ),
                       ),
-                    ),
                   ],
                 )
                 : null,

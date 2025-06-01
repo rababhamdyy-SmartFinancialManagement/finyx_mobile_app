@@ -123,7 +123,7 @@ class LoginModel {
     return null;
   }
 
-  Future<UserType?> signInWithGoogle(BuildContext context) async {
+  Future<Map<String, dynamic>?> signInWithGoogle(BuildContext context) async {
     final loc = AppLocalizations.of(context)!;
 
     try {
@@ -148,16 +148,20 @@ class LoginModel {
               .doc(user.uid)
               .get();
 
-      // إذا كان المستخدم موجودًا سابقًا
+      // ✅ المستخدم موجود مسبقاً
       if (userDoc.exists) {
         final userType = userDoc.get('userType');
-        await _updateProfileData(user); // تحديث البيانات إذا تغيرت في جوجل
-        return userType == 'individual'
-            ? UserType.individual
-            : UserType.business;
+        await _updateProfileData(user);
+        return {
+          'userType':
+              userType == 'individual'
+                  ? UserType.individual
+                  : UserType.business,
+          'isNewUser': false,
+        };
       }
 
-      // New user - show dialog to select type
+      // 🆕 مستخدم جديد - اختيار نوع المستخدم
       UserType? selectedType = await showDialog<UserType>(
         context: context,
         builder: (BuildContext context) {
@@ -268,13 +272,14 @@ class LoginModel {
         'userType':
             selectedType == UserType.individual ? 'individual' : 'business',
         'email': user.email,
-        'fullName': user.displayName ?? 'Google User', // استخدام اسم جوجل
+        'fullName': user.displayName ?? 'Google User',
         'photoUrl': user.photoURL,
         'createdAt': FieldValue.serverTimestamp(),
       });
+
       await _updateProfileData(user);
 
-      return selectedType;
+      return {'userType': selectedType, 'isNewUser': true};
     } catch (e) {
       CustomSnackbar.show(
         context,
@@ -299,6 +304,6 @@ class LoginModel {
       'profileImage': user.photoURL?.replaceAll('s96-c', 's400-c'),
       'email': user.email,
       'updatedAt': FieldValue.serverTimestamp(),
-    }, SetOptions(merge: true)); // merge للحفاظ على البيانات الأخرى
+    }, SetOptions(merge: true));
   }
 }

@@ -208,5 +208,8 @@
   "invalidCompanyLocation": "Invalid company location. It must not be empty or numbers only.",
   "invalidBudget": "Invalid budget. It must contain numbers only.",
   "invalidNumberOfEmployees": "Invalid number of employees. It must contain numbers only.",
-  "businessRegistrationSuccessful": "Business registration successful!"
+  "businessRegistrationSuccessful": "Business registration successful!",
+  "google_account_delete_note": "This account was created via Google. You will be asked to reauthenticate using your Google account.",
+"enter_your_email_to_confirm": "Enter your email to confirm",
+  "email_not_match": "Email does not match"
 }

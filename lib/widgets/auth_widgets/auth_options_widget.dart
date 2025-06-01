@@ -166,26 +166,34 @@ class _SocialAuthButtonsState extends State<SocialAuthButtons> {
           spacing: screenWidth * 0.05,
           runSpacing: 10,
           children: [
-            SocialIconButton(
-              asset: "assets/images/icons/google.png",
-              onTap: () async {
-                final loginModel = LoginModel();
-                final userType = await loginModel.signInWithGoogle(context);
+           SocialIconButton(
+  asset: "assets/images/icons/google.png",
+  onTap: () async {
+    final loginModel = LoginModel();
+    final result = await loginModel.signInWithGoogle(context);
 
-                if (userType == UserType.individual) {
-                  Navigator.pushReplacementNamed(context, '/individual_signup');
-                } else if (userType == UserType.business) {
-                  Navigator.pushReplacementNamed(context, '/business_signup');
-                } else if (userType != null) {
-                  Navigator.pushReplacementNamed(
-                    context,
-                    '/homepage',
-                    arguments: userType,
-                  );
-                }
-              },
-              screenWidth: screenWidth,
-            ),
+    if (result == null) return;
+
+    final UserType userType = result['userType'];
+    final bool isNewUser = result['isNewUser'];
+
+    if (isNewUser) {
+      if (userType == UserType.individual) {
+        Navigator.pushReplacementNamed(context, '/individual_signup');
+      } else if (userType == UserType.business) {
+        Navigator.pushReplacementNamed(context, '/business_signup');
+      }
+    } else {
+      Navigator.pushReplacementNamed(
+        context,
+        '/homepage',
+        arguments: userType,
+      );
+    }
+  },
+  screenWidth: screenWidth,
+),
+
 
             SocialIconButton(
               asset: "assets/images/icons/facebook.png",

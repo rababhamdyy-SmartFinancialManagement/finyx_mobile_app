@@ -203,11 +203,15 @@
   "invalidAddress": "العنوان يجب أن يحتوي على حروف وأرقام فقط",
   "invalidIncome": "الدخل يجب أن يحتوي على أرقام فقط",
   "passwordRequirements": "يجب أن تحتوي كلمة المرور على حروف كبيرة وصغيرة وأرقام، وأن تكون على الأقل 6 أحرف.",
-   "pleaseFillAllFields": "يرجى ملء جميع الحقول!",
+  "pleaseFillAllFields": "يرجى ملء جميع الحقول!",
   "invalidCompanyName": "اسم الشركة غير صالح. يجب ألا يكون فارغًا أو أرقام فقط.",
   "invalidCompanyLocation": "موقع الشركة غير صالح. يجب ألا يكون فارغًا أو أرقام فقط.",
   "invalidBudget": "الميزانية غير صالحة. يجب أن تحتوي على أرقام فقط.",
   "invalidNumberOfEmployees": "عدد الموظفين غير صالح. يجب أن يحتوي على أرقام فقط.",
-  "businessRegistrationSuccessful": "تم تسجيل الشركة بنجاح!"
+  "businessRegistrationSuccessful": "تم تسجيل الشركة بنجاح!",
+  "google_account_delete_note": "تم إنشاء هذا الحساب باستخدام حساب جوجل. ستحتاج لتأكيد الحذف عبر تسجيل دخول جوجل.",
+  "enter_your_email_to_confirm": "أدخل بريدك الإلكتروني للتأكيد",
+  "email_not_match": "البريد الإلكتروني غير مطابق"
+
 
 }
