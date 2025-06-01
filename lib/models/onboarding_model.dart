@@ -1,4 +1,6 @@
-/// Model: Represents a single onboarding page
+import 'package:flutter/material.dart';
+import 'applocalization.dart';
+
 class OnboardingPage {
   final String image;
   final String title;
@@ -11,24 +13,24 @@ class OnboardingPage {
   });
 }
 
-/// List of onboarding pages (model data)
-final List<OnboardingPage> onboardingPages = [
-  OnboardingPage(
-    image: "assets/images/intro/financial_planning_1.png",
-    title: "Welcome to Finyx!",
-    message:
-        "Take control of your finances effortlessly track, save, and grow with ease",
-  ),
-  OnboardingPage(
-    image: "assets/images/intro/report_1.png",
-    title: "Plan your finances",
-    message:
-        "Track your progress, and achieve your financial goals with confidence",
-  ),
-  OnboardingPage(
-    image: "assets/images/intro/planning_1.png",
-    title: "Take control of your finances!",
-    message:
-        "Plan wisely, manage efficiently, and achieve your financial goals with ease",
-  ),
-];
+List<OnboardingPage> onboardingPages(BuildContext context) {
+  final loc = AppLocalizations.of(context)!;
+
+  return [
+    OnboardingPage(
+      image: "assets/images/intro/financial_planning_1.png",
+      title: loc.translate("onboarding_title_1"),
+      message: loc.translate("onboarding_msg_1"),
+    ),
+    OnboardingPage(
+      image: "assets/images/intro/report_1.png",
+      title: loc.translate("onboarding_title_2"),
+      message: loc.translate("onboarding_msg_2"),
+    ),
+    OnboardingPage(
+      image: "assets/images/intro/planning_1.png",
+      title: loc.translate("onboarding_title_3"),
+      message: loc.translate("onboarding_msg_3"),
+    ),
+  ];
+}

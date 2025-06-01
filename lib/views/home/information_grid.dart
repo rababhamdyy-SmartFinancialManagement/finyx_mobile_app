@@ -47,7 +47,7 @@ class InformationGrid extends StatelessWidget {
             {'icon': Icons.trending_down, 'label': loc.translate("losses")},
             {'icon': Icons.multiple_stop_rounded, 'label': loc.translate("transfer")},
             {'icon': Icons.monetization_on_rounded, 'label': loc.translate("eSalaries")},
-            {'icon': Icons.account_balance_wallet, 'label': loc.translate("loan")},
+               {'icon': Icons.account_balance_wallet, 'label': loc.translate("loan")},
             {'icon': Icons.now_widgets_outlined, 'label': loc.translate("more")},
           ];
 

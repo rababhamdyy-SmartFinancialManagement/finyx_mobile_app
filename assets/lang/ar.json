@@ -208,6 +208,14 @@
   "invalidCompanyLocation": "موقع الشركة غير صالح. يجب ألا يكون فارغًا أو أرقام فقط.",
   "invalidBudget": "الميزانية غير صالحة. يجب أن تحتوي على أرقام فقط.",
   "invalidNumberOfEmployees": "عدد الموظفين غير صالح. يجب أن يحتوي على أرقام فقط.",
-  "businessRegistrationSuccessful": "تم تسجيل الشركة بنجاح!"
-
+  "businessRegistrationSuccessful": "تم تسجيل الشركة بنجاح!",
+  "onboarding_title_1": "مرحبًا بك في Finyx!",
+  "onboarding_msg_1": "تحكّم في أموالك بكل سهولة، تتبع وادخر ونمّي بثقة",
+  "onboarding_title_2": "خطط لتمويلك",
+  "onboarding_msg_2": "تتبع تقدمك وحقق أهدافك المالية بثقة",
+  "onboarding_title_3": "سيطر على أموالك!",
+  "onboarding_msg_3": "خطط بحكمة، وادِر بكفاءة، وحقق أهدافك المالية بسهولة",
+  "onboarding_skip": "تخطي",
+  "next": "التالي",
+  "get_started": "ابدأ الآن"
 }
