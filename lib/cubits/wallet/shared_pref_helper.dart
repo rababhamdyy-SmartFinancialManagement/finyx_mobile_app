@@ -44,14 +44,16 @@ class SharedPrefsHelper {
   }
 
   static Future<void> saveUserType(String userType) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('user_type', userType);
-  }
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('user_type', userType);
+  // عند تغيير نوع المستخدم، نقوم بمسح جميع الأسعار القديمة
+  await resetAllPrices();
+}
 
-  static Future<String?> getUserType() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('user_type');
-  }
+static Future<String?> getUserType() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('user_type');
+}
 
   static Future<void> saveLoginState(bool loggedIn) async {
     final prefs = await SharedPreferences.getInstance();
@@ -84,4 +86,5 @@ class SharedPrefsHelper {
     final dateString = prefs.getString('last_reset_date');
     return dateString != null ? DateTime.parse(dateString) : null;
   }
+
 }

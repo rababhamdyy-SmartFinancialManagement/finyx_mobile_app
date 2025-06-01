@@ -2,14 +2,14 @@ import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:flutter/material.dart';
 
 class WalletListTile extends StatelessWidget {
-  final IconData icon; // Icon to be displayed for the list item
-  final String label; // Label for the item (e.g., "Electricity")
-  final double? price; // Price associated with the item
-  final BuildContext context; // The context in which the widget is used
-  final VoidCallback onTap; // Callback function when the tile is tapped
-  final bool isDeletable; // Flag to determine if the item is deletable
-  final Color backgroundColor; // Background color of the tile
-  final Color iconColor; // Color for the icon
+  final IconData icon;
+  final String label;
+  final double? price;
+  final BuildContext context;
+  final VoidCallback onTap;
+  final bool isDeletable;
+  final Color backgroundColor;
+  final Color iconColor;
 
   const WalletListTile({
     super.key,
@@ -28,13 +28,13 @@ class WalletListTile extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final Color trailingBackgroundColor =
         theme.brightness == Brightness.dark
-            ? theme.cardColor // Get the background color from the theme for dark mode
-            : Colors.white; // Use white for light mode
+            ? theme.cardColor
+            : Colors.white;
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
-        tileColor: backgroundColor, // Set the background color of the tile
+        tileColor: backgroundColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         leading: _buildLeadingIcon(),
         title: Text(
@@ -58,7 +58,6 @@ class WalletListTile extends StatelessWidget {
     );
   }
 
-  // أضفنا context هنا عشان نستخدم loc.translate داخل النص
   Widget _buildTrailingButton(Color trailingBackgroundColor, BuildContext context) {
     final loc = AppLocalizations.of(context)!;
 
@@ -68,13 +67,13 @@ class WalletListTile extends StatelessWidget {
         width: 140,
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          color: trailingBackgroundColor, // Use background color based on theme
+          color: trailingBackgroundColor,
           border: Border.all(color: iconColor),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
           price != null
-              ? 'EGP $price/${loc.translate('month')}' 
+              ? '${loc.translate('currency_symbol')} $price/${loc.translate('month')}'
               : loc.translate('Enter Price'),
           style: const TextStyle(fontSize: 14, fontFamily: "Poppins"),
           textAlign: TextAlign.center,
