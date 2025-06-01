@@ -27,7 +27,7 @@ class _ChatDialogState extends State<ChatDialog> {
     "Financial Tips",
   ];
   String _chatContent = "Welcome! How can I help you today?";
-  bool _isLoading = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -53,12 +53,13 @@ class _ChatDialogState extends State<ChatDialog> {
                   "Financial Assistant",
                   style: TextStyle(
                     fontSize: 20, // تم الاحتفاظ بحجم 20 للعنوان الرئيسي
-                    fontFamily: "Poppins", 
-                    fontWeight: FontWeight.bold, 
-                    color: Color(0xFF3E0555)
-                ),),
+                    fontFamily: "Poppins",
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF3E0555),
+                  ),
+                ),
                 IconButton(
-                  icon: const Icon(Icons.close,color: Color(0xFF3E0555),),
+                  icon: const Icon(Icons.close, color: Color(0xFF3E0555)),
                   onPressed: widget.onPressed,
                 ),
               ],
@@ -109,10 +110,7 @@ class _ChatDialogState extends State<ChatDialog> {
                   },
                   child: const Text(
                     "Back to Menu",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: "Poppins"
-                    ),
+                    style: TextStyle(fontSize: 16, fontFamily: "Poppins"),
                   ),
                 ),
               ),
@@ -130,10 +128,7 @@ class _ChatDialogState extends State<ChatDialog> {
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 0,
-        textStyle: TextStyle(
-          fontSize: 16,
-          fontFamily: "Poppins",
-        )
+        textStyle: TextStyle(fontSize: 16, fontFamily: "Poppins"),
       ),
       onPressed: () {
         setState(() {
@@ -144,14 +139,8 @@ class _ChatDialogState extends State<ChatDialog> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            option,
-            style: TextStyle(
-              fontSize: 16,
-              fontFamily: "Poppins",
-            ),
-          ), 
-          const Icon(Icons.chevron_right, size: 20)
+          Text(option, style: TextStyle(fontSize: 16, fontFamily: "Poppins")),
+          const Icon(Icons.chevron_right, size: 20),
         ],
       ),
     );
@@ -175,10 +164,7 @@ class _ChatDialogState extends State<ChatDialog> {
       default:
         return const Text(
           "Select an option",
-          style: TextStyle(
-            fontSize: 16,
-            fontFamily: "Poppins"
-          ),
+          style: TextStyle(fontSize: 16, fontFamily: "Poppins"),
         );
     }
   }
@@ -246,10 +232,7 @@ class _ChatDialogState extends State<ChatDialog> {
 
     return Column(
       children: [
-        _buildChatBubble(
-          isUser: false, 
-          message: "Recommended savings plan:"
-        ),
+        _buildChatBubble(isUser: false, message: "Recommended savings plan:"),
         _buildChatBubble(
           isUser: false,
           message: "Monthly Expenses: ${total.toStringAsFixed(2)} EGP",
@@ -279,24 +262,76 @@ class _ChatDialogState extends State<ChatDialog> {
     var sorted =
         expenses.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
 
+    // حساب متوسط المصروفات لكل فئة
+    double average = total / expenses.length;
+
+    // تحديد الفئات التي تجاوزت المتوسط
+    var exceededCategories = sorted.where((e) => e.value > average).toList();
+
     return Column(
       children: [
         _buildChatBubble(
-          isUser: false, 
-          message: "Your spending analysis:"
+          isUser: false,
+          message: "📊 Your Detailed Spending Analysis:",
         ),
         _buildChatBubble(
           isUser: false,
-          message: "Total: ${total.toStringAsFixed(2)} EGP",
+          message: "Total Expenses: ${total.toStringAsFixed(2)} EGP",
         ),
-        ...sorted.take(3).map((e) {
-          double percent = (e.value / total) * 100;
-          return _buildChatBubble(
+        _buildChatBubble(
+          isUser: false,
+          message: "Average per Category: ${average.toStringAsFixed(2)} EGP",
+        ),
+
+        // تحذير إذا تجاوز المصروفات حد معين (يمكن تعديل القيمة حسب احتياجاتك)
+        if (total > 5000) // مثال: إذا تجاوزت المصروفات 5000 جنيه
+          _buildChatBubble(
             isUser: false,
             message:
-                "${e.key}: ${e.value.toStringAsFixed(2)} EGP (${percent.toStringAsFixed(1)}%)",
+                "⚠️ Warning: Your expenses have exceeded the recommended budget!",
+          ),
+
+        // عرض أهم 3 فئات تصرفًا
+        _buildChatBubble(isUser: false, message: "Top Spending Categories:"),
+        ...sorted.take(3).map((e) {
+          double percent = (e.value / total) * 100;
+          return Column(
+            children: [
+              _buildChatBubble(
+                isUser: false,
+                message:
+                    "${e.key}: ${e.value.toStringAsFixed(2)} EGP (${percent.toStringAsFixed(1)}%)",
+              ),
+              // إضافة نصائح توفير خاصة بكل فئة
+              if (FinancialTips.categoryTips.containsKey(e.key.toLowerCase()))
+                ...FinancialTips.categoryTips[e.key.toLowerCase()]!
+                    .take(2)
+                    .map(
+                      (tip) =>
+                          _buildChatBubble(isUser: false, message: "💡 $tip"),
+                    ),
+            ],
           );
         }),
+
+        // عرض الفئات التي تجاوزت المتوسط
+        if (exceededCategories.isNotEmpty)
+          _buildChatBubble(
+            isUser: false,
+            message: "Categories exceeding average:",
+          ),
+        ...exceededCategories.take(3).map((e) {
+          return _buildChatBubble(
+            isUser: false,
+            message: "⚠️ ${e.key} (${e.value.toStringAsFixed(2)} EGP)",
+          );
+        }),
+
+        // نصائح عامة للتوفير
+        _buildChatBubble(isUser: false, message: "💎 General Savings Tips:"),
+        ...FinancialTips.generalTips
+            .take(3)
+            .map((tip) => _buildChatBubble(isUser: false, message: "✨ $tip")),
       ],
     );
   }
