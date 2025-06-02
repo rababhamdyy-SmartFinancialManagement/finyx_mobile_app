@@ -231,6 +231,9 @@
   "invalidCompanyLocation": "موقع الشركة غير صالح. يجب ألا يكون فارغًا أو أرقام فقط.",
   "invalidBudget": "الميزانية غير صالحة. يجب أن تحتوي على أرقام فقط.",
   "invalidNumberOfEmployees": "عدد الموظفين غير صالح. يجب أن يحتوي على أرقام فقط.",
-  "businessRegistrationSuccessful": "تم تسجيل الشركة بنجاح!"
+  "businessRegistrationSuccessful": "تم تسجيل الشركة بنجاح!",
+  "reset_confirmation_title": "بدء جديد",
+  "reset_confirmation_message": "هل أنت متأكد أنك تريد حذف جميع المصروفات الحالية والبدء من جديد؟",
+  "no": "لا"
 
 }

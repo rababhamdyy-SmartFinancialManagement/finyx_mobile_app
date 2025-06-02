@@ -223,5 +223,8 @@
   "invalidCompanyLocation": "Invalid company location. It must not be empty or numbers only.",
   "invalidBudget": "Invalid budget. It must contain numbers only.",
   "invalidNumberOfEmployees": "Invalid number of employees. It must contain numbers only.",
-  "businessRegistrationSuccessful": "Business registration successful!"
+  "businessRegistrationSuccessful": "Business registration successful!",
+  "reset_confirmation_message": "Are you sure you want to delete all current expenses and start fresh?",
+  "reset_confirmation_title": "Start Fresh",
+  "no": "No"
 }
