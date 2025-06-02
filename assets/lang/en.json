@@ -234,6 +234,15 @@
   "enter_email_to_confirm": "Enter your email to confirm",
   "enter_password_to_confirm": "Enter your password to confirm",
   "invalid_input": "Invalid input",
-    "logged_out_successfully": "Logged out successfully"
+    "logged_out_successfully": "Logged out successfully",
+  "onboarding_title_1": "Welcome to Finyx!",
+  "onboarding_msg_1": "Take control of your finances effortlessly, track, save, and grow with ease.",
+  "onboarding_title_2": "Plan your finances",
+  "onboarding_msg_2": "Track your progress and achieve your financial goals with confidence.",
+  "onboarding_title_3": "Take control of your finances!",
+  "onboarding_msg_3": "Plan wisely, manage efficiently, and achieve your financial goals with ease.",
+  "onboarding_skip": "Skip",
+  "next": "Next",
+  "get_started": "Get Started"
 
 }
