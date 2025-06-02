@@ -40,38 +40,36 @@ class _DialogueState extends State<Dialogue> {
 
     try {
       if (widget.actionType == 'logout') {
-        // 1. أولاً قم بتسجيل الخروج من Firebase
-        await FirebaseAuth.instance.signOut();
+        // 1. إعادة تعيين الحالة أولاً
+        profileCubit.resetState();
 
-        // 2. ثم تسجيل الخروج من جوجل إذا كان مستخدم جوجل
+        // 2. تسجيل الخروج من جوجل إذا كان مستخدم جوجل
         final googleSignIn = GoogleSignIn();
         try {
           await googleSignIn.disconnect();
         } catch (_) {}
         await googleSignIn.signOut();
 
-        // 3. مسح حالة تسجيل الدخول من SharedPreferences
-        await SharedPrefsHelper.saveLoginState(false);
-        profileCubit.resetState();
+        // 3. تسجيل الخروج من Firebase
+        await FirebaseAuth.instance.signOut();
 
-        // 4. إظهار رسالة النجاح
-        scaffold.showSnackBar(
-          SnackBar(
-            content: Text(loc.translate("logged_out_successfully")),
-            backgroundColor: Colors.green,
-          ),
-        );
+        // 4. مسح حالة تسجيل الدخول من SharedPreferences
+        await SharedPrefsHelper.saveLoginState(false);
 
         // 5. الانتقال إلى شاشة تسجيل الدخول
         if (mounted) {
           Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
         }
 
-        // 6. أخيراً، إعادة تعيين حالة البروفايل بعد كل العمليات
-        profileCubit.resetState();
-      } else if (widget.actionType == 'delete') {
-        // ... (الكود الحالي لحذف الحساب يبقى كما هو)
+        // 6. إظهار رسالة النجاح
+        scaffold.showSnackBar(
+          SnackBar(
+            content: Text(loc.translate("logged_out_successfully")),
+            backgroundColor: Colors.green,
+          ),
+        );
       }
+      // ... معالجة حذف الحساب ...
     } catch (e) {
       if (mounted) {
         scaffold.showSnackBar(

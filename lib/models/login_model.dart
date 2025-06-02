@@ -42,42 +42,39 @@ class LoginModel {
   final password = passwordController.text;
 
   if (email.isEmpty || password.isEmpty) {
-    CustomSnackbar.show(
-      context,
-      loc.translate("email_or_password_empty"),
-      isError: true,
-    );
+    CustomSnackbar.show(context, loc.translate("email_or_password_empty"), isError: true);
     return null;
   }
-
   try {
     final UserCredential userCredential = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
 
     final user = userCredential.user;
-    if (user == null) {
-      CustomSnackbar.show(
-        context,
-        loc.translate("login_failed_user_not_found"),
-        isError: true,
-      );
-      return null;
-    }
-await user.reload();
-    final refreshedUser = FirebaseAuth.instance.currentUser;
+    if (user == null) return null;
 
-    // Get fresh data from server
+    // إعادة تحميل البيانات مباشرة بعد الدخول
+    await user.reload();
+    
     final profileCubit = context.read<ProfileCubit>();
-    await profileCubit.loadUserData();
+    await profileCubit.loadUserData(); 
 
-
+    // جلب أحدث بيانات من Firestore
     final userDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
-        .get(GetOptions(source: Source.server)); // جلب أحدث البيانات من السيرفر
+        .get(GetOptions(source: Source.server));
+
+    if (!userDoc.exists) {
+      CustomSnackbar.show(context, loc.translate("user_data_not_found"), isError: true);
+      return null;
+    }
 
     final userType = userDoc.data()?['userType'];
+    
+    // تحميل البيانات مع التأكد من تحديث الحالة
+    await profileCubit.loadUserData();
 
+    // حفظ بيانات الاعتماد إذا كان مطلوباً
     final prefs = await SharedPreferences.getInstance();
     if (isChecked) {
       await prefs.setString('saved_email', email);
@@ -90,41 +87,19 @@ await user.reload();
     if (userType == "individual") {
       await SharedPrefsHelper.saveUserType("individual");
       await SharedPrefsHelper.saveLoginState(true);
-      CustomSnackbar.show(
-        context,
-        loc.translate("logged_in_individual"),
-        isError: false,
-      );
       return UserType.individual;
     } else if (userType == "business") {
       await SharedPrefsHelper.saveUserType("business");
       await SharedPrefsHelper.saveLoginState(true);
-      CustomSnackbar.show(
-        context,
-        loc.translate("logged_in_business"),
-        isError: false,
-      );
       return UserType.business;
     } else {
-      CustomSnackbar.show(
-        context,
-        loc.translate("unknown_user_type"),
-        isError: true,
-      );
+      CustomSnackbar.show(context, loc.translate("unknown_user_type"), isError: true);
       return null;
     }
   } on FirebaseAuthException catch (e) {
-    CustomSnackbar.show(
-      context,
-      "${loc.translate("login_error")}: ${e.message}",
-      isError: true,
-    );
+    CustomSnackbar.show(context, "${loc.translate("login_error")}: ${e.message}", isError: true);
   } catch (e) {
-    CustomSnackbar.show(
-      context,
-      "${loc.translate("unexpected_error")}: $e",
-      isError: true,
-    );
+    CustomSnackbar.show(context, "${loc.translate("unexpected_error")}: $e", isError: true);
   }
   return null;
 }

@@ -11,18 +11,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   final FlutterLocalNotificationsPlugin notificationsPlugin;
-  
-ProfileCubit(this.notificationsPlugin) : super(ProfileState()) {
-  loadUserData();
-  _setupNotifications();
-  listenToAuthChanges();
-}
+
+  ProfileCubit(this.notificationsPlugin) : super(ProfileState()) {
+    loadUserData();
+    _setupNotifications();
+    listenToAuthChanges();
+  }
 
   void _init() {
     loadUserData();
     _setupNotifications();
     listenToAuthChanges(); // بدء الاستماع لتغييرات حالة المصادقة
   }
+
   Future<void> _setupNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -64,53 +65,28 @@ ProfileCubit(this.notificationsPlugin) : super(ProfileState()) {
       notificationDetails,
     );
   }
+
   // في ملف profile_cubit.dart
-void resetState() {
-  emit(ProfileState()); // إعادة تعيين الحالة إلى الحالة الأولية
-}
+  void resetState() {
+    emit(ProfileState()); // إعادة تعيين الحالة إلى الحالة الأولية
+  }
 
-void listenToAuthChanges() {
-  FirebaseAuth.instance.authStateChanges().listen((user) async {
-    if (user != null) {
-      await loadUserData(); // جلب بيانات المستخدم الجديد
-    } else {
-      emit(ProfileState()); // إعادة تعيين الحالة إذا لم يكن هناك مستخدم
-    }
-  });
-}
- Future<void> updateProfileField(String field, String value) async {
-  try {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
+  void listenToAuthChanges() {
+    FirebaseAuth.instance.authStateChanges().listen((user) async {
+      if (user != null) {
+        await loadUserData(); // جلب بيانات المستخدم الجديد
+      } else {
+        emit(ProfileState()); // إعادة تعيين الحالة إذا لم يكن هناك مستخدم
+      }
+    });
+  }
 
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .get();
+  Future<void> updateProfileField(String field, String value) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
 
-    if (userDoc.exists) {
-      final userType = userDoc.data()?['userType'] ?? 'individual';
-      final collectionName = userType == 'individual' ? 'individuals' : 'businesses';
-      String firestoreField = _getFirestoreFieldName(field, userType);
-
-      // Write batch to update both collections
-      final batch = FirebaseFirestore.instance.batch();
-      
-      // Update the main user document
-      batch.update(
-        FirebaseFirestore.instance.collection('users').doc(user.uid),
-        {firestoreField: value}
-      );
-      
-      // Update the details collection
-      batch.update(
-        FirebaseFirestore.instance.collection(collectionName).doc(user.uid),
-        {firestoreField: value}
-      );
-
-      await batch.commit();
-
-      // Update local state
+      // تحديث الحالة المحلية أولاً لتظهر التغييرات فوراً
       switch (field) {
         case 'Name':
           emit(state.copyWith(name: value));
@@ -128,26 +104,44 @@ void listenToAuthChanges() {
           emit(state.copyWith(idNumber: value));
           break;
         case 'Salary':
-          emit(state.copyWith(salary: value));
+          emit(state.copyWith(salary: value)); // التحديث الفوري للراتب
           break;
       }
 
-      await _addNotification(
-        AppNotification(
-          id: '${DateTime.now().millisecondsSinceEpoch}',
-          title: 'Profile Update',
-          message: '$field updated to $value',
-          timestamp: DateTime.now(),
-        ),
-      );
-    }
-  } catch (e) {
-    debugPrint('Error updating $field: ${e.toString()}');
-    rethrow;
-  }
-}
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
 
-  // Future<void> _loadUserData() async {
+      if (userDoc.exists) {
+        final userType = userDoc.data()?['userType'] ?? 'individual';
+        final collectionName =
+            userType == 'individual' ? 'individuals' : 'businesses';
+        String firestoreField = _getFirestoreFieldName(field, userType);
+
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
+          transaction.update(
+            FirebaseFirestore.instance.collection(collectionName).doc(user.uid),
+            {firestoreField: value},
+          );
+        });
+
+        await _addNotification(
+          AppNotification(
+            id: '${DateTime.now().millisecondsSinceEpoch}',
+            title: 'Profile Update',
+            message: '$field updated to $value',
+            timestamp: DateTime.now(),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error updating $field: ${e.toString()}');
+      await loadUserData(); // إعادة تحميل البيانات الأصلية في حالة الخطأ
+      rethrow;
+    }
+  } // Future<void> _loadUserData() async {
   //   try {
   //     final user = FirebaseAuth.instance.currentUser;
   //     if (user == null) return;
@@ -203,66 +197,75 @@ void listenToAuthChanges() {
   //   }
   // }
 
-Future<void> loadUserData() async {
-  try {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      debugPrint('No user logged in');
-      return;
+  Future<void> loadUserData() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        emit(ProfileState());
+        return;
+      }
+
+      // إعادة تحميل بيانات المستخدم من Firebase Auth
+      await user.reload();
+      final refreshedUser = FirebaseAuth.instance.currentUser;
+
+      // جلب البيانات من Firestore مع التأكد من الحصول على أحدث نسخة
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get(GetOptions(source: Source.server));
+
+      if (!userDoc.exists) {
+        emit(
+          ProfileState(
+            name: refreshedUser?.displayName ?? '',
+            email: refreshedUser?.email ?? '',
+          ),
+        );
+        return;
+      }
+
+      final userType = userDoc.data()?['userType'] ?? 'individual';
+      final collectionName =
+          userType == 'individual' ? 'individuals' : 'businesses';
+
+      final detailsDoc = await FirebaseFirestore.instance
+          .collection(collectionName)
+          .doc(user.uid)
+          .get(GetOptions(source: Source.server));
+
+      // دمج البيانات من Auth و Firestore مع إعطاء الأولوية لـ Firestore
+      emit(
+        ProfileState(
+          name:
+              detailsDoc.data()?['fullName'] ??
+              refreshedUser?.displayName ??
+              '',
+          email: detailsDoc.data()?['email'] ?? refreshedUser?.email ?? '',
+          birthDate:
+              detailsDoc.data()?['dob'] ?? detailsDoc.data()?['budget'] ?? '',
+          location:
+              detailsDoc.data()?['address'] ??
+              detailsDoc.data()?['companyLocation'] ??
+              '',
+          idNumber:
+              detailsDoc.data()?['nationalId'] ??
+              detailsDoc.data()?['numberOfEmployees'] ??
+              '',
+          salary:
+              detailsDoc.data()?['income'] ??
+              detailsDoc.data()?['budget'] ??
+              '',
+          imagePath:
+              detailsDoc.data()?['profileImage'] ?? refreshedUser?.photoURL,
+        ),
+      );
+    } catch (e) {
+      debugPrint('Error loading user data: $e');
+      emit(ProfileState());
     }
-
-    debugPrint('Loading data for user: ${user.uid}');
-    
-    // Get fresh data from server (no cache)
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .get(GetOptions(source: Source.server));
-
-    if (!userDoc.exists) {
-      debugPrint('User document not found in users collection');
-      emit(state.copyWith());
-      return;
-    }
-
-    final userType = userDoc.data()?['userType'] ?? 'individual';
-    final collectionName = userType == 'individual' ? 'individuals' : 'businesses';
-
-    final detailsDoc = await FirebaseFirestore.instance
-        .collection(collectionName)
-        .doc(user.uid)
-        .get(GetOptions(source: Source.server));
-
-    if (!detailsDoc.exists) {
-      debugPrint('User details not found in $collectionName collection');
-      emit(state.copyWith(
-        name: user.displayName ?? '',
-        email: user.email ?? '',
-        imagePath: user.photoURL,
-      ));
-      return;
-    }
-
-    final data = detailsDoc.data()!;
-    final newState = ProfileState(
-      name: data['fullName'] ?? user.displayName ?? '',
-      email: data['email'] ?? user.email ?? '',
-      birthDate: data['dob'] ?? data['budget'] ?? '',
-      location: data['address'] ?? data['companyLocation'] ?? '',
-      idNumber: data['nationalId'] ?? data['numberOfEmployees'] ?? '',
-      salary: data['income'] ?? data['budget'] ?? '',
-      imagePath: data['profileImage'] ?? user.photoURL,
-    );
-
-    debugPrint('Successfully loaded user data: ${newState.toMap()}');
-    emit(newState);
-
-  } catch (e) {
-    debugPrint('Error loading user data: $e');
-    emit(state.copyWith());
-    rethrow;
   }
-}
+
   Future<void> pickImage(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
@@ -369,61 +372,70 @@ Future<void> loadUserData() async {
   }
 
   Future<void> deleteAccount() async {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user == null) return;
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
 
-  try {
-    final userDoc =
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+    try {
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
 
-    if (userDoc.exists) {
-      final userType = userDoc.data()?['userType'] ?? 'individual';
-      final collectionName =
-          userType == 'individual' ? 'individuals' : 'businesses';
+      if (userDoc.exists) {
+        final userType = userDoc.data()?['userType'] ?? 'individual';
+        final collectionName =
+            userType == 'individual' ? 'individuals' : 'businesses';
 
-      await FirebaseFirestore.instance.collection(collectionName).doc(user.uid).delete();
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
+        await FirebaseFirestore.instance
+            .collection(collectionName)
+            .doc(user.uid)
+            .delete();
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .delete();
+      }
+
+      await user.delete();
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+    } catch (e) {
+      rethrow;
     }
-
-    await user.delete();
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-  } catch (e) {
-    rethrow;
   }
-}
 
- Future<bool> reauthenticate(String credentialInput) async {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user == null) return false;
+  Future<bool> reauthenticate(String credentialInput) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return false;
 
-  final providerId = user.providerData.first.providerId;
+    final providerId = user.providerData.first.providerId;
 
-  try {
-    if (providerId == 'google.com') {
-      final googleUser = await GoogleSignIn().signIn();
-      final googleAuth = await googleUser?.authentication;
-      if (googleAuth == null) return false;
+    try {
+      if (providerId == 'google.com') {
+        final googleUser = await GoogleSignIn().signIn();
+        final googleAuth = await googleUser?.authentication;
+        if (googleAuth == null) return false;
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-      await user.reauthenticateWithCredential(credential);
-      return true;
-    } else {
-      final credential = EmailAuthProvider.credential(
-        email: user.email!,
-        password: credentialInput,
-      );
-      await user.reauthenticateWithCredential(credential);
-      return true;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        await user.reauthenticateWithCredential(credential);
+        return true;
+      } else {
+        final credential = EmailAuthProvider.credential(
+          email: user.email!,
+          password: credentialInput,
+        );
+        await user.reauthenticateWithCredential(credential);
+        return true;
+      }
+    } catch (_) {
+      return false;
     }
-  } catch (_) {
-    return false;
   }
-}
 
   String _getFirestoreFieldName(String field, String userType) {
     switch (field) {
