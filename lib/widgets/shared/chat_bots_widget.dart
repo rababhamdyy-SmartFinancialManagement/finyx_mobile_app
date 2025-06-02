@@ -28,9 +28,11 @@ class _ChatDialogState extends State<ChatDialog> {
   ];
   String _chatContent = "Welcome! How can I help you today?";
 
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
@@ -39,7 +41,7 @@ class _ChatDialogState extends State<ChatDialog> {
         ),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDarkMode ? Colors.grey[900] : Colors.white,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -49,23 +51,24 @@ class _ChatDialogState extends State<ChatDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   "Financial Assistant",
                   style: TextStyle(
-                    fontSize: 20, // تم الاحتفاظ بحجم 20 للعنوان الرئيسي
+                    fontSize: 20,
                     fontFamily: "Poppins",
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF3E0555),
+                    color: isDarkMode ? Colors.white : Color(0xFF3E0555),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close, color: Color(0xFF3E0555)),
+                  icon: Icon(Icons.close, 
+                      color: isDarkMode ? Colors.white : Color(0xFF3E0555)),
                   onPressed: widget.onPressed,
                 ),
               ],
             ),
 
-            const Divider(height: 20),
+            Divider(height: 20, color: isDarkMode ? Colors.grey[700] : null),
 
             // Chat Content Area
             Expanded(
@@ -76,7 +79,11 @@ class _ChatDialogState extends State<ChatDialog> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Bot Message
-                      _buildChatBubble(isUser: false, message: _chatContent),
+                      _buildChatBubble(
+                        isUser: false, 
+                        message: _chatContent,
+                        isDarkMode: isDarkMode,
+                      ),
 
                       const SizedBox(height: 12),
 
@@ -85,12 +92,12 @@ class _ChatDialogState extends State<ChatDialog> {
                         ..._options.map(
                           (option) => Padding(
                             padding: const EdgeInsets.only(bottom: 8),
-                            child: _buildOptionButton(option),
+                            child: _buildOptionButton(option, isDarkMode),
                           ),
                         ),
 
                       // Show analysis content if option selected
-                      if (_selectedOption != null) _buildAnalysisContent(),
+                      if (_selectedOption != null) _buildAnalysisContent(isDarkMode),
                     ],
                   ),
                 ),
@@ -108,9 +115,13 @@ class _ChatDialogState extends State<ChatDialog> {
                       _chatContent = "What else can I help you with?";
                     });
                   },
-                  child: const Text(
+                  child: Text(
                     "Back to Menu",
-                    style: TextStyle(fontSize: 16, fontFamily: "Poppins"),
+                    style: TextStyle(
+                      fontSize: 16, 
+                      fontFamily: "Poppins",
+                      color: isDarkMode ? Colors.white : Color(0xFF3E0555),
+                    ),
                   ),
                 ),
               ),
@@ -120,11 +131,11 @@ class _ChatDialogState extends State<ChatDialog> {
     );
   }
 
-  Widget _buildOptionButton(String option) {
+  Widget _buildOptionButton(String option, bool isDarkMode) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.grey[200],
-        foregroundColor: Color(0xFF3E0555),
+        backgroundColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+        foregroundColor: isDarkMode ? Colors.white : Color(0xFF3E0555),
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 0,
@@ -140,13 +151,13 @@ class _ChatDialogState extends State<ChatDialog> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(option, style: TextStyle(fontSize: 16, fontFamily: "Poppins")),
-          const Icon(Icons.chevron_right, size: 20),
+          Icon(Icons.chevron_right, size: 20),
         ],
       ),
     );
   }
 
-  Widget _buildAnalysisContent() {
+  Widget _buildAnalysisContent(bool isDarkMode) {
     if (_selectedOption == null) return const SizedBox();
 
     final cubit = context.read<PriceCubit>();
@@ -154,22 +165,30 @@ class _ChatDialogState extends State<ChatDialog> {
 
     switch (_selectedOption) {
       case 0: // Zakat
-        return _buildZakatContent(expenses);
+        return _buildZakatContent(expenses, isDarkMode);
       case 1: // Savings
-        return _buildSavingsContent(expenses);
+        return _buildSavingsContent(expenses, isDarkMode);
       case 2: // Expenses
-        return _buildExpensesContent(expenses);
+        return _buildExpensesContent(expenses, isDarkMode);
       case 3: // Tips
-        return _buildTipsContent();
+        return _buildTipsContent(isDarkMode);
       default:
-        return const Text(
+        return Text(
           "Select an option",
-          style: TextStyle(fontSize: 16, fontFamily: "Poppins"),
+          style: TextStyle(
+            fontSize: 16, 
+            fontFamily: "Poppins",
+            color: isDarkMode ? Colors.white : Colors.black,
+          ),
         );
     }
   }
 
-  Widget _buildChatBubble({required bool isUser, required String message}) {
+  Widget _buildChatBubble({
+    required bool isUser, 
+    required String message,
+    required bool isDarkMode,
+  }) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       margin: EdgeInsets.only(
@@ -178,7 +197,9 @@ class _ChatDialogState extends State<ChatDialog> {
         bottom: 12,
       ),
       decoration: BoxDecoration(
-        color: isUser ? Colors.blue[50] : Colors.grey[200],
+        color: isUser 
+          ? isDarkMode ? Colors.blue[900] : Colors.blue[50]
+          : isDarkMode ? Colors.grey[800] : Colors.grey[200],
         borderRadius: BorderRadius.only(
           topLeft: const Radius.circular(16),
           topRight: const Radius.circular(16),
@@ -189,15 +210,17 @@ class _ChatDialogState extends State<ChatDialog> {
       child: Text(
         message,
         style: TextStyle(
-          fontSize: 16, // تم تغيير حجم الخط من 15 إلى 16
+          fontSize: 16,
           fontFamily: "Poppins",
-          color: isUser ? Color(0xFF3E0555) : Colors.grey[900],
+          color: isUser 
+            ? isDarkMode ? Colors.white : Color(0xFF3E0555)
+            : isDarkMode ? Colors.white : Colors.grey[900],
         ),
       ),
     );
   }
 
-  Widget _buildZakatContent(Map<String, double> expenses) {
+  Widget _buildZakatContent(Map<String, double> expenses, bool isDarkMode) {
     double total = expenses.values.fold(0.0, (sum, e) => sum + e);
     double zakat = total * 0.025;
 
@@ -206,55 +229,65 @@ class _ChatDialogState extends State<ChatDialog> {
         _buildChatBubble(
           isUser: false,
           message: "Here's your Zakat calculation:",
+          isDarkMode: isDarkMode,
         ),
         _buildChatBubble(
           isUser: false,
           message: "Total Assets: ${total.toStringAsFixed(2)} EGP",
+          isDarkMode: isDarkMode,
         ),
         _buildChatBubble(
           isUser: false,
           message: "Zakat Due (2.5%): ${zakat.toStringAsFixed(2)} EGP",
+          isDarkMode: isDarkMode,
         ),
         _buildChatBubble(
           isUser: false,
-          message:
-              total >= 1000
-                  ? "✅ You meet the Nisab threshold"
-                  : "⚠️ Below Nisab (1000 EGP)",
+          message: total >= 1000
+              ? "✅ You meet the Nisab threshold"
+              : "⚠️ Below Nisab (1000 EGP)",
+          isDarkMode: isDarkMode,
         ),
       ],
     );
   }
 
-  Widget _buildSavingsContent(Map<String, double> expenses) {
+  Widget _buildSavingsContent(Map<String, double> expenses, bool isDarkMode) {
     double total = expenses.values.fold(0.0, (sum, e) => sum + e);
     double savings = total * 0.2;
 
     return Column(
       children: [
-        _buildChatBubble(isUser: false, message: "Recommended savings plan:"),
+        _buildChatBubble(
+          isUser: false, 
+          message: "Recommended savings plan:",
+          isDarkMode: isDarkMode,
+        ),
         _buildChatBubble(
           isUser: false,
           message: "Monthly Expenses: ${total.toStringAsFixed(2)} EGP",
+          isDarkMode: isDarkMode,
         ),
         _buildChatBubble(
           isUser: false,
           message: "Suggested Savings (20%): ${savings.toStringAsFixed(2)} EGP",
+          isDarkMode: isDarkMode,
         ),
         _buildChatBubble(
           isUser: false,
           message: "💡 Tip: ${FinancialTips.generalTips[0]}",
+          isDarkMode: isDarkMode,
         ),
       ],
     );
   }
 
-  Widget _buildExpensesContent(Map<String, double> expenses) {
+  Widget _buildExpensesContent(Map<String, double> expenses, bool isDarkMode) {
     if (expenses.isEmpty) {
       return _buildChatBubble(
         isUser: false,
-        message:
-            "No expenses recorded yet. Start adding expenses to see analysis.",
+        message: "No expenses recorded yet. Start adding expenses to see analysis.",
+        isDarkMode: isDarkMode,
       );
     }
 
@@ -273,42 +306,51 @@ class _ChatDialogState extends State<ChatDialog> {
         _buildChatBubble(
           isUser: false,
           message: "📊 Your Detailed Spending Analysis:",
+          isDarkMode: isDarkMode,
         ),
         _buildChatBubble(
           isUser: false,
           message: "Total Expenses: ${total.toStringAsFixed(2)} EGP",
+          isDarkMode: isDarkMode,
         ),
         _buildChatBubble(
           isUser: false,
           message: "Average per Category: ${average.toStringAsFixed(2)} EGP",
+          isDarkMode: isDarkMode,
         ),
 
-        // تحذير إذا تجاوز المصروفات حد معين (يمكن تعديل القيمة حسب احتياجاتك)
-        if (total > 5000) // مثال: إذا تجاوزت المصروفات 5000 جنيه
+        // تحذير إذا تجاوز المصروفات حد معين
+        if (total > 5000)
           _buildChatBubble(
             isUser: false,
-            message:
-                "⚠️ Warning: Your expenses have exceeded the recommended budget!",
+            message: "⚠️ Warning: Your expenses have exceeded the recommended budget!",
+            isDarkMode: isDarkMode,
           ),
 
         // عرض أهم 3 فئات تصرفًا
-        _buildChatBubble(isUser: false, message: "Top Spending Categories:"),
+        _buildChatBubble(
+          isUser: false, 
+          message: "Top Spending Categories:",
+          isDarkMode: isDarkMode,
+        ),
         ...sorted.take(3).map((e) {
           double percent = (e.value / total) * 100;
           return Column(
             children: [
               _buildChatBubble(
                 isUser: false,
-                message:
-                    "${e.key}: ${e.value.toStringAsFixed(2)} EGP (${percent.toStringAsFixed(1)}%)",
+                message: "${e.key}: ${e.value.toStringAsFixed(2)} EGP (${percent.toStringAsFixed(1)}%)",
+                isDarkMode: isDarkMode,
               ),
-              // إضافة نصائح توفير خاصة بكل فئة
               if (FinancialTips.categoryTips.containsKey(e.key.toLowerCase()))
                 ...FinancialTips.categoryTips[e.key.toLowerCase()]!
                     .take(2)
                     .map(
-                      (tip) =>
-                          _buildChatBubble(isUser: false, message: "💡 $tip"),
+                      (tip) => _buildChatBubble(
+                        isUser: false, 
+                        message: "💡 $tip",
+                        isDarkMode: isDarkMode,
+                      ),
                     ),
             ],
           );
@@ -319,33 +361,48 @@ class _ChatDialogState extends State<ChatDialog> {
           _buildChatBubble(
             isUser: false,
             message: "Categories exceeding average:",
+            isDarkMode: isDarkMode,
           ),
         ...exceededCategories.take(3).map((e) {
           return _buildChatBubble(
             isUser: false,
             message: "⚠️ ${e.key} (${e.value.toStringAsFixed(2)} EGP)",
+            isDarkMode: isDarkMode,
           );
         }),
 
         // نصائح عامة للتوفير
-        _buildChatBubble(isUser: false, message: "💎 General Savings Tips:"),
+        _buildChatBubble(
+          isUser: false, 
+          message: "💎 General Savings Tips:",
+          isDarkMode: isDarkMode,
+        ),
         ...FinancialTips.generalTips
             .take(3)
-            .map((tip) => _buildChatBubble(isUser: false, message: "✨ $tip")),
+            .map((tip) => _buildChatBubble(
+                  isUser: false, 
+                  message: "✨ $tip",
+                  isDarkMode: isDarkMode,
+                )),
       ],
     );
   }
 
-  Widget _buildTipsContent() {
+  Widget _buildTipsContent(bool isDarkMode) {
     return Column(
       children: [
         _buildChatBubble(
           isUser: false,
           message: "Here are some financial tips:",
+          isDarkMode: isDarkMode,
         ),
         ...FinancialTips.generalTips
             .take(3)
-            .map((tip) => _buildChatBubble(isUser: false, message: "💡 $tip")),
+            .map((tip) => _buildChatBubble(
+                  isUser: false, 
+                  message: "💡 $tip",
+                  isDarkMode: isDarkMode,
+                )),
       ],
     );
   }
