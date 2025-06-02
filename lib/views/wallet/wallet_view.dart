@@ -21,14 +21,6 @@ class WalletScreen extends StatelessWidget {
           style: TextStyle(fontFamily: 'Righteous', fontSize: 25),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () async {
-              await context.read<PriceCubit>().checkAndResetMonthlyPrices();
-            },
-          ),
-        ],
       ),
       body: WalletBody(
         userType: userType,

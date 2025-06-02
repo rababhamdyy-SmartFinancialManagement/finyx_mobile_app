@@ -8,7 +8,7 @@ class PriceDialog extends StatelessWidget {
   final TextEditingController priceController;
   final PriceCubit cubit;
   final PriceState state;
-  final String label;
+  final String label; // سيتم استخدامه كمفتاح للترجمة
   final IconData icon;
   final Color iconColor;
 
@@ -57,7 +57,7 @@ class PriceDialog extends StatelessWidget {
         ),
         const SizedBox(width: 16),
         Text(
-          label,
+          loc.translate(label) ?? label, // ترجمة النص هنا
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -118,6 +118,7 @@ class PriceDialog extends StatelessWidget {
                 return;
               }
 
+              // استخدام المفتاح الأصلي (label) عند الحفظ
               cubit.updatePrice(label, price);
               await SharedPrefsHelper.savePrices(cubit.state.prices);
               cubit.setShowError(false);

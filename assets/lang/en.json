@@ -94,6 +94,20 @@
   "eSalaries": "E Salaries",
   "loan": "Loan",
 
+"club": "Club",
+  "mobile_credit": "Mobile Credit",
+  "car": "Car",
+  "voucher": "Voucher",
+  "assurance": "Assurance",
+  "cinema": "Cinema",
+  "association": "Association",
+  "licenses": "Licenses",
+  "accrued_interest": "Accrued Interest",
+  "admin_expenses": "Admin Expenses",
+  "shipping": "Shipping",
+  "more_business": "More",
+  "add_new_bill": "Add New Bill",
+
   "Add New Bill": "Add New Bill",
   "Club": "Club",
   "Mobile Credit": "Mobile Credit",
@@ -143,6 +157,7 @@
   "price": "Price",
   "Enter Price": "Enter price",
   "month": "month",
+  "currency_symbol": "EGP",
   "item_name_error": "Please enter a name",
   "price_error": "Enter valid price",
   "save": "Save",
@@ -208,5 +223,9 @@
   "invalidCompanyLocation": "Invalid company location. It must not be empty or numbers only.",
   "invalidBudget": "Invalid budget. It must contain numbers only.",
   "invalidNumberOfEmployees": "Invalid number of employees. It must contain numbers only.",
-  "businessRegistrationSuccessful": "Business registration successful!"
+  "businessRegistrationSuccessful": "Business registration successful!",
+  "reset_confirmation_message": "Are you sure you want to delete all current expenses and start fresh?",
+  "reset_confirmation_title": "Start Fresh",
+  "no": "No",
+  "start_fresh_or_enter_new_expenses": "Start fresh or enter new expenses"
 }

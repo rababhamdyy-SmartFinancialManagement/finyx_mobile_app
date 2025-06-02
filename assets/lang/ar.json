@@ -132,6 +132,7 @@
   "price": "السعر",
   "Enter Price": "أدخل السعر",
   "month": "شهر",
+  "currency_symbol": "ج.م",
   "item_name_error": "من فضلك أدخل اسم العنصر",
   "price_error": "أدخل سعرًا صحيحًا",
   "save": "حفظ",
@@ -158,7 +159,29 @@
   "enter_income": "أدخل راتبك الشهري",
   "national_id": "الرقم القومي",
   "enter_national_id": "أدخل رقمك القومي",
+ 
+  "club": "نادي",
+  "mobile_credit": "رصيد موبايل",
+  "car": "سيارة",
+  "voucher": "قسيمة",
+  "assurance": "تأمين",
+  "cinema": "سينما",
+  "association": "جمعية",
+  "Zakat": "زكاة",
 
+  "licenses": "تراخيص",
+  "accrued_interest": "فوائد مستحقة",
+  "admin_expenses": "المصاريف الإدارية",
+  "shipping": "شحن",
+  "more_business": "المزيد",
+  "add_new_bill": "إضافة فاتورة جديدة",
+
+"Mobile_Credit": "رصيد موبايل",
+"Accrued_Interest": "فوائد مستحقة",
+"Admin_Expenses": "المصاريف الإدارية",
+"Shipping": "شحن",
+"More_Business": "المزيد للمؤسسات",
+"Add_New_Bill": "إضافة فاتورة جديدة",
   "Add New Bill": "إضافة فاتورة جديدة",
   "Club": "نادي",
   "Mobile Credit": "رصيد موبايل",
@@ -208,6 +231,10 @@
   "invalidCompanyLocation": "موقع الشركة غير صالح. يجب ألا يكون فارغًا أو أرقام فقط.",
   "invalidBudget": "الميزانية غير صالحة. يجب أن تحتوي على أرقام فقط.",
   "invalidNumberOfEmployees": "عدد الموظفين غير صالح. يجب أن يحتوي على أرقام فقط.",
-  "businessRegistrationSuccessful": "تم تسجيل الشركة بنجاح!"
+  "businessRegistrationSuccessful": "تم تسجيل الشركة بنجاح!",
+  "reset_confirmation_title": "بدء جديد",
+  "reset_confirmation_message": "هل أنت متأكد أنك تريد حذف جميع المصروفات الحالية والبدء من جديد؟",
+  "no": "لا",
+  "start_fresh_or_enter_new_expenses": "ابدأ جديد أو أدخل مصروفات جديدة"
 
 }

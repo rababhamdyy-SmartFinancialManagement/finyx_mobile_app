@@ -31,10 +31,9 @@ class MoreItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final cubit = context.read<PriceCubit>(); // Access the PriceCubit
-    final loc = AppLocalizations.of(context)!; // Translation instance
+    final cubit = context.read<PriceCubit>();
+    final loc = AppLocalizations.of(context)!;
 
-    // List of icon colors for the items
     List<Color> iconColors = [
       Colors.orange,
       Colors.blue,
@@ -46,68 +45,39 @@ class MoreItems extends StatelessWidget {
       Colors.grey,
     ];
 
-    // Icons for individual users
-    List<IconData> individualIcons = [
-      Icons.sports_tennis_rounded,
-      Icons.phone_iphone,
-      Icons.car_repair,
-      Icons.wallet,
-      Icons.medical_services_outlined,
-      Icons.movie_filter_outlined,
-      Icons.groups_outlined,
-      Icons.now_widgets_outlined,
-    ];
-
-    // Icons for business users
-    List<IconData> businessIcons = [
-      Icons.assignment, // Licenses
-      Icons.money_off, // Accrued interest
-      Icons.account_balance_wallet, // Administrative expenses
-      Icons.flash_on, // Electricity
-      Icons.wifi, // Internet
-      Icons.local_shipping,
-      Icons.monetization_on, // Zakat
-      Icons.now_widgets_outlined, // More
-    ];
-
-    // Names for individual users (using loc.translate)
-    List<String> individualNames = [
-      loc.translate('Club'),
-      loc.translate('Mobile Credit'),
-      loc.translate('Car'),
-      loc.translate('Voucher'),
-      loc.translate('Assurance'),
-      loc.translate('Cinema'),
-      loc.translate('Association'),
-      loc.translate('More'),
-    ];
-
-    // Names for business users (using loc.translate)
-    List<String> businessNames = [
-      loc.translate('Licenses'),
-      loc.translate('Accrued Interest'),
-      loc.translate('Admin Expenses'),
-      loc.translate('Electricity'),
-      loc.translate('Internet'),
-      loc.translate('Shipping'),
-      loc.translate('Zakat'),
-      loc.translate('More Business'),
-    ];
-
-    // Choose the appropriate icons and names based on the user type
-    List<IconData> icons =
-        userType == UserType.business ? businessIcons : individualIcons;
-    List<String> itemNames =
-        userType == UserType.business ? businessNames : individualNames;
+    List<Map<String, dynamic>> getItems() {
+      if (userType == UserType.individual) {
+        return [
+          {'icon': Icons.sports_tennis_rounded, 'label': 'Club', 'translationKey': 'club'},
+          {'icon': Icons.phone_iphone, 'label': 'Mobile Credit', 'translationKey': 'mobile_credit'},
+          {'icon': Icons.car_repair, 'label': 'Car', 'translationKey': 'car'},
+          {'icon': Icons.wallet, 'label': 'Voucher', 'translationKey': 'voucher'},
+          {'icon': Icons.medical_services_outlined, 'label': 'Assurance', 'translationKey': 'assurance'},
+          {'icon': Icons.movie_filter_outlined, 'label': 'Cinema', 'translationKey': 'cinema'},
+          {'icon': Icons.groups_outlined, 'label': 'Association', 'translationKey': 'association'},
+          {'icon': Icons.now_widgets_outlined, 'label': 'More', 'translationKey': 'more'},
+        ];
+      } else {
+        return [
+          {'icon': Icons.assignment, 'label': 'Licenses', 'translationKey': 'licenses'},
+          {'icon': Icons.money_off, 'label': 'Accrued Interest', 'translationKey': 'accrued_interest'},
+          {'icon': Icons.account_balance_wallet, 'label': 'Admin Expenses', 'translationKey': 'admin_expenses'},
+          {'icon': Icons.flash_on, 'label': 'Electricity', 'translationKey': 'electricity'},
+          {'icon': Icons.wifi, 'label': 'Internet', 'translationKey': 'internet'},
+          {'icon': Icons.local_shipping, 'label': 'Shipping', 'translationKey': 'shipping'},
+          {'icon': Icons.monetization_on, 'label': 'Zakat', 'translationKey': 'zakat'},
+          {'icon': Icons.now_widgets_outlined, 'label': 'More', 'translationKey': 'more_business'},
+        ];
+      }
+    }
 
     return AlertDialog(
-      backgroundColor: theme.dialogBackgroundColor, 
-
+      backgroundColor: theme.dialogBackgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Center(
         child: Text(
-          loc.translate('Add New Bill'),
-          style: TextStyle(
+          loc.translate('add_new_bill') ?? 'Add New Bill',
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
             fontFamily: "Poppins",
@@ -120,39 +90,38 @@ class MoreItems extends StatelessWidget {
           spacing: 20.0,
           runSpacing: 20.0,
           alignment: WrapAlignment.center,
-          children: List.generate(8, (index) {
-            final color = iconColors[index % iconColors.length];
-            final label = itemNames[index];
-            final icon = icons[index];
+          children: List.generate(getItems().length, (index) {
+            final item = getItems()[index];
+            final color = iconColors[index]; 
+            final label = loc.translate(item['translationKey']) ?? item['label'];
+            final icon = item['icon'];
+            final translationKey = item['translationKey'];
 
             return GestureDetector(
               onTap: () async {
-                Navigator.of(context).pop(); // Close the dialog first
-
-                // Show the appropriate dialog based on the selected item
-                if (label == loc.translate('More') || label == loc.translate('More Business')) {
+                Navigator.of(context).pop();
+                
+                if (translationKey == 'more' || translationKey == 'more_business') {
                   await showDialog(
                     context: context,
-                    builder:
-                        (_) => AddDialog(
-                          nameController: TextEditingController(),
-                          priceController: TextEditingController(),
-                          cubit: cubit,
-                          state: state,
-                        ),
+                    builder: (_) => AddDialog(
+                      nameController: TextEditingController(),
+                      priceController: TextEditingController(),
+                      cubit: cubit,
+                      state: state,
+                    ),
                   );
                 } else {
                   await showDialog(
                     context: context,
-                    builder:
-                        (_) => PriceDialog(
-                          priceController: TextEditingController(),
-                          cubit: cubit,
-                          state: state,
-                          label: label,
-                          icon: icon,
-                          iconColor: color,
-                        ),
+                    builder: (_) => PriceDialog(
+                      priceController: TextEditingController(),
+                      cubit: cubit,
+                      state: state,
+                      label: translationKey,
+                      icon: icon,
+                      iconColor: color,
+                    ),
                   );
                 }
               },
@@ -175,7 +144,7 @@ class MoreItems extends StatelessWidget {
                     Text(
                       label,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.w500,
                         fontFamily: "Poppins",

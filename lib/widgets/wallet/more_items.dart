@@ -11,7 +11,7 @@ class MoreItems extends StatelessWidget {
     final Color textColor = isDark ? Colors.white : iconColor;
 
     return AlertDialog(
-      backgroundColor: theme.dialogBackgroundColor, // ← ياخد اللون من الثيم
+      backgroundColor: theme.dialogBackgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Center(
         child: Text(
@@ -20,7 +20,7 @@ class MoreItems extends StatelessWidget {
             fontSize: 20,
             fontWeight: FontWeight.bold,
             fontFamily: "Poppins",
-            color: textColor, // ← يتغير حسب المود
+            color: textColor, 
           ),
         ),
       ),

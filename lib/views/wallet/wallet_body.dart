@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 
-
 class WalletBody extends StatelessWidget {
   final UserType userType;
 
@@ -16,7 +15,6 @@ class WalletBody extends StatelessWidget {
     required this.userType,
   });
 
-  // List of colors for icons
   final List<Color> iconColors = [
     Colors.orange,
     Colors.blue,
@@ -27,47 +25,109 @@ class WalletBody extends StatelessWidget {
     Colors.indigo,
   ];
 
+  List<Map<String, dynamic>> getDefaultItems() {
+    if (userType == UserType.individual) {
+      return [
+        {'icon': Icons.flash_on, 'label': 'electricity'},
+        {'icon': Icons.wifi, 'label': 'internet'},
+        {'icon': Icons.fastfood_outlined, 'label': 'food'},
+        {'icon': Icons.money, 'label': 'zakat'},
+        {'icon': Icons.shopping_cart, 'label': 'shopping'},
+        {'icon': Icons.local_gas_station, 'label': 'gas'},
+        {'icon': Icons.water_drop, 'label': 'waterBill'},
+      ];
+    } else {
+      return [
+        {'icon': Icons.bar_chart, 'label': 'tRevenue'},
+        {'icon': Icons.stacked_line_chart, 'label': 'tExpenses'},
+        {'icon': Icons.trending_up, 'label': 'profits'},
+        {'icon': Icons.trending_down, 'label': 'losses'},
+        {'icon': Icons.multiple_stop_rounded, 'label': 'transfer'},
+        {'icon': Icons.monetization_on_rounded, 'label': 'eSalaries'},
+        {'icon': Icons.account_balance_wallet, 'label': 'loan'},
+      ];
+    }
+  }
+
+  final Map<String, String> moreItems = {
+    'Club': 'club',
+    'Mobile Credit': 'mobile_credit',
+    'Car': 'car',
+    'Voucher': 'voucher',
+    'Assurance': 'assurance',
+    'Cinema': 'cinema',
+    'Association': 'association',
+    'Licenses': 'licenses',
+    'Accrued Interest': 'accrued_interest',
+    'Admin Expenses': 'admin_expenses',
+    'Shipping': 'shipping'
+  };
+
+  bool _isDefaultItem(String label) {
+    return getDefaultItems().any((item) => item['label'] == label);
+  }
+
+  bool _isMoreItemValue(String label) {
+    return moreItems.containsValue(label);
+  }
+
+  Future<void> _showResetConfirmationDialog(BuildContext context) async {
+    final loc = AppLocalizations.of(context)!;
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(loc.translate('reset_confirmation_title') ),
+          content: Text(loc.translate('reset_confirmation_message') ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(loc.translate('cancel')),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(loc.translate('yes') ?? 'Yes'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await context.read<PriceCubit>().checkAndResetMonthlyPrices();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
 
-    // Default items for individual users
-    final List<Map<String, dynamic>> defaultItemsIndividual = [
-      {'icon': Icons.flash_on, 'label': loc.translate('electricity')},
-      {'icon': Icons.wifi, 'label': loc.translate('internet')},
-      {'icon': Icons.fastfood_outlined, 'label': loc.translate('food')},
-      {'icon': Icons.money, 'label': loc.translate('zakat')},
-      {'icon': Icons.shopping_cart, 'label': loc.translate('shopping')},
-      {'icon': Icons.local_gas_station, 'label': loc.translate('gas')},
-      {'icon': Icons.water_drop, 'label': loc.translate('waterBill')},
-    ];
+    String _getDisplayLabel(String originalLabel) {
+      if (_isDefaultItem(originalLabel)) {
+        return loc.translate(originalLabel) ?? originalLabel;
+      }
 
-    // Default items for business users
-    final List<Map<String, dynamic>> defaultItemsBusiness = [
-      {'icon': Icons.bar_chart, 'label': loc.translate('tRevenue')},
-      {'icon': Icons.stacked_line_chart, 'label': loc.translate('tExpenses')},
-      {'icon': Icons.trending_up, 'label': loc.translate('profits')},
-      {'icon': Icons.trending_down, 'label': loc.translate('losses')},
-      {'icon': Icons.multiple_stop_rounded, 'label': loc.translate('transfer')},
-      {'icon': Icons.monetization_on_rounded, 'label': loc.translate('eSalaries')},
-      {'icon': Icons.account_balance_wallet, 'label': loc.translate('loan')},
-    ];
+      if (_isMoreItemValue(originalLabel)) {
+        return loc.translate(originalLabel) ?? originalLabel;
+      }
 
-    final defaultItems = userType == UserType.individual
-        ? defaultItemsIndividual
-        : defaultItemsBusiness;
-
-    bool _isDefaultItem(String label) {
-      return defaultItems.any((item) => item['label'] == label);
+      return originalLabel;
     }
 
-    Color _getIconColor(String label, PriceCubit cubit, IconData icon) {
+    Color _getIconColor(String label, PriceCubit cubit) {
+      final defaultItems = getDefaultItems();
       int index = defaultItems.indexWhere((item) => item['label'] == label);
       if (index != -1) {
         return iconColors[index % iconColors.length];
       } else {
-        final newItemIndex = cubit.state.prices.keys.toList().indexOf(label);
-        return iconColors[(newItemIndex + defaultItems.length) % iconColors.length];
+        final allItems = [
+          ...defaultItems.map((e) => e['label']),
+          ...cubit.state.prices.keys
+        ];
+        final itemIndex = allItems.indexWhere((item) => item == label);
+        return iconColors[itemIndex % iconColors.length];
       }
     }
 
@@ -78,7 +138,7 @@ class WalletBody extends StatelessWidget {
       if (currentPrice != null) {
         priceController.text = currentPrice.toString();
       }
-      Color iconColor = _getIconColor(label, cubit, icon);
+      Color iconColor = _getIconColor(label, cubit);
 
       showDialog(
         context: context,
@@ -101,68 +161,112 @@ class WalletBody extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: BlocBuilder<PriceCubit, PriceState>(
-        builder: (context, state) {
-          final entries = state.prices.entries.toList();
-          return ListView.builder(
-            itemCount: defaultItems.length + entries.length,
-            itemBuilder: (context, index) {
-              if (index < defaultItems.length) {
-                final item = defaultItems[index];
-                final label = item['label'];
-                final icon = item['icon'];
-                final price = state.prices[label];
-                final iconColor = iconColors[index % iconColors.length];
-                final bgColor = iconColor.withAlpha(15);
-
-                return WalletListTile(
-                  icon: icon,
-                  label: label,
-                  price: price,
-                  context: context,
-                  onTap: () => _showModal(context, label, icon),
-                  isDeletable: false,
-                  backgroundColor: bgColor,
-                  iconColor: iconColor,
-                );
-              } else {
-                final entry = entries[index - defaultItems.length];
-                final label = entry.key;
-                final price = entry.value;
-
-                if (_isDefaultItem(label)) return const SizedBox.shrink();
-
-                final iconColor = iconColors[(defaultItems.length + index) % iconColors.length];
-                final bgColor = iconColor.withAlpha(15);
-
-                return Dismissible(
-                  key: Key(label),
-                  direction: DismissDirection.endToStart,
-                  background: Container(
-                    alignment: Alignment.centerRight,
-                    color: iconColor,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: const Icon(Icons.delete, color: Colors.white),
+      child: Column(
+        children: [
+          // الجزء المعدل: النص في الوسط والريفريش أيقونة على اليمين
+          Container(
+            width: double.infinity,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Center(
+                  child: Text(
+                  loc.translate('start_fresh_or_enter_new_expenses') ,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.grey,
+                      ),
+                ),
+                ),
+                Positioned(
+                  right: 0,
+                  child: IconButton(
+                    icon: const Icon(Icons.refresh, size: 18),
+                    onPressed: () => _showResetConfirmationDialog(context),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    iconSize: 18,
                   ),
-                  onDismissed: (_) {
-                    context.read<PriceCubit>().removePrice(label);
-                    SharedPrefsHelper.savePrices(state.prices);
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: BlocBuilder<PriceCubit, PriceState>(
+              builder: (context, state) {
+                final defaultItems = getDefaultItems();
+                final defaultLabels = defaultItems.map((item) => item['label']).toSet();
+
+                final customEntries = state.prices.entries
+                    .where((entry) => !defaultLabels.contains(entry.key))
+                    .toList();
+
+                final itemsToShow = [
+                  ...defaultItems.map((item) => {
+                        'type': 'default',
+                        'label': item['label'],
+                        'icon': item['icon']
+                      }),
+                  ...customEntries.map((entry) => {
+                        'type': 'custom',
+                        'label': entry.key,
+                        'icon': Icons.add
+                      })
+                ];
+
+                return ListView.builder(
+                  itemCount: itemsToShow.length,
+                  itemBuilder: (context, index) {
+                    final item = itemsToShow[index];
+                    final originalLabel = item['label'];
+                    final label = _getDisplayLabel(originalLabel);
+                    final icon = item['icon'];
+                    final price = state.prices[originalLabel] ?? 0.0;
+                    final iconColor = _getIconColor(originalLabel, context.read<PriceCubit>());
+                    final bgColor = iconColor.withAlpha(15);
+
+                    if (item['type'] == 'default') {
+                      return WalletListTile(
+                        icon: icon,
+                        label: label,
+                        price: price,
+                        context: context,
+                        onTap: () => _showModal(context, originalLabel, icon),
+                        isDeletable: false,
+                        backgroundColor: bgColor,
+                        iconColor: iconColor,
+                      );
+                    } else {
+                      return Dismissible(
+                        key: Key(originalLabel),
+                        direction: DismissDirection.endToStart,
+                        background: Container(
+                          alignment: Alignment.centerRight,
+                          color: iconColor,
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: const Icon(Icons.delete, color: Colors.white),
+                        ),
+                        onDismissed: (_) {
+                          context.read<PriceCubit>().removePrice(originalLabel);
+                        },
+                        child: WalletListTile(
+                          icon: icon,
+                          label: label,
+                          price: price,
+                          context: context,
+                          onTap: () => _showModal(context, originalLabel, icon),
+                          isDeletable: true,
+                          backgroundColor: bgColor,
+                          iconColor: iconColor,
+                        ),
+                      );
+                    }
                   },
-                  child: WalletListTile(
-                    icon: Icons.add,
-                    label: label,
-                    price: price,
-                    context: context,
-                    onTap: () => _showModal(context, label, Icons.add),
-                    isDeletable: true,
-                    backgroundColor: bgColor,
-                    iconColor: iconColor,
-                  ),
                 );
-              }
-            },
-          );
-        },
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
