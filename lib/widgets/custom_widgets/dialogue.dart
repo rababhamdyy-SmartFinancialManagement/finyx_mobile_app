@@ -70,6 +70,82 @@ class _DialogueState extends State<Dialogue> {
         );
       }
       // ... معالجة حذف الحساب ...
+      else if (widget.actionType == 'delete') {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user == null) return;
+
+        final providerId = user.providerData.first.providerId;
+        final isGoogle = providerId == 'google.com';
+        final input = _inputController.text.trim();
+
+        // التحقق من صحة المدخلات
+        if (input.isEmpty) {
+          setState(() => _showError = true);
+          return;
+        }
+
+        // إعادة المصادقة قبل الحذف
+        bool reauthenticated = false;
+        if (isGoogle) {
+          try {
+            final googleUser = await GoogleSignIn().signIn();
+            if (googleUser != null) {
+              final googleAuth = await googleUser.authentication;
+              final credential = GoogleAuthProvider.credential(
+                accessToken: googleAuth.accessToken,
+                idToken: googleAuth.idToken,
+              );
+              await user.reauthenticateWithCredential(credential);
+              reauthenticated = true;
+            }
+          } catch (e) {
+            debugPrint('Google reauth error: $e');
+          }
+        } else {
+          // للمستخدمين العاديين (باستخدام البريد الإلكتروني/كلمة المرور)
+          try {
+            final credential = EmailAuthProvider.credential(
+              email: user.email!,
+              password: input,
+            );
+            await user.reauthenticateWithCredential(credential);
+            reauthenticated = true;
+          } catch (e) {
+            debugPrint('Email reauth error: $e');
+            setState(() => _showError = true);
+            return;
+          }
+        }
+
+        if (reauthenticated) {
+          // حذف الحساب من Firebase Authentication
+          await user.delete();
+
+          // حذف بيانات المستخدم من Firestore
+          await profileCubit.deleteAccount();
+
+          // مسح بيانات التطبيق المحلية
+          await SharedPrefsHelper.saveLoginState(false);
+
+          // إعادة تعيين الحالة
+          profileCubit.resetState();
+
+          // الانتقال إلى شاشة تسجيل الدخول
+          if (mounted) {
+            Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
+          }
+
+          // إظهار رسالة النجاح
+          scaffold.showSnackBar(
+            SnackBar(
+              content: Text(loc.translate("account_deleted_successfully")),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          throw Exception('Failed to reauthenticate');
+        }
+      }
     } catch (e) {
       if (mounted) {
         scaffold.showSnackBar(

@@ -212,7 +212,10 @@
   "google_account_delete_note": "تم إنشاء هذا الحساب باستخدام حساب جوجل. ستحتاج لتأكيد الحذف عبر تسجيل دخول جوجل.",
   "enter_your_email_to_confirm": "أدخل بريدك الإلكتروني للتأكيد",
   "email_not_match": "البريد الإلكتروني غير مطابق",
-  "logged_out_successfully": "تم تسجيل الخروج بنجاح"
+  "enter_email_to_confirm": "أدخل بريدك الإلكتروني للتأكيد",
+  "enter_password_to_confirm": "أدخل كلمة المرور للتأكيد",
+  "invalid_input": "مدخل غير صحيح"
+
 
 
 }

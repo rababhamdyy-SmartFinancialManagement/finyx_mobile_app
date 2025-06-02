@@ -79,7 +79,9 @@ class SignUpModel {
     if (!validatePassword(password)) {
       CustomSnackbar.show(
         context,
-        loc.translate("passwordRequirements"), // لازم تضيفي النص ده في ملف اللغات
+        loc.translate(
+          "passwordRequirements",
+        ), // لازم تضيفي النص ده في ملف اللغات
         isError: true,
       );
       return null;
@@ -97,6 +99,7 @@ class SignUpModel {
           'email': email,
           'fullName': fullName,
           'userType': userType,
+          'fullName': fullNameController.text,
         });
 
         await SharedPrefsHelper.saveUserType(userType);
