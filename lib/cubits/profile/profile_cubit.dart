@@ -12,9 +12,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ProfileCubit extends Cubit<ProfileState> {
   final FlutterLocalNotificationsPlugin notificationsPlugin;
   
-  ProfileCubit(this.notificationsPlugin) : super(ProfileState()) {
-    _init();
-  }
+ProfileCubit(this.notificationsPlugin) : super(ProfileState()) {
+  loadUserData();
+  _setupNotifications();
+  listenToAuthChanges();
+}
 
   void _init() {
     loadUserData();
@@ -72,68 +74,78 @@ void listenToAuthChanges() {
     if (user != null) {
       await loadUserData(); // جلب بيانات المستخدم الجديد
     } else {
-      resetState(); // إعادة تعيين الحالة إذا لم يكن هناك مستخدم مسجل دخول
+      emit(ProfileState()); // إعادة تعيين الحالة إذا لم يكن هناك مستخدم
     }
   });
 }
+ Future<void> updateProfileField(String field, String value) async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
 
-  Future<void> updateProfileField(String field, String value) async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) return;
+    final userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
 
-      final userDoc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
+    if (userDoc.exists) {
+      final userType = userDoc.data()?['userType'] ?? 'individual';
+      final collectionName = userType == 'individual' ? 'individuals' : 'businesses';
+      String firestoreField = _getFirestoreFieldName(field, userType);
 
-      if (userDoc.exists) {
-        final userType = userDoc.data()?['userType'] ?? 'individual';
-        final collectionName =
-            userType == 'individual' ? 'individuals' : 'businesses';
+      // Write batch to update both collections
+      final batch = FirebaseFirestore.instance.batch();
+      
+      // Update the main user document
+      batch.update(
+        FirebaseFirestore.instance.collection('users').doc(user.uid),
+        {firestoreField: value}
+      );
+      
+      // Update the details collection
+      batch.update(
+        FirebaseFirestore.instance.collection(collectionName).doc(user.uid),
+        {firestoreField: value}
+      );
 
-        String firestoreField = _getFirestoreFieldName(field, userType);
+      await batch.commit();
 
-        await FirebaseFirestore.instance
-            .collection(collectionName)
-            .doc(user.uid)
-            .update({firestoreField: value});
-
-        switch (field) {
-          case 'Name':
-            emit(state.copyWith(name: value));
-            break;
-          case 'Email':
-            emit(state.copyWith(email: value));
-            break;
-          case 'Birth Date':
-            emit(state.copyWith(birthDate: value));
-            break;
-          case 'Location':
-            emit(state.copyWith(location: value));
-            break;
-          case 'ID Number':
-            emit(state.copyWith(idNumber: value));
-            break;
-          case 'Salary':
-            emit(state.copyWith(salary: value));
-            break;
-        }
-
-        await _addNotification(
-          AppNotification(
-            id: '${DateTime.now().millisecondsSinceEpoch}',
-            title: 'Profile Update',
-            message: '$field updated to $value',
-            timestamp: DateTime.now(),
-          ),
-        );
+      // Update local state
+      switch (field) {
+        case 'Name':
+          emit(state.copyWith(name: value));
+          break;
+        case 'Email':
+          emit(state.copyWith(email: value));
+          break;
+        case 'Birth Date':
+          emit(state.copyWith(birthDate: value));
+          break;
+        case 'Location':
+          emit(state.copyWith(location: value));
+          break;
+        case 'ID Number':
+          emit(state.copyWith(idNumber: value));
+          break;
+        case 'Salary':
+          emit(state.copyWith(salary: value));
+          break;
       }
-    } catch (e) {
-      throw Exception('Failed to update $field: ${e.toString()}');
+
+      await _addNotification(
+        AppNotification(
+          id: '${DateTime.now().millisecondsSinceEpoch}',
+          title: 'Profile Update',
+          message: '$field updated to $value',
+          timestamp: DateTime.now(),
+        ),
+      );
     }
+  } catch (e) {
+    debugPrint('Error updating $field: ${e.toString()}');
+    rethrow;
   }
+}
 
   // Future<void> _loadUserData() async {
   //   try {
@@ -191,66 +203,66 @@ void listenToAuthChanges() {
   //   }
   // }
 
-  Future<void> loadUserData() async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) return;
-
-      final userDoc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
-
-      String? imageUrl = user.photoURL;
-      String? name = user.displayName;
-      String? email = user.email;
-      String birthDate = '';
-      String location = '';
-      String idNumber = '';
-      String salary = '';
-
-      if (userDoc.exists) {
-        final userType = userDoc.data()?['userType'] ?? 'individual';
-        final collectionName =
-            userType == 'individual' ? 'individuals' : 'businesses';
-
-        final detailsDoc =
-            await FirebaseFirestore.instance
-                .collection(collectionName)
-                .doc(user.uid)
-                .get();
-
-        if (detailsDoc.exists) {
-          final data = detailsDoc.data()!;
-          imageUrl = data['profileImage'] ?? imageUrl;
-          name = data['fullName'] ?? name;
-          email = data['email'] ?? email;
-          birthDate = data['dob'] ?? data['budget'] ?? '';
-          location = data['address'] ?? data['companyLocation'] ?? '';
-          idNumber = data['nationalId'] ?? data['numberOfEmployees'] ?? '';
-          salary = data['income'] ?? data['budget'] ?? '';
-        }
-      }
-
-      emit(
-        state.copyWith(
-          name: name ?? '',
-          email: email ?? '',
-          birthDate: birthDate,
-          location: location,
-          idNumber: idNumber,
-          salary: salary,
-          imagePath: imageUrl,
-        ),
-      );
-
-    } catch (e) {
-      debugPrint('Error loading user data: $e');
-      emit(state.copyWith());
+Future<void> loadUserData() async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      debugPrint('No user logged in');
+      return;
     }
-  }
 
+    debugPrint('Loading data for user: ${user.uid}');
+    
+    // Get fresh data from server (no cache)
+    final userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get(GetOptions(source: Source.server));
+
+    if (!userDoc.exists) {
+      debugPrint('User document not found in users collection');
+      emit(state.copyWith());
+      return;
+    }
+
+    final userType = userDoc.data()?['userType'] ?? 'individual';
+    final collectionName = userType == 'individual' ? 'individuals' : 'businesses';
+
+    final detailsDoc = await FirebaseFirestore.instance
+        .collection(collectionName)
+        .doc(user.uid)
+        .get(GetOptions(source: Source.server));
+
+    if (!detailsDoc.exists) {
+      debugPrint('User details not found in $collectionName collection');
+      emit(state.copyWith(
+        name: user.displayName ?? '',
+        email: user.email ?? '',
+        imagePath: user.photoURL,
+      ));
+      return;
+    }
+
+    final data = detailsDoc.data()!;
+    final newState = ProfileState(
+      name: data['fullName'] ?? user.displayName ?? '',
+      email: data['email'] ?? user.email ?? '',
+      birthDate: data['dob'] ?? data['budget'] ?? '',
+      location: data['address'] ?? data['companyLocation'] ?? '',
+      idNumber: data['nationalId'] ?? data['numberOfEmployees'] ?? '',
+      salary: data['income'] ?? data['budget'] ?? '',
+      imagePath: data['profileImage'] ?? user.photoURL,
+    );
+
+    debugPrint('Successfully loaded user data: ${newState.toMap()}');
+    emit(newState);
+
+  } catch (e) {
+    debugPrint('Error loading user data: $e');
+    emit(state.copyWith());
+    rethrow;
+  }
+}
   Future<void> pickImage(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);

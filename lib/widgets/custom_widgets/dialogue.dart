@@ -28,63 +28,67 @@ class _DialogueState extends State<Dialogue> {
     super.dispose();
   }
 
- Future<void> _handleAction(BuildContext context) async {
-  setState(() {
-    _isLoading = true;
-    _showError = false;
-  });
+  Future<void> _handleAction(BuildContext context) async {
+    setState(() {
+      _isLoading = true;
+      _showError = false;
+    });
 
-  final loc = AppLocalizations.of(context)!;
-  final scaffold = ScaffoldMessenger.of(context);
-  final user = FirebaseAuth.instance.currentUser;
-  final profileCubit = context.read<ProfileCubit>();
+    final loc = AppLocalizations.of(context)!;
+    final scaffold = ScaffoldMessenger.of(context);
+    final profileCubit = context.read<ProfileCubit>();
 
-  try {
-    if (widget.actionType == 'logout') {
-      // تسجيل الخروج من جوجل إذا كان مستخدم جوجل
-      final googleSignIn = GoogleSignIn();
-      try {
-        await googleSignIn.disconnect();
-      } catch (_) {}
-      await googleSignIn.signOut();
-      
-      // تسجيل الخروج من Firebase
-      await FirebaseAuth.instance.signOut();
-      
-      // مسح حالة تسجيل الدخول من SharedPreferences
-      await SharedPrefsHelper.saveLoginState(false);
-      
-      // إعادة تعيين حالة البروفايل
-      profileCubit.resetState();
-      
-      // إعادة التوجيه إلى شاشة تسجيل الدخول
-      if (mounted) {
-        Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
+    try {
+      if (widget.actionType == 'logout') {
+        // 1. أولاً قم بتسجيل الخروج من Firebase
+        await FirebaseAuth.instance.signOut();
+
+        // 2. ثم تسجيل الخروج من جوجل إذا كان مستخدم جوجل
+        final googleSignIn = GoogleSignIn();
+        try {
+          await googleSignIn.disconnect();
+        } catch (_) {}
+        await googleSignIn.signOut();
+
+        // 3. مسح حالة تسجيل الدخول من SharedPreferences
+        await SharedPrefsHelper.saveLoginState(false);
+        profileCubit.resetState();
+
+        // 4. إظهار رسالة النجاح
+        scaffold.showSnackBar(
+          SnackBar(
+            content: Text(loc.translate("logged_out_successfully")),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        // 5. الانتقال إلى شاشة تسجيل الدخول
+        if (mounted) {
+          Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
+        }
+
+        // 6. أخيراً، إعادة تعيين حالة البروفايل بعد كل العمليات
+        profileCubit.resetState();
+      } else if (widget.actionType == 'delete') {
+        // ... (الكود الحالي لحذف الحساب يبقى كما هو)
       }
-      
-      scaffold.showSnackBar(
-        SnackBar(
-          content: Text(loc.translate("logged_out_successfully")),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } 
-    else if (widget.actionType == 'delete') {
-      // ... (الكود الحالي لحذف الحساب يبقى كما هو)
-    }
-  } catch (e) {
-    scaffold.showSnackBar(
-      SnackBar(
-        content: Text('${loc.translate("error_occurred")}: ${e.toString()}'),
-        backgroundColor: Colors.red,
-      ),
-    );
-  } finally {
-    if (mounted) {
-      setState(() => _isLoading = false);
+    } catch (e) {
+      if (mounted) {
+        scaffold.showSnackBar(
+          SnackBar(
+            content: Text(
+              '${loc.translate("error_occurred")}: ${e.toString()}',
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
-}
 
   @override
   Widget build(BuildContext context) {

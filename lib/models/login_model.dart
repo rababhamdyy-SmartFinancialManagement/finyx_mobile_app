@@ -63,11 +63,13 @@ class LoginModel {
       );
       return null;
     }
+await user.reload();
+    final refreshedUser = FirebaseAuth.instance.currentUser;
 
-    // الحصول على ProfileCubit من context
+    // Get fresh data from server
     final profileCubit = context.read<ProfileCubit>();
-    profileCubit.resetState(); // إعادة تعيين الحالة
-    await profileCubit.loadUserData(); // جلب بيانات المستخدم الجديد
+    await profileCubit.loadUserData();
+
 
     final userDoc = await FirebaseFirestore.instance
         .collection('users')

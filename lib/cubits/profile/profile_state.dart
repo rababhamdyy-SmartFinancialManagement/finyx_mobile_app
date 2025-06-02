@@ -42,4 +42,18 @@ class ProfileState {
       notifications: notifications ?? this.notifications,
     );
   }
+
+  // أضف هذه الدالة الجديدة
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'email': email,
+      'birthDate': birthDate,
+      'location': location,
+      'idNumber': idNumber,
+      'salary': salary,
+      'imagePath': imagePath,
+      'notifications': notifications.map((n) => n.toMap()).toList(),
+    };
+  }
 }
