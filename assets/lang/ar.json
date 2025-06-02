@@ -241,6 +241,8 @@
   "email_not_match": "البريد الإلكتروني غير مطابق",
   "enter_email_to_confirm": "أدخل بريدك الإلكتروني للتأكيد",
   "enter_password_to_confirm": "أدخل كلمة المرور للتأكيد",
-  "invalid_input": "مدخل غير صحيح"
+  "invalid_input": "مدخل غير صحيح",
+    "logged_out_successfully": "تم تسجيل الخروج بنجاح"
+
 
 }

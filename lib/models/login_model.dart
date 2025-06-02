@@ -45,18 +45,20 @@ class LoginModel {
     CustomSnackbar.show(context, loc.translate("email_or_password_empty"), isError: true);
     return null;
   }
+
   try {
     final UserCredential userCredential = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
 
     final user = userCredential.user;
-    if (user == null) return null;
+    if (user == null) {
+      CustomSnackbar.show(context, loc.translate("login_failed_user_not_found"), isError: true);
+      return null;
+    }
 
-    // إعادة تحميل البيانات مباشرة بعد الدخول
+    // إعادة تحميل بيانات المستخدم للتأكد من تحديثها
     await user.reload();
-    
-    final profileCubit = context.read<ProfileCubit>();
-    await profileCubit.loadUserData(); 
+    final refreshedUser = FirebaseAuth.instance.currentUser;
 
     // جلب أحدث بيانات من Firestore
     final userDoc = await FirebaseFirestore.instance
@@ -70,6 +72,7 @@ class LoginModel {
     }
 
     final userType = userDoc.data()?['userType'];
+    final profileCubit = context.read<ProfileCubit>();
     
     // تحميل البيانات مع التأكد من تحديث الحالة
     await profileCubit.loadUserData();

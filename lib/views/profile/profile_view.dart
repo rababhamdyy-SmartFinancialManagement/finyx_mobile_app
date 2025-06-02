@@ -15,7 +15,8 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserver {
+class _ProfileScreenState extends State<ProfileScreen>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -97,10 +98,11 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
                 onPressed: () {
                   showDialog(
                     context: context,
-                    builder: (context) => Dialogue(
-                      message: loc.translate("delete_account_confirmation"),
-                      actionType: 'delete',
-                    ),
+                    builder:
+                        (context) => Dialogue(
+                          message: loc.translate("delete_account_confirmation"),
+                          actionType: 'delete',
+                        ),
                   );
                 },
               ),
@@ -111,10 +113,11 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
                 onPressed: () {
                   showDialog(
                     context: context,
-                    builder: (context) => Dialogue(
-                      message: loc.translate("logout_confirmation"),
-                      actionType: 'logout',
-                    ),
+                    builder:
+                        (context) => Dialogue(
+                          message: loc.translate("logout_confirmation"),
+                          actionType: 'logout',
+                        ),
                   );
                 },
               ),

@@ -233,5 +233,7 @@
   "email_not_match": "Email does not match",
   "enter_email_to_confirm": "Enter your email to confirm",
   "enter_password_to_confirm": "Enter your password to confirm",
-  "invalid_input": "Invalid input"
+  "invalid_input": "Invalid input",
+    "logged_out_successfully": "Logged out successfully"
+
 }
