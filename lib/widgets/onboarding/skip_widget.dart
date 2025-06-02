@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../models/applocalization.dart';
+
 class SkipWidget extends StatelessWidget {
   const SkipWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-
+    final loc = AppLocalizations.of(context)!;
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Padding(
@@ -17,7 +19,8 @@ class SkipWidget extends StatelessWidget {
             Navigator.pushNamed(context, '/login');
           },
           child: Text(
-            "Skip",
+
+            loc.translate("onboarding_skip"),
             style: TextStyle(
               fontSize: screenWidth > 600 ? 24 : 28, 
               fontWeight: FontWeight.w400,

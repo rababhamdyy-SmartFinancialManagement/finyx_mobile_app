@@ -1,4 +1,4 @@
-import '../../models/chart_section.dart';
+ import '../../models/chart_section.dart';
 
 class ChartState {
   final List<ChartSection> sections;

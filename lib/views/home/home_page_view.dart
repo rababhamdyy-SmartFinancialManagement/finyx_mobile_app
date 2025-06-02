@@ -1,4 +1,4 @@
-import 'package:finyx_mobile_app/cubits/bottom%20nav/navigation_cubit.dart';
+import  'package:finyx_mobile_app/cubits/bottom%20nav/navigation_cubit.dart';
 import 'package:finyx_mobile_app/cubits/bottom%20nav/navigation_state.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';

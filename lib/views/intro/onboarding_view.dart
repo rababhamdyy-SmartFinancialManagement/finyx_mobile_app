@@ -7,7 +7,6 @@ import 'package:finyx_mobile_app/widgets/onboarding/portrait_layout.dart';
 import 'package:finyx_mobile_app/models/onboarding_model.dart';
 import 'package:flutter/material.dart';
 
-/// Main onboarding screen
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -19,7 +18,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  /// Handles page navigation
   void _changePage(int newIndex) {
     _pageController.animateToPage(
       newIndex,
@@ -30,51 +28,48 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final pages = onboardingPages(context);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
             Visibility(
-              visible:
-                  _currentPage <
-                  onboardingPages.length - 1, // hide skip button on last page
+              visible: _currentPage < pages.length - 1,
               child: const SkipWidget(),
             ),
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final bool isLandscape =
-                      constraints.maxWidth > constraints.maxHeight;
+                  final bool isLandscape = constraints.maxWidth > constraints.maxHeight;
                   return isLandscape
                       ? OnboardingLandscapeLayout(
-                        pageController: _pageController,
-                        onboardingPages: onboardingPages,
-                        currentPage: _currentPage,
-                        onPageChanged:
-                            (index) => setState(() => _currentPage = index),
-                      )
+                    pageController: _pageController,
+                    onboardingPages: pages,
+                    currentPage: _currentPage,
+                    onPageChanged: (index) => setState(() => _currentPage = index),
+                  )
                       : OnboardingPortraitLayout(
-                        pageController: _pageController,
-                        onboardingPages: onboardingPages,
-                        currentPage: _currentPage,
-                        onPageChanged:
-                            (index) => setState(() => _currentPage = index),
-                      );
+                    pageController: _pageController,
+                    onboardingPages: pages,
+                    currentPage: _currentPage,
+                    onPageChanged: (index) => setState(() => _currentPage = index),
+                  );
                 },
               ),
             ),
             OnboardingPageIndicator(
               controller: _pageController,
-              pageCount: onboardingPages.length,
+              pageCount: pages.length,
               onPageChange: _changePage,
             ),
             const SizedBox(height: 25),
             OnboardingActionButton(
               currentPage: _currentPage,
-              totalPages: onboardingPages.length,
+              totalPages: pages.length,
               onNextPressed: () {
-                if (_currentPage < onboardingPages.length - 1) {
+                if (_currentPage < pages.length - 1) {
                   _changePage(_currentPage + 1);
                 } else {
                   Navigator.pushReplacementNamed(context, '/login');

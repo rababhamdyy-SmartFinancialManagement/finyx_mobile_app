@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:finyx_mobile_app/models/otp_model.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_appbar.dart';
 import 'package:finyx_mobile_app/widgets/custom_widgets/custom_title_section.dart';
 import 'package:finyx_mobile_app/widgets/shared/curved_background_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:finyx_mobile_app/models/otp_model.dart';
 import 'package:finyx_mobile_app/widgets/shared/button_widget.dart';
-
+import 'package:finyx_mobile_app/models/applocalization.dart';
 
 class OtpView extends StatefulWidget {
   final String email;
@@ -30,14 +30,14 @@ class _OtpViewState extends State<OtpView> {
     try {
       await _model.sendOtpToEmail(widget.email);
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('OTP sent successfully!')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.translate('otp_sent_successfully'))),
+        );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to send OTP: ${e.toString()}')),
+          SnackBar(content: Text('${AppLocalizations.of(context)!.translate('otp_send_failed')}: ${e.toString()}')),
         );
       }
     } finally {
@@ -55,9 +55,9 @@ class _OtpViewState extends State<OtpView> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${AppLocalizations.of(context)!.translate('otp_error')}: ${e.toString()}')),
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -66,9 +66,11 @@ class _OtpViewState extends State<OtpView> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       extendBodyBehindAppBar: true,
@@ -76,7 +78,7 @@ class _OtpViewState extends State<OtpView> {
         screenWidth: screenWidth,
         screenHeight: screenHeight,
         iconColor: Colors.white,
-        backgroundColor: Color(0xFFFFFFFF),
+        backgroundColor: const Color(0xFFFFFFFF),
       ),
       body: Stack(
         children: [
@@ -92,7 +94,7 @@ class _OtpViewState extends State<OtpView> {
                 child: Column(
                   children: [
                     CustomTitleSection(
-                      title: "OTP Verification",
+                      title: loc.translate("otp_verification"),
                       screenWidth: screenWidth,
                       screenHeight: screenHeight,
                       titleColor: Colors.white,
@@ -102,10 +104,9 @@ class _OtpViewState extends State<OtpView> {
                       "assets/images/otp/otp.png",
                       width: screenWidth * 0.9,
                     ),
-
                     SizedBox(height: screenHeight * 0.07),
                     ButtonWidget(
-                      text: "Resend OTP",
+                      text: loc.translate("resend_otp"),
                       onPressed: _isLoading ? null : _sendOtp,
                       isLoading: _isLoading,
                       width: screenSize.width * 0.8,
