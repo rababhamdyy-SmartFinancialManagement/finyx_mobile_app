@@ -1,4 +1,5 @@
 {
+  "take_control_of_your_finances": "تحكم في أموالك",
   "Settings_title": "الإعدادات",
   "General": "عام",
   "App_Preferences": "تفضيلات التطبيق",
@@ -250,7 +251,7 @@
   "onboarding_msg_3": "خطط بحكمة، وادِر بكفاءة، وحقق أهدافك المالية بسهولة",
   "onboarding_skip": "تخطي",
   "next": "التالي",
-  "get_started": "ابدأ الآن"
+  "get_started":"ابدأ الآن"
 }
 
 

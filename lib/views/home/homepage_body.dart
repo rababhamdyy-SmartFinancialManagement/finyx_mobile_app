@@ -68,7 +68,7 @@ class HomepageBody extends StatelessWidget {
             ),
             SizedBox(height: 4), // ضيف مسافة صغيرة بين السطرين
             Text(
-              loc.translate("available_balance"),
+              loc.translate("take_control_of_your_finances"),
               style: TextStyle(
                 fontSize: screenWidth * 0.04,
                 fontFamily: 'Poppins',
