@@ -235,6 +235,12 @@
   "reset_confirmation_title": "بدء جديد",
   "reset_confirmation_message": "هل أنت متأكد أنك تريد حذف جميع المصروفات الحالية والبدء من جديد؟",
   "no": "لا",
-  "start_fresh_or_enter_new_expenses": "ابدأ جديد أو أدخل مصروفات جديدة"
+  "start_fresh_or_enter_new_expenses": "ابدأ جديد أو أدخل مصروفات جديدة",
+  "google_account_delete_note": "تم إنشاء هذا الحساب باستخدام حساب جوجل. ستحتاج لتأكيد الحذف عبر تسجيل دخول جوجل.",
+  "enter_your_email_to_confirm": "أدخل بريدك الإلكتروني للتأكيد",
+  "email_not_match": "البريد الإلكتروني غير مطابق",
+  "enter_email_to_confirm": "أدخل بريدك الإلكتروني للتأكيد",
+  "enter_password_to_confirm": "أدخل كلمة المرور للتأكيد",
+  "invalid_input": "مدخل غير صحيح"
 
 }
