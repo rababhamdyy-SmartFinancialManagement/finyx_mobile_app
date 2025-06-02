@@ -46,30 +46,27 @@ class LoginModel {
     return null;
   }
 
-  try {
+   try {
     final UserCredential userCredential = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
 
     final user = userCredential.user;
-    if (user == null) {
-      CustomSnackbar.show(context, loc.translate("login_failed_user_not_found"), isError: true);
-      return null;
-    }
+    if (user == null) return null;
 
-    // إعادة تحميل بيانات المستخدم للتأكد من تحديثها
+    // إعادة تحميل بيانات المستخدم
     await user.reload();
     final refreshedUser = FirebaseAuth.instance.currentUser;
 
-    // جلب أحدث بيانات من Firestore
+    // جلب أحدث بيانات من Firestore مع تعطيل الكاش
     final userDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
         .get(GetOptions(source: Source.server));
 
-    if (!userDoc.exists) {
-      CustomSnackbar.show(context, loc.translate("user_data_not_found"), isError: true);
-      return null;
-    }
+    if (!userDoc.exists) return null;
+
+    // تحميل بيانات الملف الشخصي بقوة
+    await context.read<ProfileCubit>().loadUserData();
 
     final userType = userDoc.data()?['userType'];
     final profileCubit = context.read<ProfileCubit>();

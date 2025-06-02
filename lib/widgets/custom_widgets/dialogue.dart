@@ -41,6 +41,8 @@ class _DialogueState extends State<Dialogue> {
     try {
       if (widget.actionType == 'logout') {
         // 1. إعادة تعيين الحالة أولاً
+        final profileCubit = context.read<ProfileCubit>();
+
         profileCubit.resetState();
 
         // 2. تسجيل الخروج من جوجل إذا كان مستخدم جوجل
