@@ -234,6 +234,7 @@
   "businessRegistrationSuccessful": "تم تسجيل الشركة بنجاح!",
   "reset_confirmation_title": "بدء جديد",
   "reset_confirmation_message": "هل أنت متأكد أنك تريد حذف جميع المصروفات الحالية والبدء من جديد؟",
-  "no": "لا"
+  "no": "لا",
+  "start_fresh_or_enter_new_expenses": "ابدأ جديد أو أدخل مصروفات جديدة"
 
 }

@@ -226,5 +226,6 @@
   "businessRegistrationSuccessful": "Business registration successful!",
   "reset_confirmation_message": "Are you sure you want to delete all current expenses and start fresh?",
   "reset_confirmation_title": "Start Fresh",
-  "no": "No"
+  "no": "No",
+  "start_fresh_or_enter_new_expenses": "Start fresh or enter new expenses"
 }

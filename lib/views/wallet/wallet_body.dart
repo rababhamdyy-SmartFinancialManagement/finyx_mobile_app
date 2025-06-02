@@ -171,11 +171,11 @@ class WalletBody extends StatelessWidget {
               children: [
                 Center(
                   child: Text(
-                    'Start fresh or enter new expenses',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey,
-                        ),
-                  ),
+                  loc.translate('start_fresh_or_enter_new_expenses') ,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.grey,
+                      ),
+                ),
                 ),
                 Positioned(
                   right: 0,
