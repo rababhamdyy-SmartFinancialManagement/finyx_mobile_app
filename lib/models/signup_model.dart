@@ -99,7 +99,6 @@ class SignUpModel {
           'email': email,
           'fullName': fullName,
           'userType': userType,
-          'fullName': fullNameController.text,
         });
 
         await SharedPrefsHelper.saveUserType(userType);
