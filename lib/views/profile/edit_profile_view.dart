@@ -13,8 +13,8 @@ class EditProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    return BlocProvider(
-      create: (context) => ProfileCubit(FlutterLocalNotificationsPlugin()),
+    return BlocProvider.value(
+      value: BlocProvider.of<ProfileCubit>(context),
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(

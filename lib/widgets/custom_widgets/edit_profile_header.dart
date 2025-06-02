@@ -36,10 +36,20 @@ class EditProfileHeader extends StatelessWidget {
                   ),
                   child: CircleAvatar(
                     radius: width * 0.19,
-                    backgroundImage: _getImageProvider(imageUrl),
+                    backgroundColor:
+                        Colors.transparent, // لجعل الخلفية شفافة إذا لزم الأمر
+                    backgroundImage:
+                        imageUrl != null ? _getImageProvider(imageUrl) : null,
                     child:
                         imageUrl == null
-                            ? const Icon(Icons.person, size: 40)
+                            ? ClipOval(
+                              child: Image.asset(
+                                'assets/images/profile/profile2.png',
+                                width: width * 0.38, // (radius * 2)
+                                height: width * 0.38,
+                                fit: BoxFit.cover,
+                              ),
+                            )
                             : null,
                   ),
                 ),

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,8 +13,15 @@ class ProfileCubit extends Cubit<ProfileState> {
   final FlutterLocalNotificationsPlugin notificationsPlugin;
 
   ProfileCubit(this.notificationsPlugin) : super(ProfileState()) {
-    _loadUserData();
+    loadUserData();
     _setupNotifications();
+    listenToAuthChanges();
+  }
+
+  void _init() {
+    loadUserData();
+    _setupNotifications();
+    listenToAuthChanges(); // بدء الاستماع لتغييرات حالة المصادقة
   }
 
   Future<void> _setupNotifications() async {
@@ -58,10 +66,47 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
+  // في ملف profile_cubit.dart
+  void resetState() {
+    emit(ProfileState()); // إعادة تعيين الحالة إلى الحالة الأولية
+  }
+
+  void listenToAuthChanges() {
+    FirebaseAuth.instance.authStateChanges().listen((user) async {
+      if (user != null) {
+        await loadUserData(); // جلب بيانات المستخدم الجديد
+      } else {
+        emit(ProfileState()); // إعادة تعيين الحالة إذا لم يكن هناك مستخدم
+      }
+    });
+  }
+
   Future<void> updateProfileField(String field, String value) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
+
+      // تحديث الحالة المحلية أولاً لتظهر التغييرات فوراً
+      switch (field) {
+        case 'Name':
+          emit(state.copyWith(name: value));
+          break;
+        case 'Email':
+          emit(state.copyWith(email: value));
+          break;
+        case 'Birth Date':
+          emit(state.copyWith(birthDate: value));
+          break;
+        case 'Location':
+          emit(state.copyWith(location: value));
+          break;
+        case 'ID Number':
+          emit(state.copyWith(idNumber: value));
+          break;
+        case 'Salary':
+          emit(state.copyWith(salary: value)); // التحديث الفوري للراتب
+          break;
+      }
 
       final userDoc =
           await FirebaseFirestore.instance
@@ -73,34 +118,14 @@ class ProfileCubit extends Cubit<ProfileState> {
         final userType = userDoc.data()?['userType'] ?? 'individual';
         final collectionName =
             userType == 'individual' ? 'individuals' : 'businesses';
-
         String firestoreField = _getFirestoreFieldName(field, userType);
 
-        await FirebaseFirestore.instance
-            .collection(collectionName)
-            .doc(user.uid)
-            .update({firestoreField: value});
-
-        switch (field) {
-          case 'Name':
-            emit(state.copyWith(name: value));
-            break;
-          case 'Email':
-            emit(state.copyWith(email: value));
-            break;
-          case 'Birth Date':
-            emit(state.copyWith(birthDate: value));
-            break;
-          case 'Location':
-            emit(state.copyWith(location: value));
-            break;
-          case 'ID Number':
-            emit(state.copyWith(idNumber: value));
-            break;
-          case 'Salary':
-            emit(state.copyWith(salary: value));
-            break;
-        }
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
+          transaction.update(
+            FirebaseFirestore.instance.collection(collectionName).doc(user.uid),
+            {firestoreField: value},
+          );
+        });
 
         await _addNotification(
           AppNotification(
@@ -112,11 +137,11 @@ class ProfileCubit extends Cubit<ProfileState> {
         );
       }
     } catch (e) {
-      throw Exception('Failed to update $field: ${e.toString()}');
+      debugPrint('Error updating $field: ${e.toString()}');
+      await loadUserData(); // إعادة تحميل البيانات الأصلية في حالة الخطأ
+      rethrow;
     }
-  }
-
-  // Future<void> _loadUserData() async {
+  } // Future<void> _loadUserData() async {
   //   try {
   //     final user = FirebaseAuth.instance.currentUser;
   //     if (user == null) return;
@@ -172,63 +197,72 @@ class ProfileCubit extends Cubit<ProfileState> {
   //   }
   // }
 
-  Future<void> _loadUserData() async {
+  Future<void> loadUserData() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
-      if (user == null) return;
-
-      final userDoc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
-
-      String? imageUrl = user.photoURL;
-      String? name = user.displayName;
-      String? email = user.email;
-      String birthDate = '';
-      String location = '';
-      String idNumber = '';
-      String salary = '';
-
-      if (userDoc.exists) {
-        final userType = userDoc.data()?['userType'] ?? 'individual';
-        final collectionName =
-            userType == 'individual' ? 'individuals' : 'businesses';
-
-        final detailsDoc =
-            await FirebaseFirestore.instance
-                .collection(collectionName)
-                .doc(user.uid)
-                .get();
-
-        if (detailsDoc.exists) {
-          final data = detailsDoc.data()!;
-          imageUrl = data['profileImage'] ?? imageUrl;
-          name = data['fullName'] ?? name;
-          email = data['email'] ?? email;
-          birthDate = data['dob'] ?? data['budget'] ?? '';
-          location = data['address'] ?? data['companyLocation'] ?? '';
-          idNumber = data['nationalId'] ?? data['numberOfEmployees'] ?? '';
-          salary = data['income'] ?? data['budget'] ?? '';
-        }
+      if (user == null) {
+        emit(ProfileState());
+        return;
       }
 
+      // إعادة تحميل بيانات المستخدم من Firebase Auth
+      await user.reload();
+      final refreshedUser = FirebaseAuth.instance.currentUser;
+
+      // جلب البيانات من Firestore مع التأكد من الحصول على أحدث نسخة
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get(GetOptions(source: Source.server));
+
+      if (!userDoc.exists) {
+        emit(
+          ProfileState(
+            name: refreshedUser?.displayName ?? '',
+            email: refreshedUser?.email ?? '',
+          ),
+        );
+        return;
+      }
+
+      final userType = userDoc.data()?['userType'] ?? 'individual';
+      final collectionName =
+          userType == 'individual' ? 'individuals' : 'businesses';
+
+      final detailsDoc = await FirebaseFirestore.instance
+          .collection(collectionName)
+          .doc(user.uid)
+          .get(GetOptions(source: Source.server));
+
+      // دمج البيانات من Auth و Firestore مع إعطاء الأولوية لـ Firestore
       emit(
-        state.copyWith(
-          name: name ?? '',
-          email: email ?? '',
-          birthDate: birthDate,
-          location: location,
-          idNumber: idNumber,
-          salary: salary,
-          imagePath: imageUrl,
+        ProfileState(
+          name:
+              detailsDoc.data()?['fullName'] ??
+              refreshedUser?.displayName ??
+              '',
+          email: detailsDoc.data()?['email'] ?? refreshedUser?.email ?? '',
+          birthDate:
+              detailsDoc.data()?['dob'] ?? detailsDoc.data()?['budget'] ?? '',
+          location:
+              detailsDoc.data()?['address'] ??
+              detailsDoc.data()?['companyLocation'] ??
+              '',
+          idNumber:
+              detailsDoc.data()?['nationalId'] ??
+              detailsDoc.data()?['numberOfEmployees'] ??
+              '',
+          salary:
+              detailsDoc.data()?['income'] ??
+              detailsDoc.data()?['budget'] ??
+              '',
+          imagePath:
+              detailsDoc.data()?['profileImage'] ?? refreshedUser?.photoURL,
         ),
       );
-
     } catch (e) {
       debugPrint('Error loading user data: $e');
-      emit(state.copyWith());
+      emit(ProfileState());
     }
   }
 
@@ -338,10 +372,10 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> deleteAccount() async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) return;
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
 
+    try {
       final userDoc =
           await FirebaseFirestore.instance
               .collection('users')
@@ -357,7 +391,6 @@ class ProfileCubit extends Cubit<ProfileState> {
             .collection(collectionName)
             .doc(user.uid)
             .delete();
-
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
@@ -373,19 +406,33 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<bool> reauthenticate(String password) async {
+  Future<bool> reauthenticate(String credentialInput) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return false;
+
+    final providerId = user.providerData.first.providerId;
+
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null || user.email == null) return false;
+      if (providerId == 'google.com') {
+        final googleUser = await GoogleSignIn().signIn();
+        final googleAuth = await googleUser?.authentication;
+        if (googleAuth == null) return false;
 
-      final credential = EmailAuthProvider.credential(
-        email: user.email!,
-        password: password,
-      );
-
-      await user.reauthenticateWithCredential(credential);
-      return true;
-    } catch (e) {
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        await user.reauthenticateWithCredential(credential);
+        return true;
+      } else {
+        final credential = EmailAuthProvider.credential(
+          email: user.email!,
+          password: credentialInput,
+        );
+        await user.reauthenticateWithCredential(credential);
+        return true;
+      }
+    } catch (_) {
       return false;
     }
   }

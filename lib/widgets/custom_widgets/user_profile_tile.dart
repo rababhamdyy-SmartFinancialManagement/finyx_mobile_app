@@ -16,7 +16,7 @@ class UserProfileCard extends StatelessWidget {
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
         final imageUrl = state.imagePath ?? user?.photoURL;
-        
+
         return Column(
           children: [
             _buildProfileImage(width, imageUrl),
@@ -54,10 +54,19 @@ class UserProfileCard extends StatelessWidget {
       ),
       child: CircleAvatar(
         radius: width * 0.19,
-        backgroundImage: _getImageProvider(imageUrl),
-        child: imageUrl == null 
-            ? const Icon(Icons.person, size: 40)
-            : null,
+        backgroundColor: Colors.transparent, // لجعل الخلفية شفافة إذا لزم الأمر
+        backgroundImage: imageUrl != null ? _getImageProvider(imageUrl) : null,
+        child:
+            imageUrl == null
+                ? ClipOval(
+                  child: Image.asset(
+                    'assets/images/profile/profile2.png',
+                    width: width * 0.38, // (radius * 2)
+                    height: width * 0.38,
+                    fit: BoxFit.cover,
+                  ),
+                )
+                : null,
       ),
     );
   }
@@ -66,7 +75,7 @@ class UserProfileCard extends StatelessWidget {
     if (imageUrl == null) {
       return const AssetImage('assets/images/profile/profile2.png');
     }
-    
+
     if (imageUrl.startsWith('http')) {
       return NetworkImage(imageUrl);
     } else {

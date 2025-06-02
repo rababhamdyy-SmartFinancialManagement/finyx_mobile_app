@@ -15,6 +15,8 @@ class AppNotification {
     this.actionType,
   });
 
+  
+
   factory AppNotification.fromMap(Map<String, dynamic> map) {
     return AppNotification(
       id: map['id'],

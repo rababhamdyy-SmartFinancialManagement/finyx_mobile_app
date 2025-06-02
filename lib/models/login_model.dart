@@ -1,5 +1,7 @@
+import 'package:finyx_mobile_app/cubits/profile/profile_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
@@ -35,129 +37,113 @@ class LoginModel {
   }
 
   Future<UserType?> loginUser(BuildContext context) async {
-    final loc = AppLocalizations.of(context)!;
+  final loc = AppLocalizations.of(context)!;
+  final email = emailController.text.trim();
+  final password = passwordController.text;
 
-    final email = emailController.text.trim();
-    final password = passwordController.text;
+  if (email.isEmpty || password.isEmpty) {
+    CustomSnackbar.show(context, loc.translate("email_or_password_empty"), isError: true);
+    return null;
+  }
+  try {
+    final UserCredential userCredential = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
 
-    if (email.isEmpty || password.isEmpty) {
-      CustomSnackbar.show(
-        context,
-        loc.translate("email_or_password_empty"),
-        isError: true,
-      );
+    final user = userCredential.user;
+    if (user == null) return null;
+
+    // إعادة تحميل البيانات مباشرة بعد الدخول
+    await user.reload();
+    
+    final profileCubit = context.read<ProfileCubit>();
+    await profileCubit.loadUserData(); 
+
+    // جلب أحدث بيانات من Firestore
+    final userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get(GetOptions(source: Source.server));
+
+    if (!userDoc.exists) {
+      CustomSnackbar.show(context, loc.translate("user_data_not_found"), isError: true);
       return null;
     }
 
-    try {
-      final UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
+    final userType = userDoc.data()?['userType'];
+    
+    // تحميل البيانات مع التأكد من تحديث الحالة
+    await profileCubit.loadUserData();
 
-      final user = userCredential.user;
-
-      if (user == null) {
-        CustomSnackbar.show(
-          context,
-          loc.translate("login_failed_user_not_found"),
-          isError: true,
-        );
-        return null;
-      }
-
-      final userDoc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
-      final userType = userDoc.data()?['userType'];
-
-      final prefs = await SharedPreferences.getInstance();
-      if (isChecked) {
-        await prefs.setString('saved_email', email);
-        await prefs.setString('saved_password', password);
-      } else {
-        await prefs.remove('saved_email');
-        await prefs.remove('saved_password');
-      }
-
-      if (userType == "individual") {
-        await SharedPrefsHelper.saveUserType("individual");
-        await SharedPrefsHelper.saveLoginState(true);
-        CustomSnackbar.show(
-          context,
-          loc.translate("logged_in_individual"),
-          isError: false,
-        );
-        return UserType.individual;
-      } else if (userType == "business") {
-        await SharedPrefsHelper.saveUserType("business");
-        await SharedPrefsHelper.saveLoginState(true);
-        CustomSnackbar.show(
-          context,
-          loc.translate("logged_in_business"),
-          isError: false,
-        );
-        return UserType.business;
-      } else {
-        CustomSnackbar.show(
-          context,
-          loc.translate("unknown_user_type"),
-          isError: true,
-        );
-        return null;
-      }
-    } on FirebaseAuthException catch (e) {
-      CustomSnackbar.show(
-        context,
-        "${loc.translate("login_error")}: ${e.message}",
-        isError: true,
-      );
-    } catch (e) {
-      CustomSnackbar.show(
-        context,
-        "${loc.translate("unexpected_error")}: $e",
-        isError: true,
-      );
+    // حفظ بيانات الاعتماد إذا كان مطلوباً
+    final prefs = await SharedPreferences.getInstance();
+    if (isChecked) {
+      await prefs.setString('saved_email', email);
+      await prefs.setString('saved_password', password);
+    } else {
+      await prefs.remove('saved_email');
+      await prefs.remove('saved_password');
     }
 
-    return null;
+    if (userType == "individual") {
+      await SharedPrefsHelper.saveUserType("individual");
+      await SharedPrefsHelper.saveLoginState(true);
+      return UserType.individual;
+    } else if (userType == "business") {
+      await SharedPrefsHelper.saveUserType("business");
+      await SharedPrefsHelper.saveLoginState(true);
+      return UserType.business;
+    } else {
+      CustomSnackbar.show(context, loc.translate("unknown_user_type"), isError: true);
+      return null;
+    }
+  } on FirebaseAuthException catch (e) {
+    CustomSnackbar.show(context, "${loc.translate("login_error")}: ${e.message}", isError: true);
+  } catch (e) {
+    CustomSnackbar.show(context, "${loc.translate("unexpected_error")}: $e", isError: true);
   }
+  return null;
+}
 
-  Future<UserType?> signInWithGoogle(BuildContext context) async {
-    final loc = AppLocalizations.of(context)!;
+Future<Map<String, dynamic>?> signInWithGoogle(BuildContext context) async {
+  final loc = AppLocalizations.of(context)!;
 
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return null;
+  try {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    if (googleUser == null) return null;
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
 
-      final UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithCredential(credential);
-      final User? user = userCredential.user;
-      if (user == null) return null;
+    final UserCredential userCredential = await FirebaseAuth.instance
+        .signInWithCredential(credential);
+    final User? user = userCredential.user;
+    if (user == null) return null;
 
-      final DocumentSnapshot userDoc =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
+    // الحصول على ProfileCubit من context
+    final profileCubit = context.read<ProfileCubit>();
+    profileCubit.resetState(); // إعادة تعيين الحالة
+    await profileCubit.loadUserData(); // جلب بيانات المستخدم الجديد
 
-      // إذا كان المستخدم موجودًا سابقًا
-      if (userDoc.exists) {
+    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get(GetOptions(source: Source.server)); // جلب أحدث البيانات من السيرفر
+if (userDoc.exists) {
         final userType = userDoc.get('userType');
-        await _updateProfileData(user); // تحديث البيانات إذا تغيرت في جوجل
-        return userType == 'individual'
-            ? UserType.individual
-            : UserType.business;
+        await _updateProfileData(user);
+        return {
+          'userType':
+              userType == 'individual'
+                  ? UserType.individual
+                  : UserType.business,
+          'isNewUser': false,
+        };
       }
 
-      // New user - show dialog to select type
+      // 🆕 مستخدم جديد - اختيار نوع المستخدم
       UserType? selectedType = await showDialog<UserType>(
         context: context,
         builder: (BuildContext context) {
@@ -268,22 +254,23 @@ class LoginModel {
         'userType':
             selectedType == UserType.individual ? 'individual' : 'business',
         'email': user.email,
-        'fullName': user.displayName ?? 'Google User', // استخدام اسم جوجل
+        'fullName': user.displayName ?? 'Google User',
         'photoUrl': user.photoURL,
         'createdAt': FieldValue.serverTimestamp(),
       });
+
       await _updateProfileData(user);
 
-      return selectedType;
-    } catch (e) {
-      CustomSnackbar.show(
-        context,
-        "${loc.translate("google_sign_in_error")}: $e",
-        isError: true,
-      );
-      return null;
-    }
+      return {'userType': selectedType, 'isNewUser': true};
+    }   catch (e) {
+    CustomSnackbar.show(
+      context,
+      "${loc.translate("google_sign_in_error")}: $e",
+      isError: true,
+    );
+    return null;
   }
+}
 
   Future<void> _updateProfileData(User user) async {
     final userDoc =
@@ -299,6 +286,6 @@ class LoginModel {
       'profileImage': user.photoURL?.replaceAll('s96-c', 's400-c'),
       'email': user.email,
       'updatedAt': FieldValue.serverTimestamp(),
-    }, SetOptions(merge: true)); // merge للحفاظ على البيانات الأخرى
+    }, SetOptions(merge: true));
   }
 }
