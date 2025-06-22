@@ -64,8 +64,10 @@ class _IndividualSignupViewState extends State<IndividualSignupView> {
                             borderSide: const BorderSide(color: Colors.grey),
                           ),
                         ),
-                        style: const TextStyle(
-                          color: Colors.black,
+                        style: TextStyle(
+                          color: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium!.color!.withAlpha(150),
                           fontSize: 14,
                         ),
                       ),

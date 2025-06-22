@@ -12,7 +12,7 @@ class UserProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final user = FirebaseAuth.instance.currentUser;
-
+    print('User UID: ${user?.uid}');
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
         final imageUrl = state.imagePath ?? user?.photoURL;

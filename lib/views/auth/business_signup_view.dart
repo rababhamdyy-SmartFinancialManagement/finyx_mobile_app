@@ -40,9 +40,9 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: screenHeight * 0.01),
-                FinyxWidget(fontSize: screenWidth * 0.14),               
+                FinyxWidget(fontSize: screenWidth * 0.14),
                 SizedBox(height: screenHeight * 0.04),
-    Row(
+                Row(
                   children: [
                     SizedBox(
                       height: screenHeight * 0.066,
@@ -64,8 +64,10 @@ class _BusinessSignUpViewState extends State<BusinessSignUpView> {
                             borderSide: const BorderSide(color: Colors.grey),
                           ),
                         ),
-                        style: const TextStyle(
-                          color: Colors.black,
+                        style: TextStyle(
+                          color: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium!.color!.withAlpha(150),
                           fontSize: 14,
                         ),
                       ),

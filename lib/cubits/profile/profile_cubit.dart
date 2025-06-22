@@ -81,61 +81,80 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> updateProfileField(String field, String value) async {
-  try {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
 
-    // تحديث الحالة المحلية أولاً
-    switch (field) {
-      case 'Name': emit(state.copyWith(name: value)); break;
-      case 'Email': emit(state.copyWith(email: value)); break;
-      case 'Birth Date': emit(state.copyWith(birthDate: value)); break;
-      case 'Location': emit(state.copyWith(location: value)); break;
-      case 'ID Number': emit(state.copyWith(idNumber: value)); break;
-      case 'Salary': emit(state.copyWith(salary: value)); break;
-    }
+      // تحديث الحالة محليًا
+      switch (field) {
+        case 'Name':
+          emit(state.copyWith(name: value));
+          break;
+        case 'Email':
+          emit(state.copyWith(email: value));
+          break;
+        case 'Birth Date':
+          emit(state.copyWith(birthDate: value));
+          break;
+        case 'Location':
+          emit(state.copyWith(location: value));
+          break;
+        case 'ID Number':
+          emit(state.copyWith(idNumber: value));
+          break;
+        case 'Salary':
+          emit(state.copyWith(salary: value));
+          break;
+      }
 
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .get(GetOptions(source: Source.server));
-
-    if (userDoc.exists) {
-      final userType = userDoc.data()?['userType'] ?? 'individual';
-      final collectionName = userType == 'individual' ? 'individuals' : 'businesses';
-      String firestoreField = _getFirestoreFieldName(field, userType);
-
-      // استخدم المعاملات (Transactions) للتأكد من التحديث الآمن
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        DocumentReference docRef = FirebaseFirestore.instance
-            .collection(collectionName)
-            .doc(user.uid);
-        
-        transaction.update(docRef, {firestoreField: value});
-      });
-
-      // أضف علامة timestamp للتحديث
-      await FirebaseFirestore.instance
-          .collection(collectionName)
+      // جلب نوع المستخدم
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
           .doc(user.uid)
-          .update({'lastUpdated': FieldValue.serverTimestamp()});
+          .get(GetOptions(source: Source.server));
 
-      await _addNotification(
-        AppNotification(
-          id: '${DateTime.now().millisecondsSinceEpoch}',
-          title: 'Profile Update',
-          message: '$field updated to $value',
-          timestamp: DateTime.now(),
-        ),
-      );
+      if (userDoc.exists) {
+        final userType = userDoc.data()?['userType'] ?? 'individual';
+        final collectionName =
+            userType == 'individual' ? 'individuals' : 'businesses';
+        final firestoreField = _getFirestoreFieldName(field, userType);
+
+        if (field == 'Name') {
+          // ✨ الاسم بيتخزن في Collection users
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .update({'fullName': value});
+        } else {
+          // باقي الحقول بتتحدث في individuals/businesses
+          await FirebaseFirestore.instance
+              .collection(collectionName)
+              .doc(user.uid)
+              .update({firestoreField: value});
+        }
+
+        await FirebaseFirestore.instance
+            .collection(collectionName)
+            .doc(user.uid)
+            .update({'lastUpdated': FieldValue.serverTimestamp()});
+
+        await _addNotification(
+          AppNotification(
+            id: '${DateTime.now().millisecondsSinceEpoch}',
+            title: 'Profile Update',
+            message: '$field updated to $value',
+            timestamp: DateTime.now(),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error updating $field: ${e.toString()}');
+      await loadUserData();
+      rethrow;
     }
-  } catch (e) {
-    debugPrint('Error updating $field: ${e.toString()}');
-    await loadUserData();
-    rethrow;
   }
-}
- // Future<void> _loadUserData() async {
+
+  // Future<void> _loadUserData() async {
   //   try {
   //     final user = FirebaseAuth.instance.currentUser;
   //     if (user == null) return;
@@ -191,61 +210,65 @@ class ProfileCubit extends Cubit<ProfileState> {
   //   }
   // }
 
- Future<void> loadUserData() async {
-  try {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
+  Future<void> loadUserData() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        emit(ProfileState());
+        return;
+      }
+
+      // إعادة تحميل بيانات المستخدم من Firebase Auth
+      await user.reload();
+      final refreshedUser = FirebaseAuth.instance.currentUser;
+
+      // جلب البيانات من Firestore مع تعطيل الكاش
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get(GetOptions(source: Source.server));
+      String? fullNameFromUsers = userDoc.data()?['fullName'];
+      String? emailFromUsers = userDoc.data()?['email'];
+      String userType = userDoc.data()?['userType'] ?? 'individual';
+      String collectionName =
+          userType == 'individual' ? 'individuals' : 'businesses';
+
+      if (!userDoc.exists) {
+        emit(
+          ProfileState(
+            name: refreshedUser?.displayName ?? '',
+            email: refreshedUser?.email ?? '',
+          ),
+        );
+        return;
+      }
+
+      // جلب البيانات مع الترتيب حسب آخر تحديث
+      final detailsDoc = await FirebaseFirestore.instance
+          .collection(collectionName)
+          .doc(user.uid)
+          .get(GetOptions(source: Source.server));
+      if (detailsDoc.exists) {
+        final data = detailsDoc.data()!;
+        emit(
+          ProfileState(
+            name: fullNameFromUsers ?? refreshedUser?.displayName ?? '',
+            email: emailFromUsers ?? refreshedUser?.email ?? '',
+            birthDate: data['dob'] ?? data['budget'] ?? '',
+            location: data['address'] ?? data['companyLocation'] ?? '',
+            idNumber: data['nationalId'] ?? data['numberOfEmployees'] ?? '',
+            salary: data['income'] ?? data['budget'] ?? '',
+            imagePath: data['profileImage'] ?? refreshedUser?.photoURL,
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error loading user data: $e');
       emit(ProfileState());
-      return;
     }
-
-    // إعادة تحميل بيانات المستخدم من Firebase Auth
-    await user.reload();
-    final refreshedUser = FirebaseAuth.instance.currentUser;
-
-    // جلب البيانات من Firestore مع تعطيل الكاش
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .get(GetOptions(source: Source.server));
-
-    if (!userDoc.exists) {
-      emit(ProfileState(
-        name: refreshedUser?.displayName ?? '',
-        email: refreshedUser?.email ?? '',
-      ));
-      return;
-    }
-
-    final userType = userDoc.data()?['userType'] ?? 'individual';
-    final collectionName = userType == 'individual' ? 'individuals' : 'businesses';
-
-    // جلب البيانات مع الترتيب حسب آخر تحديث
-    final detailsDoc = await FirebaseFirestore.instance
-        .collection(collectionName)
-        .doc(user.uid)
-        .get(GetOptions(source: Source.server));
-
-    if (detailsDoc.exists) {
-      final data = detailsDoc.data()!;
-      emit(
-        ProfileState(
-          name: data['fullName'] ?? refreshedUser?.displayName ?? '',
-          email: data['email'] ?? refreshedUser?.email ?? '',
-          birthDate: data['dob'] ?? data['budget'] ?? '',
-          location: data['address'] ?? data['companyLocation'] ?? '',
-          idNumber: data['nationalId'] ?? data['numberOfEmployees'] ?? '',
-          salary: data['income'] ?? data['budget'] ?? '',
-          imagePath: data['profileImage'] ?? refreshedUser?.photoURL,
-        ),
-      );
-    }
-  } catch (e) {
-    debugPrint('Error loading user data: $e');
-    emit(ProfileState());
   }
-}
-Future<void> pickImage(ImageSource source) async {
+
+  Future<void> pickImage(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
       if (image != null) {
@@ -278,6 +301,7 @@ Future<void> pickImage(ImageSource source) async {
       // print('Error picking image: $e');
     }
   }
+
   Future<void> updateImagePath(String newPath) async {
     try {
       emit(state.copyWith(imagePath: newPath));
