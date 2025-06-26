@@ -5,6 +5,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
 import '../../cubits/profile/profile_cubit.dart';
 import '../../models/applocalization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../cubits/wallet/price_cubit.dart';
 
 class Dialogue extends StatefulWidget {
   final String message;
@@ -40,39 +42,35 @@ class _DialogueState extends State<Dialogue> {
 
     try {
       if (widget.actionType == 'logout') {
-        // 1. إعادة تعيين الحالة أولاً
         final profileCubit = context.read<ProfileCubit>();
 
         profileCubit.resetState();
 
-        // 2. تسجيل الخروج من جوجل إذا كان مستخدم جوجل
         final googleSignIn = GoogleSignIn();
         try {
           await googleSignIn.disconnect();
         } catch (_) {}
         await googleSignIn.signOut();
 
-        // 3. تسجيل الخروج من Firebase
         await FirebaseAuth.instance.signOut();
 
-        // 4. مسح حالة تسجيل الدخول من SharedPreferences
-        await SharedPrefsHelper.saveLoginState(false);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.clear();
 
-        // 5. الانتقال إلى شاشة تسجيل الدخول
+        // Also reset wallet data in memory
+        context.read<PriceCubit>().reset();
+
         if (mounted) {
           Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
         }
 
-        // 6. إظهار رسالة النجاح
         scaffold.showSnackBar(
           SnackBar(
             content: Text(loc.translate("logged_out_successfully")),
             backgroundColor: Colors.green,
           ),
         );
-      }
-      // ... معالجة حذف الحساب ...
-      else if (widget.actionType == 'delete') {
+      } else if (widget.actionType == 'delete') {
         final user = FirebaseAuth.instance.currentUser;
         if (user == null) return;
 
@@ -80,13 +78,11 @@ class _DialogueState extends State<Dialogue> {
         final isGoogle = providerId == 'google.com';
         final input = _inputController.text.trim();
 
-        // التحقق من صحة المدخلات
         if (input.isEmpty) {
           setState(() => _showError = true);
           return;
         }
 
-        // إعادة المصادقة قبل الحذف
         bool reauthenticated = false;
         if (isGoogle) {
           try {
@@ -104,7 +100,6 @@ class _DialogueState extends State<Dialogue> {
             debugPrint('Google reauth error: $e');
           }
         } else {
-          // للمستخدمين العاديين (باستخدام البريد الإلكتروني/كلمة المرور)
           try {
             final credential = EmailAuthProvider.credential(
               email: user.email!,
@@ -120,24 +115,18 @@ class _DialogueState extends State<Dialogue> {
         }
 
         if (reauthenticated) {
-          // حذف الحساب من Firebase Authentication
           await user.delete();
 
-          // حذف بيانات المستخدم من Firestore
           await profileCubit.deleteAccount();
 
-          // مسح بيانات التطبيق المحلية
-          await SharedPrefsHelper.saveLoginState(false);
+          await FirebaseAuth.instance.signOut();
 
-          // إعادة تعيين الحالة
           profileCubit.resetState();
 
-          // الانتقال إلى شاشة تسجيل الدخول
           if (mounted) {
             Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
           }
 
-          // إظهار رسالة النجاح
           scaffold.showSnackBar(
             SnackBar(
               content: Text(loc.translate("account_deleted_successfully")),

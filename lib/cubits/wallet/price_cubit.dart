@@ -109,7 +109,6 @@ class PriceCubit extends Cubit<PriceState> {
     final now = DateTime.now();
     final lastResetDate = await SharedPrefsHelper.getLastResetDate();
 
-
     if (lastResetDate == null ||
         now.month != lastResetDate.month ||
         now.year != lastResetDate.year) {
@@ -128,5 +127,10 @@ class PriceCubit extends Cubit<PriceState> {
   Future<void> initialize() async {
     await _loadPrices();
     await checkAndResetMonthlyPrices();
+  }
+
+  // Resets the wallet data in memory (for logout)
+  void reset() {
+    emit(PriceState(prices: {}));
   }
 }
