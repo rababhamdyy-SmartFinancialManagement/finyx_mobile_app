@@ -8,104 +8,77 @@ import '../wallet/price_cubit.dart';
 class ChartCubit extends Cubit<ChartState> {
   final UserType userType;
   final PriceCubit priceCubit;
+  bool _initialLoad = true;
 
   ChartCubit({required this.userType, required this.priceCubit})
-    : super(ChartState([])) {
+      : super(ChartState(_getInitialSections(userType))) {
+    _updateSectionsBasedOnPrices(priceCubit.state.prices);
     priceCubit.stream.listen((priceState) {
       _updateSectionsBasedOnPrices(priceState.prices);
     });
   }
 
-  void _updateSectionsBasedOnPrices(Map<String, double> prices) {
-    if (prices.isEmpty) {
-      final suggestedCategories =
-          userType == UserType.individual
-              ? ['Food', 'Transport', 'Housing', 'Utilities', 'Entertainment']
-              : [
-                'Revenue',
-                'Salaries',
-                'Marketing',
-                'Operations',
-                'Investments',
-              ];
+  static List<ChartSection> _getInitialSections(UserType userType) {
+    final suggestedCategories = userType == UserType.individual
+        ? ['Food', 'Transport', 'Housing', 'Utilities', 'Entertainment']
+        : ['Revenue', 'Salaries', 'Marketing', 'Operations', 'Investments'];
 
-      emit(
-        ChartState(
-          suggestedCategories
-              .map((category) => ChartSection(category, 0, Colors.grey[400]!))
-              .toList(),
-        ),
-      );
+    return suggestedCategories
+        .map((category) => ChartSection(category, 0, Colors.grey[400]!))
+        .toList();
+  }
+
+  void _updateSectionsBasedOnPrices(Map<String, double> prices) {
+    if (_initialLoad) {
+      _initialLoad = false;
+      emit(ChartState(_getInitialSections(userType)));
+    }
+
+    if (prices.isEmpty) {
+      emit(ChartState(_getInitialSections(userType)));
       return;
     }
 
     final total = prices.values.fold(0.0, (sum, value) => sum + value);
     if (total == 0) {
-      emit(ChartState([]));
+      emit(ChartState(_getInitialSections(userType)));
       return;
     }
 
-    final totalExpenses = prices.values.fold(0.0, (sum, value) => sum + value);
-
-    if (totalExpenses == 0) {
-      emit(ChartState([]));
-      return;
-    }
-
-    var sortedEntries =
-        prices.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
-
+    var sortedEntries = prices.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
     var topEntries = sortedEntries.take(5).toList();
 
-    double othersValue = 0;
-    if (sortedEntries.length > 5) {
-      othersValue = sortedEntries
-          .sublist(5)
-          .fold(0.0, (sum, entry) => sum + entry.value);
-    }
+    double othersValue = sortedEntries.length > 5
+        ? sortedEntries.sublist(5).fold(0.0, (sum, entry) => sum + entry.value)
+        : 0;
 
-    List<ChartSection> sections = [];
-
-    for (var entry in topEntries) {
-      sections.add(
-        ChartSection(
-          entry.key,
-          (entry.value / total) * 100,
-          _getColorForSection(entry.key, sections.length),
-        ),
+    List<ChartSection> sections = topEntries.map((entry) {
+      return ChartSection(
+        entry.key,
+        (entry.value / total) * 100,
+        _getColorForSection(entry.key, topEntries.indexOf(entry)),
       );
-    }
+    }).toList();
 
     if (othersValue > 0) {
-      sections.add(
-        ChartSection("Others", (othersValue / total) * 100, Colors.grey),
-      );
+      sections.add(ChartSection("Others", (othersValue / total) * 100, Colors.grey));
     }
 
+    if (sections.isEmpty) sections = _getInitialSections(userType);
     emit(ChartState(sections));
   }
 
   Color _getColorForSection(String title, int index) {
-    final colors = [
-      Colors.purple,
-      Colors.indigo,
-      Colors.pink,
-      Colors.teal,
-      Colors.deepOrange,
-      Colors.grey,
-    ];
-
+    final colors = [Colors.purple, Colors.indigo, Colors.pink, Colors.teal, Colors.deepOrange, Colors.grey];
     return colors[index % colors.length];
   }
 
   void updateSection(String title, double newValue) {
-    final updated =
-        state.sections.map((section) {
-          if (section.title == title) {
-            return ChartSection(title, newValue, section.color);
-          }
-          return section;
-        }).toList();
+    final updated = state.sections.map((section) {
+      return section.title == title
+          ? ChartSection(title, newValue, section.color)
+          : section;
+    }).toList();
     emit(ChartState(updated));
   }
 }

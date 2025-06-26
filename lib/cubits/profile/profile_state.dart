@@ -1,4 +1,5 @@
 import 'package:finyx_mobile_app/models/notification/notification_model.dart';
+import 'package:finyx_mobile_app/models/user_type.dart';
 
 class ProfileState {
   final String name;
@@ -9,6 +10,7 @@ class ProfileState {
   final String salary;
   final String? imagePath;
   final List<AppNotification> notifications;
+  final UserType userType;
 
   ProfileState({
     this.name = '',
@@ -19,6 +21,7 @@ class ProfileState {
     this.salary = '',
     this.imagePath,
     this.notifications = const [],
+    this.userType = UserType.individual,
   });
 
   ProfileState copyWith({
@@ -30,6 +33,7 @@ class ProfileState {
     String? salary,
     String? imagePath,
     List<AppNotification>? notifications,
+    UserType? userType,
   }) {
     return ProfileState(
       name: name ?? this.name,
@@ -40,10 +44,10 @@ class ProfileState {
       salary: salary ?? this.salary,
       imagePath: imagePath ?? this.imagePath,
       notifications: notifications ?? this.notifications,
+      userType: userType ?? this.userType,
     );
   }
 
-  // أضف هذه الدالة الجديدة
   Map<String, dynamic> toMap() {
     return {
       'name': name,
@@ -53,6 +57,7 @@ class ProfileState {
       'idNumber': idNumber,
       'salary': salary,
       'imagePath': imagePath,
+      'userType': userType.toString(),
       'notifications': notifications.map((n) => n.toMap()).toList(),
     };
   }

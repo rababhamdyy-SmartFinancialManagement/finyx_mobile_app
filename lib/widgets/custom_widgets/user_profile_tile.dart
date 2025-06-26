@@ -6,42 +6,54 @@ import '../../cubits/profile/profile_cubit.dart';
 import '../../cubits/profile/profile_state.dart';
 
 class UserProfileCard extends StatelessWidget {
-  const UserProfileCard({Key? key}) : super(key: key);
+  final String name;
+  final String email;
+  final String additionalInfo;
+  final String? imagePath;
+
+  const UserProfileCard({
+    super.key,
+    required this.name,
+    required this.email,
+    required this.additionalInfo,
+    this.imagePath,
+  });
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final user = FirebaseAuth.instance.currentUser;
-    print('User UID: ${user?.uid}');
-    return BlocBuilder<ProfileCubit, ProfileState>(
-      builder: (context, state) {
-        final imageUrl = state.imagePath ?? user?.photoURL;
 
-        return Column(
-          children: [
-            _buildProfileImage(width, imageUrl),
-            const SizedBox(height: 12),
-            Text(
-              state.name.isNotEmpty ? state.name : user?.displayName ?? 'User',
-              style: TextStyle(
-                fontSize: width * 0.045,
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Poppins',
-              ),
-            ),
-            const SizedBox(height: 6),
-            if ((state.email.isNotEmpty ? state.email : user?.email) != null)
-              Text(
-                state.email.isNotEmpty ? state.email : user!.email!,
-                style: TextStyle(
-                  fontSize: width * 0.04,
-                  color: Colors.grey[600],
-                  fontFamily: 'Poppins',
-                ),
-              ),
-          ],
-        );
-      },
+    return Column(
+      children: [
+        _buildProfileImage(width, imagePath),
+        const SizedBox(height: 12),
+        Text(
+          name,
+          style: TextStyle(
+            fontSize: width * 0.045,
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Poppins',
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          email,
+          style: TextStyle(
+            fontSize: width * 0.04,
+            color: Colors.grey[600],
+            fontFamily: 'Poppins',
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          additionalInfo,
+          style: TextStyle(
+            fontSize: width * 0.04,
+            color: Colors.grey[600],
+            fontFamily: 'Poppins',
+          ),
+        ),
+      ],
     );
   }
 
@@ -54,19 +66,18 @@ class UserProfileCard extends StatelessWidget {
       ),
       child: CircleAvatar(
         radius: width * 0.19,
-        backgroundColor: Colors.transparent, // لجعل الخلفية شفافة إذا لزم الأمر
+        backgroundColor: Colors.transparent,
         backgroundImage: imageUrl != null ? _getImageProvider(imageUrl) : null,
-        child:
-            imageUrl == null
-                ? ClipOval(
-                  child: Image.asset(
-                    'assets/images/profile/profile2.png',
-                    width: width * 0.38, // (radius * 2)
-                    height: width * 0.38,
-                    fit: BoxFit.cover,
-                  ),
-                )
-                : null,
+        child: imageUrl == null
+            ? ClipOval(
+          child: Image.asset(
+            'assets/images/profile/profile2.png',
+            width: width * 0.38,
+            height: width * 0.38,
+            fit: BoxFit.cover,
+          ),
+        )
+            : null,
       ),
     );
   }

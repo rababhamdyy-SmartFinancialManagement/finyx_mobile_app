@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class EditProfileInfoTile extends StatelessWidget {
-  final String iconPath; // Change this to a string for the asset path
+  final IconData icon;
   final String text;
   final String fieldName;
   final VoidCallback onEdit;
 
   const EditProfileInfoTile({
     super.key,
-    required this.iconPath, // Use the asset path for image
+    required this.icon,
     required this.text,
     required this.fieldName,
     required this.onEdit,
@@ -30,20 +30,19 @@ class EditProfileInfoTile extends StatelessWidget {
           ),
           leading: CircleAvatar(
             backgroundColor: const Color(0xFFEDE7F6),
-            child: Image.asset(
-              iconPath, // Use the asset path here
-              width: 30, // Set a width and height for the image
-              height: 30,
-              fit:
-                  BoxFit
-                      .contain, // Ensure the image fits well inside the circle
-            ),
+            child: Icon(icon, color: const Color(0xFF3E0555)),
           ),
           title: Text(
             text,
-            style: TextStyle(fontSize: width * 0.045, fontFamily: 'Poppins'),
+            style: TextStyle(
+                fontSize: width * 0.045,
+                fontFamily: 'Poppins'
+            ),
           ),
-          trailing: IconButton(icon: const Icon(Icons.edit), onPressed: onEdit),
+          trailing: IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: onEdit,
+          ),
         ),
       ),
     );

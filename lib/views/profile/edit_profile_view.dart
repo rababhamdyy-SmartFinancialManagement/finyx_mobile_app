@@ -4,6 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../cubits/profile/profile_cubit.dart';
 import '../../cubits/profile/profile_state.dart';
 import '../../models/applocalization.dart';
+import '../../models/user_type.dart';
 import '../../widgets/custom_widgets/edit_profile_header.dart';
 import '../../widgets/custom_widgets/edit_profile_info_tile.dart';
 
@@ -32,6 +33,8 @@ class EditProfileScreen extends StatelessWidget {
         ),
         body: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
+            final isBusiness = state.userType == UserType.business;
+
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 32, 16, 0),
@@ -41,101 +44,48 @@ class EditProfileScreen extends StatelessWidget {
                     const SizedBox(height: 24),
                     Divider(thickness: 1, color: Colors.grey.shade300),
                     const SizedBox(height: 24),
-                    EditProfileInfoTile(
-                      iconPath: "assets/images/profile/User(1).png",
-                      text: state.name,
-                      fieldName: 'Name',
-                      onEdit:
-                          () => _showEditDialog(context, 'Name', state.name, (
-                            value,
-                          ) {
-                            context.read<ProfileCubit>().updateProfileField(
-                              'Name',
-                              value,
-                            );
-                          }),
+                    _buildEditProfileTile(
+                      context,
+                      icon: Icons.person,
+                      title: 'Name',
+                      value: state.name,
+                      onEdit: (value) => context.read<ProfileCubit>().updateProfileField('Name', value),
                     ),
-                    EditProfileInfoTile(
-                      iconPath: "assets/images/profile/🦆 icon _mail_.png",
-                      text: state.email,
-                      fieldName: 'Email',
-                      onEdit:
-                          () => _showEditDialog(context, 'Email', state.email, (
-                            value,
-                          ) {
-                            context.read<ProfileCubit>().updateProfileField(
-                              'Email',
-                              value,
-                            );
-                          }),
+                    _buildEditProfileTile(
+                      context,
+                      icon: Icons.email,
+                      title: 'Email',
+                      value: state.email,
+                      onEdit: (value) => context.read<ProfileCubit>().updateProfileField('Email', value),
                     ),
-                    EditProfileInfoTile(
-                      iconPath: "assets/images/profile/calendar 1.png",
-                      text: state.birthDate,
-                      fieldName: 'Birth Date',
-                      onEdit:
-                          () => _showEditDialog(
-                            context,
-                            'Birth Date',
-                            state.birthDate,
-                            (value) {
-                              context.read<ProfileCubit>().updateProfileField(
-                                'Birth Date',
-                                value,
-                              );
-                            },
-                          ),
+                    if (!isBusiness)
+                      _buildEditProfileTile(
+                        context,
+                        icon: Icons.calendar_today,
+                        title: 'Birth Date',
+                        value: state.birthDate,
+                        onEdit: (value) => context.read<ProfileCubit>().updateProfileField('Birth Date', value),
+                      ),
+                    _buildEditProfileTile(
+                      context,
+                      icon: Icons.location_on,
+                      title: isBusiness ? 'Company Location' : 'Address',
+                      value: state.location,
+                      onEdit: (value) => context.read<ProfileCubit>().updateProfileField('Location', value),
                     ),
-                    EditProfileInfoTile(
-                      iconPath: "assets/images/profile/location 1.png",
-                      text: state.location,
-                      fieldName: 'Location',
-                      onEdit:
-                          () => _showEditDialog(
-                            context,
-                            'Location',
-                            state.location,
-                            (value) {
-                              context.read<ProfileCubit>().updateProfileField(
-                                'Location',
-                                value,
-                              );
-                            },
-                          ),
+                    _buildEditProfileTile(
+                      context,
+                      icon: Icons.badge,
+                      title: isBusiness ? 'Number of Employees' : 'National ID',
+                      value: state.idNumber,
+                      onEdit: (value) => context.read<ProfileCubit>().updateProfileField('ID Number', value),
                     ),
-                    EditProfileInfoTile(
-                      iconPath: "assets/images/profile/id 1.png",
-                      text: state.idNumber,
-                      fieldName: 'ID Number',
-                      onEdit:
-                          () => _showEditDialog(
-                            context,
-                            'ID Number',
-                            state.idNumber,
-                            (value) {
-                              context.read<ProfileCubit>().updateProfileField(
-                                'ID Number',
-                                value,
-                              );
-                            },
-                          ),
-                    ),
-                    EditProfileInfoTile(
-                      iconPath: "assets/images/profile/wages 1.png",
-                      text: state.salary,
-                      fieldName: 'Salary',
-                      onEdit:
-                          () => _showEditDialog(
-                            context,
-                            'Salary',
-                            state.salary,
-                            (value) {
-                              context.read<ProfileCubit>().updateProfileField(
-                                'Salary',
-                                value,
-                              );
-                            },
-                          ),
+                    _buildEditProfileTile(
+                      context,
+                      icon: Icons.attach_money,
+                      title: isBusiness ? 'Budget' : 'Income',
+                      value: state.salary,
+                      onEdit: (value) => context.read<ProfileCubit>().updateProfileField('Salary', value),
                     ),
                   ],
                 ),
@@ -147,13 +97,48 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildEditProfileTile(
+      BuildContext context, {
+        required IconData icon,
+        required String title,
+        required String value,
+        required Function(String) onEdit,
+      }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          leading: CircleAvatar(
+            backgroundColor: const Color(0xFFEDE7F6),
+            child: Icon(icon, color: const Color(0xFF3E0555)),
+          ),
+          title: Text(
+            value.isEmpty ? 'Not set' : value,
+            style: TextStyle(
+                fontSize: MediaQuery.of(context).size.width * 0.045,
+                fontFamily: 'Poppins'
+            ),
+          ),
+          trailing: IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () => _showEditDialog(context, title, value, onEdit),
+          ),
+        ),
+      ),
+    );
+  }
+
   void _showEditDialog(
-    BuildContext context,
-    String fieldName, 
-    String currentValue,
-    Function(String) onSave,
-  ) {
+      BuildContext context,
+      String fieldName,
+      String currentValue,
+      Function(String) onSave,
+      ) {
     final controller = TextEditingController(text: currentValue);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     showDialog(
       context: context,
@@ -164,17 +149,14 @@ class EditProfileScreen extends StatelessWidget {
               'Edit $fieldName',
               style: TextStyle(
                 fontFamily: "Poppins",
-                color:
-                    Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Color(0xFF3E0555),
+                color: isDarkMode ? Colors.white : const Color(0xFF3E0555),
               ),
             ),
           ),
           content: TextField(
             controller: controller,
             decoration: InputDecoration(hintText: 'Enter new $fieldName'),
-            style: TextStyle(fontFamily: "Poppins"),
+            style: const TextStyle(fontFamily: "Poppins"),
           ),
           actions: [
             Row(
@@ -186,10 +168,7 @@ class EditProfileScreen extends StatelessWidget {
                     'Cancel',
                     style: TextStyle(
                       fontFamily: "Poppins",
-                      color:
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Color(0xFF3E0555),
+                      color: isDarkMode ? Colors.white : const Color(0xFF3E0555),
                     ),
                   ),
                 ),
@@ -203,10 +182,7 @@ class EditProfileScreen extends StatelessWidget {
                     'Save',
                     style: TextStyle(
                       fontFamily: "Poppins",
-                      color:
-                          Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Color(0xFF3E0555),
+                      color: isDarkMode ? Colors.white : const Color(0xFF3E0555),
                     ),
                   ),
                 ),
