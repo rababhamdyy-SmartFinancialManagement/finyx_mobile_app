@@ -1,9 +1,6 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../../cubits/profile/profile_cubit.dart';
-import '../../cubits/profile/profile_state.dart';
 
 class UserProfileCard extends StatelessWidget {
   final String name;
@@ -67,30 +64,29 @@ class UserProfileCard extends StatelessWidget {
       child: CircleAvatar(
         radius: width * 0.19,
         backgroundColor: Colors.transparent,
-        backgroundImage: imageUrl != null ? _getImageProvider(imageUrl) : null,
-        child: imageUrl == null
-            ? ClipOval(
-          child: Image.asset(
-            'assets/images/profile/profile2.png',
-            width: width * 0.38,
-            height: width * 0.38,
-            fit: BoxFit.cover,
-          ),
-        )
-            : null,
+        backgroundImage: _getImageProvider(imageUrl),
       ),
     );
   }
 
   ImageProvider _getImageProvider(String? imageUrl) {
-    if (imageUrl == null) {
+    if (imageUrl == null || imageUrl.isEmpty) {
       return const AssetImage('assets/images/profile/profile2.png');
     }
 
     if (imageUrl.startsWith('http')) {
       return NetworkImage(imageUrl);
-    } else {
-      return FileImage(File(imageUrl));
     }
+
+    try {
+      final file = File(imageUrl);
+      if (file.existsSync()) {
+        return FileImage(file);
+      }
+    } catch (e) {
+      debugPrint('Invalid file path for image: $e');
+    }
+
+    return const AssetImage('assets/images/profile/profile2.png');
   }
 }

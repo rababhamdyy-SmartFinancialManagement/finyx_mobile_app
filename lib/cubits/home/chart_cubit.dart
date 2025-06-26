@@ -81,4 +81,10 @@ class ChartCubit extends Cubit<ChartState> {
     }).toList();
     emit(ChartState(updated));
   }
+
+  void reset(UserType newUserType) {
+  _initialLoad = true;
+  emit(ChartState(_getInitialSections(newUserType)));
+}
+
 }

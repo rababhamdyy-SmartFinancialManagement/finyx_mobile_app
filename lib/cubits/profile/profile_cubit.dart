@@ -25,10 +25,10 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   Future<void> _setupNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
     final InitializationSettings initializationSettings =
-    InitializationSettings(android: initializationSettingsAndroid);
+        InitializationSettings(android: initializationSettingsAndroid);
 
     await notificationsPlugin.initialize(initializationSettings);
   }
@@ -44,14 +44,14 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   Future<void> _showLocalNotification(AppNotification notification) async {
     AndroidNotificationDetails androidNotificationDetails =
-    AndroidNotificationDetails(
-      'profile_updates',
-      'Profile Updates',
-      importance: Importance.high,
-      priority: Priority.high,
-      channelShowBadge: true,
-      showWhen: true,
-    );
+        AndroidNotificationDetails(
+          'profile_updates',
+          'Profile Updates',
+          importance: Importance.high,
+          priority: Priority.high,
+          channelShowBadge: true,
+          showWhen: true,
+        );
 
     NotificationDetails notificationDetails = NotificationDetails(
       android: androidNotificationDetails,
@@ -95,13 +95,13 @@ class ProfileCubit extends Cubit<ProfileState> {
           .get(GetOptions(source: Source.server));
 
       if (userDoc.exists) {
-        final userType = userDoc.data()?['userType'] == 'business'
-            ? UserType.business
-            : UserType.individual;
+        final userType =
+            userDoc.data()?['userType'] == 'business'
+                ? UserType.business
+                : UserType.individual;
 
-        final collectionName = userType == UserType.individual
-            ? 'individuals'
-            : 'businesses';
+        final collectionName =
+            userType == UserType.individual ? 'individuals' : 'businesses';
 
         final firestoreField = _getFirestoreFieldName(field, userType);
 
@@ -115,9 +115,9 @@ class ProfileCubit extends Cubit<ProfileState> {
               .collection(collectionName)
               .doc(user.uid)
               .update({
-            firestoreField: value,
-            'lastUpdated': FieldValue.serverTimestamp()
-          });
+                firestoreField: value,
+                'lastUpdated': FieldValue.serverTimestamp(),
+              });
         }
 
         await _addNotification(
@@ -172,20 +172,22 @@ class ProfileCubit extends Cubit<ProfileState> {
           .get(GetOptions(source: Source.server));
 
       if (!userDoc.exists) {
-        emit(ProfileState(
-          name: refreshedUser?.displayName ?? '',
-          email: refreshedUser?.email ?? '',
-        ));
+        emit(
+          ProfileState(
+            name: refreshedUser?.displayName ?? '',
+            email: refreshedUser?.email ?? '',
+          ),
+        );
         return;
       }
 
-      final userType = userDoc.data()?['userType'] == 'business'
-          ? UserType.business
-          : UserType.individual;
+      final userType =
+          userDoc.data()?['userType'] == 'business'
+              ? UserType.business
+              : UserType.individual;
 
-      final collectionName = userType == UserType.individual
-          ? 'individuals'
-          : 'businesses';
+      final collectionName =
+          userType == UserType.individual ? 'individuals' : 'businesses';
 
       final detailsDoc = await FirebaseFirestore.instance
           .collection(collectionName)
@@ -198,29 +200,52 @@ class ProfileCubit extends Cubit<ProfileState> {
       if (detailsDoc.exists) {
         final data = detailsDoc.data()!;
         final firestoreImagePath = data['profileImage'] as String?;
-        final imagePath = firestoreImagePath ?? cachedImagePath ?? refreshedUser?.photoURL;
+        final userImagePath = userDoc.data()?['profileImage'] as String?;
+        final imagePath =
+            firestoreImagePath ??
+            userImagePath ??
+            cachedImagePath ??
+            refreshedUser?.photoURL;
 
-        emit(ProfileState(
-          name: userDoc.data()?['fullName'] ?? refreshedUser?.displayName ?? '',
-          email: userDoc.data()?['email'] ?? refreshedUser?.email ?? '',
-          birthDate: data['dob'] ?? '',
-          location: data['address'] ?? data['companyLocation'] ?? '',
-          idNumber: data['nationalId'] ?? data['numberOfEmployees'] ?? '',
-          salary: data['income'] ?? data['budget'] ?? '',
-          imagePath: imagePath,
-          userType: userType,
-        ));
+        emit(
+          ProfileState(
+            name:
+                userDoc.data()?['fullName'] ?? refreshedUser?.displayName ?? '',
+            email: userDoc.data()?['email'] ?? refreshedUser?.email ?? '',
+            birthDate: data['dob'] ?? '',
+            location: data['address'] ?? data['companyLocation'] ?? '',
+            idNumber: data['nationalId'] ?? data['numberOfEmployees'] ?? '',
+            salary: data['income'] ?? data['budget'] ?? '',
+            imagePath: imagePath,
+            userType: userType,
+          ),
+        );
 
-        if (firestoreImagePath != null && firestoreImagePath != cachedImagePath) {
-          await prefs.setString('imagePath', firestoreImagePath);
+        if ((firestoreImagePath ?? userImagePath) != null &&
+            (firestoreImagePath ?? userImagePath) != cachedImagePath) {
+          await prefs.setString(
+            'imagePath',
+            firestoreImagePath ?? userImagePath!,
+          );
         }
       } else {
-        emit(ProfileState(
-          name: userDoc.data()?['fullName'] ?? refreshedUser?.displayName ?? '',
-          email: userDoc.data()?['email'] ?? refreshedUser?.email ?? '',
-          imagePath: cachedImagePath,
-          userType: userType,
-        ));
+        final userImagePath = userDoc.data()?['profileImage'] as String?;
+        final imagePath =
+            userImagePath ?? cachedImagePath ?? refreshedUser?.photoURL;
+
+        emit(
+          ProfileState(
+            name:
+                userDoc.data()?['fullName'] ?? refreshedUser?.displayName ?? '',
+            email: userDoc.data()?['email'] ?? refreshedUser?.email ?? '',
+            imagePath: imagePath,
+            userType: userType,
+          ),
+        );
+
+        if (userImagePath != null && userImagePath != cachedImagePath) {
+          await prefs.setString('imagePath', userImagePath);
+        }
       }
     } catch (e) {
       debugPrint('Error loading user data: $e');
@@ -249,27 +274,32 @@ class ProfileCubit extends Cubit<ProfileState> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
 
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
 
       if (userDoc.exists) {
-        final userType = userDoc.data()?['userType'] == 'business'
-            ? UserType.business
-            : UserType.individual;
+        final userType =
+            userDoc.data()?['userType'] == 'business'
+                ? UserType.business
+                : UserType.individual;
 
-        final collectionName = userType == UserType.individual
-            ? 'individuals'
-            : 'businesses';
+        final collectionName =
+            userType == UserType.individual ? 'individuals' : 'businesses';
 
         await FirebaseFirestore.instance
             .collection(collectionName)
             .doc(user.uid)
             .update({
-          'profileImage': imagePath,
-          'lastUpdated': FieldValue.serverTimestamp()
-        });
+              'profileImage': imagePath,
+              'lastUpdated': FieldValue.serverTimestamp(),
+            });
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({'profileImage': imagePath});
       }
     } catch (e) {
       debugPrint('Error updating profile image: $e');
@@ -289,24 +319,26 @@ class ProfileCubit extends Cubit<ProfileState> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
 
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
 
       if (userDoc.exists) {
-        final userType = userDoc.data()?['userType'] == 'business'
-            ? UserType.business
-            : UserType.individual;
+        final userType =
+            userDoc.data()?['userType'] == 'business'
+                ? UserType.business
+                : UserType.individual;
 
-        final collectionName = userType == UserType.individual
-            ? 'individuals'
-            : 'businesses';
+        final collectionName =
+            userType == UserType.individual ? 'individuals' : 'businesses';
 
-        final detailsDoc = await FirebaseFirestore.instance
-            .collection(collectionName)
-            .doc(user.uid)
-            .get();
+        final detailsDoc =
+            await FirebaseFirestore.instance
+                .collection(collectionName)
+                .doc(user.uid)
+                .get();
 
         if (detailsDoc.exists) {
           final imagePath = detailsDoc.data()?['profileImage'] as String?;
@@ -327,19 +359,20 @@ class ProfileCubit extends Cubit<ProfileState> {
     if (user == null) return;
 
     try {
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
 
       if (userDoc.exists) {
-        final userType = userDoc.data()?['userType'] == 'business'
-            ? UserType.business
-            : UserType.individual;
+        final userType =
+            userDoc.data()?['userType'] == 'business'
+                ? UserType.business
+                : UserType.individual;
 
-        final collectionName = userType == UserType.individual
-            ? 'individuals'
-            : 'businesses';
+        final collectionName =
+            userType == UserType.individual ? 'individuals' : 'businesses';
 
         await FirebaseFirestore.instance
             .collection(collectionName)
@@ -402,7 +435,9 @@ class ProfileCubit extends Cubit<ProfileState> {
       case 'Location':
         return userType == UserType.individual ? 'address' : 'companyLocation';
       case 'ID Number':
-        return userType == UserType.individual ? 'nationalId' : 'numberOfEmployees';
+        return userType == UserType.individual
+            ? 'nationalId'
+            : 'numberOfEmployees';
       case 'Salary':
         return userType == UserType.individual ? 'income' : 'budget';
       default:
