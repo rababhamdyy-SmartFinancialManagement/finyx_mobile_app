@@ -9,7 +9,6 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(seconds: 3));
 
@@ -17,10 +16,15 @@ class SplashScreen extends StatelessWidget {
 
       final isLoggedIn = await SharedPrefsHelper.getLoginState();
       final userTypeStr = await SharedPrefsHelper.getUserType();
-      final userType = userTypeStr == 'business' ? UserType.business : UserType.individual;
+      final userType =
+          userTypeStr == 'business' ? UserType.business : UserType.individual;
 
       if (isLoggedIn) {
-        Navigator.pushReplacementNamed(context, '/homepage', arguments: userType);
+        Navigator.pushReplacementNamed(
+          context,
+          '/homepage',
+          arguments: userType,
+        );
       } else {
         Navigator.pushReplacementNamed(context, '/onboarding');
       }
@@ -34,18 +38,23 @@ class SplashScreen extends StatelessWidget {
       onTap: () async {
         final isLoggedIn = await SharedPrefsHelper.getLoginState();
         final userTypeStr = await SharedPrefsHelper.getUserType();
-        final userType = userTypeStr == 'business' ? UserType.business : UserType.individual;
+        final userType =
+            userTypeStr == 'business' ? UserType.business : UserType.individual;
 
         if (!context.mounted) return;
 
         if (isLoggedIn) {
-          Navigator.pushReplacementNamed(context, '/homepage', arguments: userType);
+          Navigator.pushReplacementNamed(
+            context,
+            '/homepage',
+            arguments: userType,
+          );
         } else {
           Navigator.pushReplacementNamed(context, '/onboarding');
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
