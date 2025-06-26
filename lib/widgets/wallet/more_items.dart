@@ -1,3 +1,4 @@
+import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:flutter/material.dart';
 
 class MoreItems extends StatelessWidget {
@@ -9,13 +10,14 @@ class MoreItems extends StatelessWidget {
     final bool isDark = theme.brightness == Brightness.dark;
     final Color iconColor = const Color(0xFF3E0555);
     final Color textColor = isDark ? Colors.white : iconColor;
+    final loc = AppLocalizations.of(context)!;
 
     return AlertDialog(
       backgroundColor: theme.dialogBackgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Center(
         child: Text(
-          'Add New Bill',
+          loc.translate("addNewBill"),
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,

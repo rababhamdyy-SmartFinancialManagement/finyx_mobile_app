@@ -1,4 +1,5 @@
 import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
+import 'package:finyx_mobile_app/helpers/dynamic_translator.dart';
 import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/widgets/wallet/price_dialog.dart';
@@ -10,10 +11,7 @@ import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 class WalletBody extends StatelessWidget {
   final UserType userType;
 
-  WalletBody({
-    super.key,
-    required this.userType,
-  });
+  WalletBody({super.key, required this.userType});
 
   final List<Color> iconColors = [
     Colors.orange,
@@ -60,7 +58,7 @@ class WalletBody extends StatelessWidget {
     'Licenses': 'licenses',
     'Accrued Interest': 'accrued_interest',
     'Admin Expenses': 'admin_expenses',
-    'Shipping': 'shipping'
+    'Shipping': 'shipping',
   };
 
   bool _isDefaultItem(String label) {
@@ -78,8 +76,8 @@ class WalletBody extends StatelessWidget {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(loc.translate('reset_confirmation_title') ),
-          content: Text(loc.translate('reset_confirmation_message') ),
+          title: Text(loc.translate('reset_confirmation_title')),
+          content: Text(loc.translate('reset_confirmation_message')),
           actions: <Widget>[
             TextButton(
               child: Text(loc.translate('cancel')),
@@ -100,21 +98,21 @@ class WalletBody extends StatelessWidget {
     );
   }
 
+  Future<String> translateSmart(
+    String key,
+    AppLocalizations loc,
+    String languageCode,
+  ) async {
+    if (loc.has(key)) {
+      return loc.translate(key)!;
+    } else {
+      return await DynamicTranslator.getTranslated(key, languageCode);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-
-    String _getDisplayLabel(String originalLabel) {
-      if (_isDefaultItem(originalLabel)) {
-        return loc.translate(originalLabel) ?? originalLabel;
-      }
-
-      if (_isMoreItemValue(originalLabel)) {
-        return loc.translate(originalLabel) ?? originalLabel;
-      }
-
-      return originalLabel;
-    }
 
     Color _getIconColor(String label, PriceCubit cubit) {
       final defaultItems = getDefaultItems();
@@ -124,7 +122,7 @@ class WalletBody extends StatelessWidget {
       } else {
         final allItems = [
           ...defaultItems.map((e) => e['label']),
-          ...cubit.state.prices.keys
+          ...cubit.state.prices.keys,
         ];
         final itemIndex = allItems.indexWhere((item) => item == label);
         return iconColors[itemIndex % iconColors.length];
@@ -163,7 +161,6 @@ class WalletBody extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          // الجزء المعدل: النص في الوسط والريفريش أيقونة على اليمين
           Container(
             width: double.infinity,
             child: Stack(
@@ -171,11 +168,11 @@ class WalletBody extends StatelessWidget {
               children: [
                 Center(
                   child: Text(
-                  loc.translate('start_fresh_or_enter_new_expenses') ,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey,
-                      ),
-                ),
+                    loc.translate('start_fresh_or_enter_new_expenses'),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                  ),
                 ),
                 Positioned(
                   right: 0,
@@ -195,23 +192,29 @@ class WalletBody extends StatelessWidget {
             child: BlocBuilder<PriceCubit, PriceState>(
               builder: (context, state) {
                 final defaultItems = getDefaultItems();
-                final defaultLabels = defaultItems.map((item) => item['label']).toSet();
+                final defaultLabels =
+                    defaultItems.map((item) => item['label']).toSet();
 
-                final customEntries = state.prices.entries
-                    .where((entry) => !defaultLabels.contains(entry.key))
-                    .toList();
+                final customEntries =
+                    state.prices.entries
+                        .where((entry) => !defaultLabels.contains(entry.key))
+                        .toList();
 
                 final itemsToShow = [
-                  ...defaultItems.map((item) => {
-                        'type': 'default',
-                        'label': item['label'],
-                        'icon': item['icon']
-                      }),
-                  ...customEntries.map((entry) => {
-                        'type': 'custom',
-                        'label': entry.key,
-                        'icon': Icons.add
-                      })
+                  ...defaultItems.map(
+                    (item) => {
+                      'type': 'default',
+                      'label': item['label'],
+                      'icon': item['icon'],
+                    },
+                  ),
+                  ...customEntries.map(
+                    (entry) => {
+                      'type': 'custom',
+                      'label': entry.key,
+                      'icon': Icons.add,
+                    },
+                  ),
                 ];
 
                 return ListView.builder(
@@ -219,48 +222,71 @@ class WalletBody extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final item = itemsToShow[index];
                     final originalLabel = item['label'];
-                    final label = _getDisplayLabel(originalLabel);
                     final icon = item['icon'];
                     final price = state.prices[originalLabel] ?? 0.0;
-                    final iconColor = _getIconColor(originalLabel, context.read<PriceCubit>());
+                    final iconColor = _getIconColor(
+                      originalLabel,
+                      context.read<PriceCubit>(),
+                    );
                     final bgColor = iconColor.withAlpha(15);
 
-                    if (item['type'] == 'default') {
-                      return WalletListTile(
-                        icon: icon,
-                        label: label,
-                        price: price,
-                        context: context,
-                        onTap: () => _showModal(context, originalLabel, icon),
-                        isDeletable: false,
-                        backgroundColor: bgColor,
-                        iconColor: iconColor,
-                      );
-                    } else {
-                      return Dismissible(
-                        key: Key(originalLabel),
-                        direction: DismissDirection.endToStart,
-                        background: Container(
-                          alignment: Alignment.centerRight,
-                          color: iconColor,
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: const Icon(Icons.delete, color: Colors.white),
-                        ),
-                        onDismissed: (_) {
-                          context.read<PriceCubit>().removePrice(originalLabel);
-                        },
-                        child: WalletListTile(
-                          icon: icon,
-                          label: label,
-                          price: price,
-                          context: context,
-                          onTap: () => _showModal(context, originalLabel, icon),
-                          isDeletable: true,
-                          backgroundColor: bgColor,
-                          iconColor: iconColor,
-                        ),
-                      );
-                    }
+                    return FutureBuilder<String>(
+                      future: translateSmart(
+                        originalLabel,
+                        loc,
+                        loc.locale?.languageCode ?? 'en',
+                      ),
+                      builder: (context, snapshot) {
+                        final label = snapshot.data ?? originalLabel;
+
+                        if (item['type'] == 'default') {
+                          return WalletListTile(
+                            icon: icon,
+                            label: label,
+                            price: price,
+                            context: context,
+                            onTap:
+                                () => _showModal(context, originalLabel, icon),
+                            isDeletable: false,
+                            backgroundColor: bgColor,
+                            iconColor: iconColor,
+                          );
+                        } else {
+                          return Dismissible(
+                            key: Key(originalLabel),
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                              alignment: Alignment.centerRight,
+                              color: iconColor,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                            ),
+                            onDismissed: (_) {
+                              context.read<PriceCubit>().removePrice(
+                                originalLabel,
+                              );
+                            },
+                            child: WalletListTile(
+                              icon: icon,
+                              label: label,
+                              price: price,
+                              context: context,
+                              onTap:
+                                  () =>
+                                      _showModal(context, originalLabel, icon),
+                              isDeletable: true,
+                              backgroundColor: bgColor,
+                              iconColor: iconColor,
+                            ),
+                          );
+                        }
+                      },
+                    );
                   },
                 );
               },

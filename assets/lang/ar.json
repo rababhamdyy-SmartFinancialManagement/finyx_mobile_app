@@ -250,7 +250,28 @@
   "onboarding_msg_3": "خطط بحكمة، وادِر بكفاءة، وحقق أهدافك المالية بسهولة",
   "onboarding_skip": "تخطي",
   "next": "التالي",
-  "get_started":"ابدأ الآن"
+  "get_started":"ابدأ الآن",
+    "Food": "الطعام",
+  "Transport": "المواصلات",
+  "Others": "أخرى",
+    "total_expenses": "إجمالي المصروفات",
+      "Housing": "الإسكان",
+  "Utilities": "المرافق",
+  "Entertainment": "الترفيه",
+    "Revenue": "الإيرادات",
+  "Salaries": "الرواتب",
+  "Marketing": "التسويق",
+  "Operations": "العمليات",
+  "Investments": "الاستثمارات",
+  "other_categories_details": "تفاصيل الفئات الأخرى",
+  "total_percentage": "النسبة الإجمالية",
+  "no_other_categories": "لا توجد فئات أخرى متاحة",
+  "ok": "حسنًا",
+    "viewBill": "عرض الفاتورة",
+      "addNewBill": "إضافة فاتورة جديدة"
+
+
+
 }
 
 

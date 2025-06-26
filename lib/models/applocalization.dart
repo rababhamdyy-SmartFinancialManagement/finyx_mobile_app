@@ -9,19 +9,25 @@ class AppLocalizations {
   static AppLocalizations? of(BuildContext context) {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
+
   static LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate(); 
+      _AppLocalizationsDelegate();
 
   late Map<String, String> jsonStrings;
   Future loadLangJson() async {
-    String strings= await rootBundle.loadString(
+    String strings = await rootBundle.loadString(
       'assets/lang/${locale!.languageCode}.json',
     );
     Map<String, dynamic> jsons = json.decode(strings);
     jsonStrings = jsons.map((key, value) => MapEntry(key, value.toString()));
   }
+
   String translate(String key) {
     return jsonStrings[key] ?? "";
+  }
+
+  bool has(String key) {
+    return jsonStrings.containsKey(key);
   }
 }
 
@@ -35,6 +41,8 @@ class _AppLocalizationsDelegate
     await appLocalizations.loadLangJson();
     return appLocalizations;
   }
+
   @override
-  bool shouldReload(covariant LocalizationsDelegate<AppLocalizations> old) => false;
+  bool shouldReload(covariant LocalizationsDelegate<AppLocalizations> old) =>
+      false;
 }

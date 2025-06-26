@@ -5,6 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
+import 'package:finyx_mobile_app/helpers/dynamic_translator.dart';
+
+Future<String> translateSmart(
+  String key,
+  AppLocalizations loc,
+  String langCode,
+) async {
+  if (loc.has(key)) {
+    return loc.translate(key);
+  } else {
+    return await DynamicTranslator.getTranslated(key, langCode);
+  }
+}
 
 Future<void> moreItems(BuildContext context, UserType userType) async {
   await showDialog(
@@ -12,10 +25,7 @@ Future<void> moreItems(BuildContext context, UserType userType) async {
     builder: (BuildContext context) {
       return BlocBuilder<PriceCubit, PriceState>(
         builder: (context, state) {
-          return MoreItems(
-            state: state,
-            userType: userType,
-          );
+          return MoreItems(state: state, userType: userType);
         },
       );
     },
@@ -48,25 +58,85 @@ class MoreItems extends StatelessWidget {
     List<Map<String, dynamic>> getItems() {
       if (userType == UserType.individual) {
         return [
-          {'icon': Icons.sports_tennis_rounded, 'label': 'Club', 'translationKey': 'club'},
-          {'icon': Icons.phone_iphone, 'label': 'Mobile Credit', 'translationKey': 'mobile_credit'},
+          {
+            'icon': Icons.sports_tennis_rounded,
+            'label': 'Club',
+            'translationKey': 'club',
+          },
+          {
+            'icon': Icons.phone_iphone,
+            'label': 'Mobile Credit',
+            'translationKey': 'mobile_credit',
+          },
           {'icon': Icons.car_repair, 'label': 'Car', 'translationKey': 'car'},
-          {'icon': Icons.wallet, 'label': 'Voucher', 'translationKey': 'voucher'},
-          {'icon': Icons.medical_services_outlined, 'label': 'Assurance', 'translationKey': 'assurance'},
-          {'icon': Icons.movie_filter_outlined, 'label': 'Cinema', 'translationKey': 'cinema'},
-          {'icon': Icons.groups_outlined, 'label': 'Association', 'translationKey': 'association'},
-          {'icon': Icons.now_widgets_outlined, 'label': 'More', 'translationKey': 'more'},
+          {
+            'icon': Icons.wallet,
+            'label': 'Voucher',
+            'translationKey': 'voucher',
+          },
+          {
+            'icon': Icons.medical_services_outlined,
+            'label': 'Assurance',
+            'translationKey': 'assurance',
+          },
+          {
+            'icon': Icons.movie_filter_outlined,
+            'label': 'Cinema',
+            'translationKey': 'cinema',
+          },
+          {
+            'icon': Icons.groups_outlined,
+            'label': 'Association',
+            'translationKey': 'association',
+          },
+          {
+            'icon': Icons.now_widgets_outlined,
+            'label': 'More',
+            'translationKey': 'more',
+          },
         ];
       } else {
         return [
-          {'icon': Icons.assignment, 'label': 'Licenses', 'translationKey': 'licenses'},
-          {'icon': Icons.money_off, 'label': 'Accrued Interest', 'translationKey': 'accrued_interest'},
-          {'icon': Icons.account_balance_wallet, 'label': 'Admin Expenses', 'translationKey': 'admin_expenses'},
-          {'icon': Icons.flash_on, 'label': 'Electricity', 'translationKey': 'electricity'},
-          {'icon': Icons.wifi, 'label': 'Internet', 'translationKey': 'internet'},
-          {'icon': Icons.local_shipping, 'label': 'Shipping', 'translationKey': 'shipping'},
-          {'icon': Icons.monetization_on, 'label': 'Zakat', 'translationKey': 'zakat'},
-          {'icon': Icons.now_widgets_outlined, 'label': 'More', 'translationKey': 'more_business'},
+          {
+            'icon': Icons.assignment,
+            'label': 'Licenses',
+            'translationKey': 'licenses',
+          },
+          {
+            'icon': Icons.money_off,
+            'label': 'Accrued Interest',
+            'translationKey': 'accrued_interest',
+          },
+          {
+            'icon': Icons.account_balance_wallet,
+            'label': 'Admin Expenses',
+            'translationKey': 'admin_expenses',
+          },
+          {
+            'icon': Icons.flash_on,
+            'label': 'Electricity',
+            'translationKey': 'electricity',
+          },
+          {
+            'icon': Icons.wifi,
+            'label': 'Internet',
+            'translationKey': 'internet',
+          },
+          {
+            'icon': Icons.local_shipping,
+            'label': 'Shipping',
+            'translationKey': 'shipping',
+          },
+          {
+            'icon': Icons.monetization_on,
+            'label': 'Zakat',
+            'translationKey': 'zakat',
+          },
+          {
+            'icon': Icons.now_widgets_outlined,
+            'label': 'More',
+            'translationKey': 'more_business',
+          },
         ];
       }
     }
@@ -92,36 +162,38 @@ class MoreItems extends StatelessWidget {
           alignment: WrapAlignment.center,
           children: List.generate(getItems().length, (index) {
             final item = getItems()[index];
-            final color = iconColors[index]; 
-            final label = loc.translate(item['translationKey']) ?? item['label'];
+            final color = iconColors[index];
             final icon = item['icon'];
             final translationKey = item['translationKey'];
 
             return GestureDetector(
               onTap: () async {
                 Navigator.of(context).pop();
-                
-                if (translationKey == 'more' || translationKey == 'more_business') {
+
+                if (translationKey == 'more' ||
+                    translationKey == 'more_business') {
                   await showDialog(
                     context: context,
-                    builder: (_) => AddDialog(
-                      nameController: TextEditingController(),
-                      priceController: TextEditingController(),
-                      cubit: cubit,
-                      state: state,
-                    ),
+                    builder:
+                        (_) => AddDialog(
+                          nameController: TextEditingController(),
+                          priceController: TextEditingController(),
+                          cubit: cubit,
+                          state: state,
+                        ),
                   );
                 } else {
                   await showDialog(
                     context: context,
-                    builder: (_) => PriceDialog(
-                      priceController: TextEditingController(),
-                      cubit: cubit,
-                      state: state,
-                      label: translationKey,
-                      icon: icon,
-                      iconColor: color,
-                    ),
+                    builder:
+                        (_) => PriceDialog(
+                          priceController: TextEditingController(),
+                          cubit: cubit,
+                          state: state,
+                          label: translationKey,
+                          icon: icon,
+                          iconColor: color,
+                        ),
                   );
                 }
               },
@@ -141,14 +213,24 @@ class MoreItems extends StatelessWidget {
                       child: Icon(icon, color: color, size: 28),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      label,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Poppins",
+                    FutureBuilder<String>(
+                      future: translateSmart(
+                        translationKey,
+                        loc,
+                        loc.locale!.languageCode,
                       ),
+                      builder: (context, snapshot) {
+                        final translatedLabel = snapshot.data ?? item['label'];
+                        return Text(
+                          translatedLabel,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Poppins",
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

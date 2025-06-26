@@ -243,6 +243,26 @@
   "onboarding_msg_3": "Plan wisely, manage efficiently, and achieve your financial goals with ease.",
   "onboarding_skip": "Skip",
   "next": "Next",
-  "get_started": "Get Started"
+  "get_started": "Get Started",
+   "Food": "Food",
+  "Transport": "Transport",
+  "Others": "Others",
+  "total_expenses": "Total Expenses",
+    "Housing": "Housing",
+  "Utilities": "Utilities",
+  "Entertainment": "Entertainment",
+    "Revenue": "Revenue",
+  "Salaries": "Salaries",
+  "Marketing": "Marketing",
+  "Operations": "Operations",
+  "Investments": "Investments",
+    "other_categories_details": "Other Categories Details",
+  "total_percentage": "Total percentage",
+  "no_other_categories": "No other categories available",
+  "ok": "OK",
+    "viewBill": "View Bill",
+      "addNewBill": "Add New Bill"
+
+
 
 }
