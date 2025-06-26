@@ -72,103 +72,77 @@ class _DialogueState extends State<Dialogue> {
           ),
         );
       } else if (widget.actionType == 'delete') {
-        final user = FirebaseAuth.instance.currentUser;
-        if (user == null) return;
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) return;
 
-        final providerId = user.providerData.first.providerId;
-        final isGoogle = providerId == 'google.com';
-        final input = _inputController.text.trim();
+  final providerId = user.providerData.first.providerId;
+  final isGoogle = providerId == 'google.com';
+  final input = _inputController.text.trim();
 
-        if (input.isEmpty) {
-          setState(() => _showError = true);
-          return;
-        }
+  if (input.isEmpty) {
+    setState(() => _showError = true);
+    return;
+  }
 
-        bool reauthenticated = false;
-        if (isGoogle) {
-          try {
-            final googleUser = await GoogleSignIn().signIn();
-            if (googleUser != null) {
-              final googleAuth = await googleUser.authentication;
-              final credential = GoogleAuthProvider.credential(
-                accessToken: googleAuth.accessToken,
-                idToken: googleAuth.idToken,
-              );
-              await user.reauthenticateWithCredential(credential);
-              reauthenticated = true;
-            }
-          } catch (e) {
-            debugPrint('Google reauth error: $e');
-          }
-        } else {
-          try {
-            final credential = EmailAuthProvider.credential(
-              email: user.email!,
-              password: input,
-            );
-            await user.reauthenticateWithCredential(credential);
-            reauthenticated = true;
-          } catch (e) {
-            debugPrint('Email reauth error: $e');
-            setState(() => _showError = true);
-            return;
-          }
-        }
-
-        if (reauthenticated) {
-          debugPrint('Starting account deletion...');
-          // Get user UID before deletion
-          final userUid = user.uid;
-
-          // Get user data before deletion
-          final userEmail = user.email;
-          final userDisplayName = user.displayName;
-
-          // Delete Firestore data first
-          await profileCubit.deleteAccount();
-          debugPrint('Account deleted from Firestore');
-
-          // Delete the user from Firebase Auth
-          await user.delete();
-          debugPrint('User deleted from Firebase Auth');
-
-          profileCubit.resetState();
-
-          // Clear SharedPreferences
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.clear();
-
-          // Show success message before navigation
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(loc.translate("account_deleted_successfully")),
-                backgroundColor: Colors.green,
-              ),
-            );
-          }
-
-          if (mounted) {
-            Navigator.of(context).pop(); // Close dialog
-            Navigator.of(
-              context,
-            ).pushNamedAndRemoveUntil('/login', (route) => false);
-
-            // Delay to ensure navigation is complete
-            Future.delayed(Duration(milliseconds: 300), () async {
-              // Now delete user and Firestore data in the background
-              await profileCubit.deleteAccount();
-              final user = FirebaseAuth.instance.currentUser;
-              if (user != null) {
-                await user.delete();
-              }
-              // No need to navigate again
-            });
-          }
-        } else {
-          throw Exception('Failed to reauthenticate');
-        }
+  bool reauthenticated = false;
+  if (isGoogle) {
+    try {
+      final googleUser = await GoogleSignIn().signIn();
+      if (googleUser != null) {
+        final googleAuth = await googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        await user.reauthenticateWithCredential(credential);
+        reauthenticated = true;
       }
+    } catch (e) {
+      debugPrint('Google reauth error: $e');
+    }
+  } else {
+    try {
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: input,
+      );
+      await user.reauthenticateWithCredential(credential);
+      reauthenticated = true;
+    } catch (e) {
+      debugPrint('Email reauth error: $e');
+      setState(() => _showError = true);
+      return;
+    }
+  }
+
+  if (reauthenticated) {
+    await user.delete();
+
+    await profileCubit.deleteAccount();
+
+   await SharedPrefsHelper.saveLoginState(false);
+
+    profileCubit.resetState();
+
+    await Future.delayed(Duration(milliseconds: 500));
+
+    if (mounted) {
+      Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
+    }
+
+    if (mounted) {
+      scaffold.showSnackBar(
+        SnackBar(
+          content: Text(loc.translate("account_deleted_successfully")),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
+  } else {
+    throw Exception('Failed to reauthenticate');
+  }
+}
+
     } catch (e) {
       if (mounted) {
         scaffold.showSnackBar(

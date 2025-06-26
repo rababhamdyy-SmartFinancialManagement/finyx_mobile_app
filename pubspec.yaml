@@ -55,7 +55,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.3
   flutter_native_splash: ^2.4.6
   flutter_local_notifications: ^19.2.0
-  intl: 0.19.0
+  intl: 0.20.2
   cached_network_image: ^3.4.1
   pdf: ^3.11.3
   printing: ^5.14.2
