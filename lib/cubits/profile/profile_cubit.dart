@@ -39,7 +39,12 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     emit(state.copyWith(notifications: newNotifications));
 
-    await _showLocalNotification(notification);
+final prefs = await SharedPreferences.getInstance();
+final notificationsEnabled = prefs.getBool('notifications') ?? true;
+
+if (notificationsEnabled) {
+  await _showLocalNotification(notification);
+}
   }
 
   Future<void> _showLocalNotification(AppNotification notification) async {

@@ -4,6 +4,7 @@ import 'package:finyx_mobile_app/helpers/constants.dart';
 import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:finyx_mobile_app/models/theme_state_enum.dart';
 import 'package:finyx_mobile_app/widgets/buttons_widgets/custom_container_button.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finyx_mobile_app/models/langaugeEventType.dart';
@@ -18,7 +19,7 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   bool isDarkMode = false;
   bool isLanguageArabic = false;
-
+  bool isNotificationsEnabled = true;
   @override
   void initState() {
     super.initState();
@@ -26,6 +27,10 @@ class _SettingScreenState extends State<SettingScreen> {
     isDarkMode = theme == 'dark';
     final lang = shared_preferences?.getString('lang') ?? 'en';
     isLanguageArabic = lang == 'ar';
+
+    final notificationsEnabled =
+        shared_preferences?.getBool('notifications') ?? true;
+    isNotificationsEnabled = notificationsEnabled;
   }
 
   @override
@@ -103,8 +108,26 @@ class _SettingScreenState extends State<SettingScreen> {
                   onPressed: () {},
                   icon: Icons.notifications_outlined,
                   isSwitch: true,
-                  initialSelected: true,
+                  initialSelected: isNotificationsEnabled,
+                  onSwitchChanged: (enabled) async {
+                    setState(() {
+                      isNotificationsEnabled = enabled;
+                    });
+
+                    await shared_preferences?.setBool('notifications', enabled);
+
+                    if (enabled) {
+                      await FirebaseMessaging.instance.subscribeToTopic(
+                        'general',
+                      );
+                    } else {
+                      await FirebaseMessaging.instance.unsubscribeFromTopic(
+                        'general',
+                      );
+                    }
+                  },
                 ),
+
                 CustomContainerButton(
                   text: loc.translate("Dark_mode"),
                   onPressed: () {},
