@@ -382,6 +382,10 @@ class ProfileCubit extends Cubit<ProfileState> {
             .collection('users')
             .doc(user.uid)
             .delete();
+        await FirebaseFirestore.instance
+            .collection('wallets')
+            .doc(user.uid)
+            .delete();
       }
 
       await user.delete();

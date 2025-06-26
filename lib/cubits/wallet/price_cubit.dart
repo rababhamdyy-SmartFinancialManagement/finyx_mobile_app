@@ -1,6 +1,8 @@
 import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PriceState {
   final Map<String, double> prices;
@@ -31,6 +33,31 @@ class PriceCubit extends Cubit<PriceState> {
     emit(state.copyWith(prices: prices));
   }
 
+  // Loads wallet data from Firestore for the current user
+  Future<void> loadFromFirestore() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+    final doc =
+        await FirebaseFirestore.instance.collection('wallets').doc(uid).get();
+    if (doc.exists && doc.data() != null && doc.data()!['prices'] != null) {
+      final pricesMap = Map<String, dynamic>.from(doc.data()!['prices']);
+      final prices = <String, double>{};
+      pricesMap.forEach((k, v) {
+        if (v is num) prices[k] = v.toDouble();
+      });
+      emit(state.copyWith(prices: prices));
+    }
+  }
+
+  // Saves wallet data to Firestore for the current user
+  Future<void> saveToFirestore() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+    await FirebaseFirestore.instance.collection('wallets').doc(uid).set({
+      'prices': state.prices,
+    });
+  }
+
   // Updates the price for a given label if the price is valid
   void updatePrice(String label, double price) {
     if (price <= 0) {
@@ -44,6 +71,9 @@ class PriceCubit extends Cubit<PriceState> {
 
     // Save the updated prices in SharedPreferences
     SharedPrefsHelper.savePrices(newPrices);
+    // Save to Firestore
+    emit(state.copyWith(prices: newPrices));
+    saveToFirestore();
 
     // Emit the new state only if the prices have actually changed
     if (newPrices.toString() != state.prices.toString()) {
@@ -71,6 +101,9 @@ class PriceCubit extends Cubit<PriceState> {
 
       // Save the prices after removal in SharedPreferences
       SharedPrefsHelper.savePrices(newPrices);
+      // Save to Firestore
+      emit(state.copyWith(prices: newPrices));
+      saveToFirestore();
 
       emit(state.copyWith(prices: newPrices));
 

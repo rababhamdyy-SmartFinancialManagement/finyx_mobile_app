@@ -63,9 +63,6 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) {
             final cubit = PriceCubit(notificationsPlugin);
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              cubit.checkAndResetMonthlyPrices();
-            });
             return cubit;
           },
         ),

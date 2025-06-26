@@ -9,6 +9,7 @@ import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/widgets/shared/custom_snack_bar_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:finyx_mobile_app/models/applocalization.dart';
+import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 
 class LoginModel {
   final TextEditingController emailController = TextEditingController();
@@ -37,103 +38,125 @@ class LoginModel {
   }
 
   Future<UserType?> loginUser(BuildContext context) async {
-  final loc = AppLocalizations.of(context)!;
-  final email = emailController.text.trim();
-  final password = passwordController.text;
+    final loc = AppLocalizations.of(context)!;
+    final email = emailController.text.trim();
+    final password = passwordController.text;
 
-  if (email.isEmpty || password.isEmpty) {
-    CustomSnackbar.show(context, loc.translate("email_or_password_empty"), isError: true);
+    if (email.isEmpty || password.isEmpty) {
+      CustomSnackbar.show(
+        context,
+        loc.translate("email_or_password_empty"),
+        isError: true,
+      );
+      return null;
+    }
+
+    try {
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+
+      final user = userCredential.user;
+      if (user == null) return null;
+
+      // إعادة تحميل بيانات المستخدم
+      await user.reload();
+      final refreshedUser = FirebaseAuth.instance.currentUser;
+
+      // جلب أحدث بيانات من Firestore مع تعطيل الكاش
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get(GetOptions(source: Source.server));
+
+      if (!userDoc.exists) return null;
+
+      // تحميل بيانات الملف الشخصي بقوة
+      await context.read<ProfileCubit>().loadUserData();
+
+      final userType = userDoc.data()?['userType'];
+      final profileCubit = context.read<ProfileCubit>();
+
+      // تحميل البيانات مع التأكد من تحديث الحالة
+      await profileCubit.loadUserData();
+
+      // حفظ بيانات الاعتماد إذا كان مطلوباً
+      final prefs = await SharedPreferences.getInstance();
+      if (isChecked) {
+        await prefs.setString('saved_email', email);
+        await prefs.setString('saved_password', password);
+      } else {
+        await prefs.remove('saved_email');
+        await prefs.remove('saved_password');
+      }
+
+      if (userType == "individual") {
+        await SharedPrefsHelper.saveUserType("individual");
+        await SharedPrefsHelper.saveLoginState(true);
+        await context.read<PriceCubit>().loadFromFirestore();
+        return UserType.individual;
+      } else if (userType == "business") {
+        await SharedPrefsHelper.saveUserType("business");
+        await SharedPrefsHelper.saveLoginState(true);
+        await context.read<PriceCubit>().loadFromFirestore();
+        return UserType.business;
+      } else {
+        CustomSnackbar.show(
+          context,
+          loc.translate("unknown_user_type"),
+          isError: true,
+        );
+        return null;
+      }
+    } on FirebaseAuthException catch (e) {
+      CustomSnackbar.show(
+        context,
+        "${loc.translate("login_error")}: ${e.message}",
+        isError: true,
+      );
+    } catch (e) {
+      CustomSnackbar.show(
+        context,
+        "${loc.translate("unexpected_error")}: $e",
+        isError: true,
+      );
+    }
     return null;
   }
 
-   try {
-    final UserCredential userCredential = await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email, password: password);
+  Future<Map<String, dynamic>?> signInWithGoogle(BuildContext context) async {
+    final loc = AppLocalizations.of(context)!;
 
-    final user = userCredential.user;
-    if (user == null) return null;
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) return null;
 
-    // إعادة تحميل بيانات المستخدم
-    await user.reload();
-    final refreshedUser = FirebaseAuth.instance.currentUser;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
 
-    // جلب أحدث بيانات من Firestore مع تعطيل الكاش
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .get(GetOptions(source: Source.server));
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
+      final User? user = userCredential.user;
+      if (user == null) return null;
 
-    if (!userDoc.exists) return null;
+      // الحصول على ProfileCubit من context
+      final profileCubit = context.read<ProfileCubit>();
+      profileCubit.resetState(); // إعادة تعيين الحالة
+      await profileCubit.loadUserData(); // جلب بيانات المستخدم الجديد
 
-    // تحميل بيانات الملف الشخصي بقوة
-    await context.read<ProfileCubit>().loadUserData();
-
-    final userType = userDoc.data()?['userType'];
-    final profileCubit = context.read<ProfileCubit>();
-    
-    // تحميل البيانات مع التأكد من تحديث الحالة
-    await profileCubit.loadUserData();
-
-    // حفظ بيانات الاعتماد إذا كان مطلوباً
-    final prefs = await SharedPreferences.getInstance();
-    if (isChecked) {
-      await prefs.setString('saved_email', email);
-      await prefs.setString('saved_password', password);
-    } else {
-      await prefs.remove('saved_email');
-      await prefs.remove('saved_password');
-    }
-
-    if (userType == "individual") {
-      await SharedPrefsHelper.saveUserType("individual");
-      await SharedPrefsHelper.saveLoginState(true);
-      return UserType.individual;
-    } else if (userType == "business") {
-      await SharedPrefsHelper.saveUserType("business");
-      await SharedPrefsHelper.saveLoginState(true);
-      return UserType.business;
-    } else {
-      CustomSnackbar.show(context, loc.translate("unknown_user_type"), isError: true);
-      return null;
-    }
-  } on FirebaseAuthException catch (e) {
-    CustomSnackbar.show(context, "${loc.translate("login_error")}: ${e.message}", isError: true);
-  } catch (e) {
-    CustomSnackbar.show(context, "${loc.translate("unexpected_error")}: $e", isError: true);
-  }
-  return null;
-}
-
-Future<Map<String, dynamic>?> signInWithGoogle(BuildContext context) async {
-  final loc = AppLocalizations.of(context)!;
-
-  try {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    if (googleUser == null) return null;
-
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    final UserCredential userCredential = await FirebaseAuth.instance
-        .signInWithCredential(credential);
-    final User? user = userCredential.user;
-    if (user == null) return null;
-
-    // الحصول على ProfileCubit من context
-    final profileCubit = context.read<ProfileCubit>();
-    profileCubit.resetState(); // إعادة تعيين الحالة
-    await profileCubit.loadUserData(); // جلب بيانات المستخدم الجديد
-
-    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .get(GetOptions(source: Source.server)); // جلب أحدث البيانات من السيرفر
-if (userDoc.exists) {
+      final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get(
+            GetOptions(source: Source.server),
+          ); // جلب أحدث البيانات من السيرفر
+      if (userDoc.exists) {
         final userType = userDoc.get('userType');
         await _updateProfileData(user);
+        await context.read<PriceCubit>().loadFromFirestore();
         return {
           'userType':
               userType == 'individual'
@@ -262,15 +285,15 @@ if (userDoc.exists) {
       await _updateProfileData(user);
 
       return {'userType': selectedType, 'isNewUser': true};
-    }   catch (e) {
-    CustomSnackbar.show(
-      context,
-      "${loc.translate("google_sign_in_error")}: $e",
-      isError: true,
-    );
-    return null;
+    } catch (e) {
+      CustomSnackbar.show(
+        context,
+        "${loc.translate("google_sign_in_error")}: $e",
+        isError: true,
+      );
+      return null;
+    }
   }
-}
 
   Future<void> _updateProfileData(User user) async {
     final userDoc =

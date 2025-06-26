@@ -7,6 +7,7 @@ import '../../cubits/profile/profile_cubit.dart';
 import '../../models/applocalization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../cubits/wallet/price_cubit.dart';
+import '../../views/auth/login_view.dart';
 
 class Dialogue extends StatefulWidget {
   final String message;
@@ -115,24 +116,55 @@ class _DialogueState extends State<Dialogue> {
         }
 
         if (reauthenticated) {
-          await user.delete();
+          debugPrint('Starting account deletion...');
+          // Get user UID before deletion
+          final userUid = user.uid;
 
+          // Get user data before deletion
+          final userEmail = user.email;
+          final userDisplayName = user.displayName;
+
+          // Delete Firestore data first
           await profileCubit.deleteAccount();
+          debugPrint('Account deleted from Firestore');
 
-          await FirebaseAuth.instance.signOut();
+          // Delete the user from Firebase Auth
+          await user.delete();
+          debugPrint('User deleted from Firebase Auth');
 
           profileCubit.resetState();
 
+          // Clear SharedPreferences
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.clear();
+
+          // Show success message before navigation
           if (mounted) {
-            Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(loc.translate("account_deleted_successfully")),
+                backgroundColor: Colors.green,
+              ),
+            );
           }
 
-          scaffold.showSnackBar(
-            SnackBar(
-              content: Text(loc.translate("account_deleted_successfully")),
-              backgroundColor: Colors.green,
-            ),
-          );
+          if (mounted) {
+            Navigator.of(context).pop(); // Close dialog
+            Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil('/login', (route) => false);
+
+            // Delay to ensure navigation is complete
+            Future.delayed(Duration(milliseconds: 300), () async {
+              // Now delete user and Firestore data in the background
+              await profileCubit.deleteAccount();
+              final user = FirebaseAuth.instance.currentUser;
+              if (user != null) {
+                await user.delete();
+              }
+              // No need to navigate again
+            });
+          }
         } else {
           throw Exception('Failed to reauthenticate');
         }
