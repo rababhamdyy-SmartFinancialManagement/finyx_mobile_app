@@ -7,7 +7,6 @@ import 'package:finyx_mobile_app/widgets/wallet/add_dialog.dart';
 import 'package:finyx_mobile_app/widgets/wallet/price_dialog.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 
-
 class InformationGrid extends StatelessWidget {
   final UserType userType;
 
@@ -29,27 +28,92 @@ class InformationGrid extends StatelessWidget {
       Colors.grey,
     ];
 
-    List<Map<String, dynamic>> items = userType == UserType.individual
-        ? [
-            {'icon': Icons.flash_on, 'label': loc.translate("electricity")},
-            {'icon': Icons.wifi, 'label': loc.translate("internet")},
-            {'icon': Icons.fastfood_outlined, 'label': loc.translate("food")},
-            {'icon': Icons.money, 'label': loc.translate("zakat")},
-            {'icon': Icons.shopping_cart, 'label': loc.translate("shopping")},
-            {'icon': Icons.local_gas_station, 'label': loc.translate("gas")},
-            {'icon': Icons.water_drop, 'label': loc.translate("waterBill")},
-            {'icon': Icons.now_widgets_outlined, 'label': loc.translate("more")},
-          ]
-        : [
-            {'icon': Icons.bar_chart, 'label': loc.translate("tRevenue")},
-            {'icon': Icons.stacked_line_chart, 'label': loc.translate("tExpenses")},
-            {'icon': Icons.trending_up, 'label': loc.translate("profits")},
-            {'icon': Icons.trending_down, 'label': loc.translate("losses")},
-            {'icon': Icons.multiple_stop_rounded, 'label': loc.translate("transfer")},
-            {'icon': Icons.monetization_on_rounded, 'label': loc.translate("eSalaries")},
-               {'icon': Icons.account_balance_wallet, 'label': loc.translate("loan")},
-            {'icon': Icons.now_widgets_outlined, 'label': loc.translate("more")},
-          ];
+    List<Map<String, dynamic>> items =
+        userType == UserType.individual
+            ? [
+              {
+                'icon': Icons.flash_on,
+                'label': 'electricity',
+                'translated': loc.translate("electricity"),
+              },
+              {
+                'icon': Icons.wifi,
+                'label': 'internet',
+                'translated': loc.translate("internet"),
+              },
+              {
+                'icon': Icons.fastfood_outlined,
+                'label': 'food',
+                'translated': loc.translate("food"),
+              },
+              {
+                'icon': Icons.money,
+                'label': 'zakat',
+                'translated': loc.translate("zakat"),
+              },
+              {
+                'icon': Icons.shopping_cart,
+                'label': 'shopping',
+                'translated': loc.translate("shopping"),
+              },
+              {
+                'icon': Icons.local_gas_station,
+                'label': 'gas',
+                'translated': loc.translate("gas"),
+              },
+              {
+                'icon': Icons.water_drop,
+                'label': 'waterBill',
+                'translated': loc.translate("waterBill"),
+              },
+              {
+                'icon': Icons.now_widgets_outlined,
+                'label': 'more',
+                'translated': loc.translate("more"),
+              },
+            ]
+            : [
+              {
+                'icon': Icons.bar_chart,
+                'label': 'tRevenue',
+                'translated': loc.translate("tRevenue"),
+              },
+              {
+                'icon': Icons.stacked_line_chart,
+                'label': 'tExpenses',
+                'translated': loc.translate("tExpenses"),
+              },
+              {
+                'icon': Icons.trending_up,
+                'label': 'profits',
+                'translated': loc.translate("profits"),
+              },
+              {
+                'icon': Icons.trending_down,
+                'label': 'losses',
+                'translated': loc.translate("losses"),
+              },
+              {
+                'icon': Icons.multiple_stop_rounded,
+                'label': 'transfer',
+                'translated': loc.translate("transfer"),
+              },
+              {
+                'icon': Icons.monetization_on_rounded,
+                'label': 'eSalaries',
+                'translated': loc.translate("eSalaries"),
+              },
+              {
+                'icon': Icons.account_balance_wallet,
+                'label': 'loan',
+                'translated': loc.translate("loan"),
+              },
+              {
+                'icon': Icons.now_widgets_outlined,
+                'label': 'more',
+                'translated': loc.translate("more"),
+              },
+            ];
 
     return BlocBuilder<PriceCubit, PriceState>(
       builder: (context, state) {
@@ -77,30 +141,32 @@ class InformationGrid extends StatelessWidget {
                     if (label == loc.translate("more")) {
                       await showDialog(
                         context: context,
-                        builder: (_) => AddDialog(
-                          nameController: TextEditingController(),
-                          priceController: TextEditingController(),
-                          cubit: cubit,
-                          state: state,
-                        ),
+                        builder:
+                            (_) => AddDialog(
+                              nameController: TextEditingController(),
+                              priceController: TextEditingController(),
+                              cubit: cubit,
+                              state: state,
+                            ),
                       );
                     } else {
                       await showDialog(
                         context: context,
-                        builder: (_) => PriceDialog(
-                          priceController: TextEditingController(),
-                          cubit: cubit,
-                          state: state,
-                          label: label,
-                          icon: icon,
-                          iconColor: iconColor,
-                        ),
+                        builder:
+                            (_) => PriceDialog(
+                              priceController: TextEditingController(),
+                              cubit: cubit,
+                              state: state,
+                              label: item['label'],
+                              icon: icon,
+                              iconColor: iconColor,
+                            ),
                       );
                     }
                   },
                   child: _buildIconText(
                     icon: icon,
-                    label: label,
+                    label: item['translated'],
                     iconColor: iconColor,
                     iconSize: iconSize,
                     fontSize: fontSize,
