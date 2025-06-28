@@ -7,7 +7,7 @@
 **Finyx** is an 🤖 AI-powered financial management app designed to help individuals and businesses manage their finances more effectively. The app tracks income and expenses, provides insights into spending habits, and offers personalized recommendations for improving financial stability.
 
 
-▶️▶️ Watch the demo video on YouTube: [Click here](https://youtu.be/soIwbTVkB5s)
+▶️▶️ Watch the demo video on YouTube: [Click here](https://youtu.be/M2j7K9DgDOU)
 
 
 ---
