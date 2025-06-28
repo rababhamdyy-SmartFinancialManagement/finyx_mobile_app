@@ -13,7 +13,7 @@ class MoreItems extends StatelessWidget {
     final loc = AppLocalizations.of(context)!;
 
     return AlertDialog(
-      backgroundColor: theme.dialogBackgroundColor,
+      backgroundColor: theme.dialogTheme.backgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Center(
         child: Text(

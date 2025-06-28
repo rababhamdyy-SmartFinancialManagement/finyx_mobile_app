@@ -3,7 +3,7 @@ import 'package:finyx_mobile_app/cubits/app_theme/app_theme_cubit.dart';
 import 'package:finyx_mobile_app/cubits/profile/profile_cubit.dart';
 import 'package:finyx_mobile_app/helpers/constants.dart';
 import 'package:finyx_mobile_app/models/applocalization.dart';
-import 'package:finyx_mobile_app/models/langaugeEventType.dart';
+import 'package:finyx_mobile_app/models/language_event_type.dart';
 import 'package:finyx_mobile_app/models/theme_state_enum.dart';
 import 'package:finyx_mobile_app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  shared_preferences = await SharedPreferences.getInstance();
+  sharedPreferences = await SharedPreferences.getInstance();
 
   final notificationsPlugin = FlutterLocalNotificationsPlugin();
   await _initializeNotifications();

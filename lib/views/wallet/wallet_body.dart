@@ -1,4 +1,3 @@
-import 'package:finyx_mobile_app/cubits/wallet/shared_pref_helper.dart';
 import 'package:finyx_mobile_app/helpers/dynamic_translator.dart';
 import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
@@ -61,14 +60,6 @@ class WalletBody extends StatelessWidget {
     'Shipping': 'shipping',
   };
 
-  bool _isDefaultItem(String label) {
-    return getDefaultItems().any((item) => item['label'] == label);
-  }
-
-  bool _isMoreItemValue(String label) {
-    return moreItems.containsValue(label);
-  }
-
   Future<void> _showResetConfirmationDialog(BuildContext context) async {
     final loc = AppLocalizations.of(context)!;
     return showDialog<void>(
@@ -86,7 +77,7 @@ class WalletBody extends StatelessWidget {
               },
             ),
             TextButton(
-              child: Text(loc.translate('yes') ?? 'Yes'),
+              child: Text(loc.translate('yes')),
               onPressed: () async {
                 Navigator.of(context).pop();
                 await context.read<PriceCubit>().checkAndResetMonthlyPrices();
@@ -104,7 +95,7 @@ class WalletBody extends StatelessWidget {
     String languageCode,
   ) async {
     if (loc.has(key)) {
-      return loc.translate(key)!;
+      return loc.translate(key);
     } else {
       return await DynamicTranslator.getTranslated(key, languageCode);
     }
@@ -114,7 +105,7 @@ class WalletBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
 
-    Color _getIconColor(String label, PriceCubit cubit) {
+    Color getIconColor(String label, PriceCubit cubit) {
       final defaultItems = getDefaultItems();
       int index = defaultItems.indexWhere((item) => item['label'] == label);
       if (index != -1) {
@@ -129,14 +120,14 @@ class WalletBody extends StatelessWidget {
       }
     }
 
-    void _showModal(BuildContext context, String label, IconData icon) async {
+    void showModal(BuildContext context, String label, IconData icon) async {
       TextEditingController priceController = TextEditingController();
       final cubit = context.read<PriceCubit>();
       double? currentPrice = cubit.state.prices[label];
       if (currentPrice != null) {
         priceController.text = currentPrice.toString();
       }
-      Color iconColor = _getIconColor(label, cubit);
+      Color iconColor = getIconColor(label, cubit);
 
       showDialog(
         context: context,
@@ -161,7 +152,7 @@ class WalletBody extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          Container(
+          SizedBox(
             width: double.infinity,
             child: Stack(
               alignment: Alignment.center,
@@ -224,7 +215,7 @@ class WalletBody extends StatelessWidget {
                     final originalLabel = item['label'];
                     final icon = item['icon'];
                     final price = state.prices[originalLabel] ?? 0.0;
-                    final iconColor = _getIconColor(
+                    final iconColor = getIconColor(
                       originalLabel,
                       context.read<PriceCubit>(),
                     );
@@ -246,7 +237,7 @@ class WalletBody extends StatelessWidget {
                             price: price,
                             context: context,
                             onTap:
-                                () => _showModal(context, originalLabel, icon),
+                                () => showModal(context, originalLabel, icon),
                             isDeletable: false,
                             backgroundColor: bgColor,
                             iconColor: iconColor,
@@ -277,8 +268,7 @@ class WalletBody extends StatelessWidget {
                               price: price,
                               context: context,
                               onTap:
-                                  () =>
-                                      _showModal(context, originalLabel, icon),
+                                  () => showModal(context, originalLabel, icon),
                               isDeletable: true,
                               backgroundColor: bgColor,
                               iconColor: iconColor,

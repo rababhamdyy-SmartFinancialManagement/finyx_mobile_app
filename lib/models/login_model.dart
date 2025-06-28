@@ -60,7 +60,6 @@ class LoginModel {
 
       // إعادة تحميل بيانات المستخدم
       await user.reload();
-      final refreshedUser = FirebaseAuth.instance.currentUser;
 
       // جلب أحدث بيانات من Firestore مع تعطيل الكاش
       final userDoc = await FirebaseFirestore.instance

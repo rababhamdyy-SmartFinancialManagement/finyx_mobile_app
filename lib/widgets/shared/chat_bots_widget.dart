@@ -1,4 +1,3 @@
-import 'package:finyx_mobile_app/helpers/dynamic_translator.dart';
 import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 import 'package:finyx_mobile_app/models/chatBot/financial_tips.dart';

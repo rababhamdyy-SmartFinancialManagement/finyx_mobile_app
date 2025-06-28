@@ -1,9 +1,7 @@
-import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/views/wallet/wallet_body.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WalletScreen extends StatelessWidget {
   final UserType userType;

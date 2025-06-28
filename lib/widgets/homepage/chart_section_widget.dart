@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/models/chart_section.dart';
-import 'package:finyx_mobile_app/models/applocalization.dart';  
+import 'package:finyx_mobile_app/models/applocalization.dart';
 
 class ChartSectionWidget extends StatelessWidget {
   final ChartSection section;
 
-  const ChartSectionWidget({Key? key, required this.section}) : super(key: key);
+  const ChartSectionWidget({super.key, required this.section});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class ChartSectionWidget extends StatelessWidget {
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: section.color.withOpacity(0.2),
+        color: section.color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(color: Colors.white, blurRadius: 6, offset: Offset(0, 4)),

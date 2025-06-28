@@ -10,16 +10,16 @@ class AppThemeCubit extends Cubit<AppThemeState> {
   changeTheme(ThemeStateEnum state) {
     switch (state) {
       case ThemeStateEnum.light:
-        shared_preferences!.setString('theme', 'light');
+        sharedPreferences!.setString('theme', 'light');
         emit(AppLightTheme());
         break;
       case ThemeStateEnum.dark:
-        shared_preferences!.setString('theme', 'dark');
+        sharedPreferences!.setString('theme', 'dark');
         emit(AppDarkTheme());
         break;
       case ThemeStateEnum.initial:
-        if (shared_preferences!.getString('theme') != null) {
-          if (shared_preferences!.getString('theme') == 'dark') {
+        if (sharedPreferences!.getString('theme') != null) {
+          if (sharedPreferences!.getString('theme') == 'dark') {
             emit(AppDarkTheme());
           } else {
             emit(AppLightTheme());

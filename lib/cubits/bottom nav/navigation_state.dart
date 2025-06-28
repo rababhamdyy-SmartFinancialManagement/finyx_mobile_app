@@ -8,5 +8,5 @@ class NavigationInitial extends NavigationState {
 }
 
 class NavigationChanged extends NavigationState {
-  const NavigationChanged(int index) : super(index);
+  const NavigationChanged(super.index);
 }

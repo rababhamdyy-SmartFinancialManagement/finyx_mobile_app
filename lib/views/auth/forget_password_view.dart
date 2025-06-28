@@ -1,4 +1,4 @@
-import 'package:finyx_mobile_app/models/PasswordPageType.dart';
+import 'package:finyx_mobile_app/models/password_page_type.dart';
 import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/models/forget_password_model.dart';
@@ -31,7 +31,9 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${loc.translate("reset_link_sent")} ${_model.emailController.text}'),
+            content: Text(
+              '${loc.translate("reset_link_sent")} ${_model.emailController.text}',
+            ),
             duration: Duration(seconds: 5),
           ),
         );
@@ -107,7 +109,7 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
                       screenWidth: screenWidth,
                       screenHeight: screenHeight,
                       titleColor: Colors.white,
-                      subtitleColor: Colors.white.withOpacity(0.7),
+                      subtitleColor: Colors.white.withValues(alpha: 0.7),
                     ),
                     SizedBox(height: screenHeight * 0.05),
                     Image.asset(
@@ -124,7 +126,9 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
                         if (value == null || value.isEmpty) {
                           return loc.translate("email_required");
                         }
-                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                        if (!RegExp(
+                          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                        ).hasMatch(value)) {
                           return loc.translate("invalid_email");
                         }
                         return null;

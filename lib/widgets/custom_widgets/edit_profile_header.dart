@@ -1,10 +1,9 @@
 import 'dart:io';
-import 'package:finyx_mobile_app/cubits/profile/profile_cubit.dart';
-import 'package:finyx_mobile_app/cubits/profile/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:finyx_mobile_app/cubits/profile/profile_cubit.dart';
+import 'package:finyx_mobile_app/cubits/profile/profile_state.dart';
 
 class EditProfileHeader extends StatelessWidget {
   final String name;
@@ -34,19 +33,21 @@ class EditProfileHeader extends StatelessWidget {
                   child: CircleAvatar(
                     radius: width * 0.19,
                     backgroundColor: Colors.transparent,
-                    backgroundImage: state.imagePath != null
-                        ? _getImageProvider(state.imagePath!)
-                        : null,
-                    child: state.imagePath == null
-                        ? ClipOval(
-                      child: Image.asset(
-                        'assets/images/profile/profile2.png',
-                        width: width * 0.38,
-                        height: width * 0.38,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                        : null,
+                    backgroundImage:
+                        state.imagePath != null
+                            ? _getImageProvider(state.imagePath!)
+                            : null,
+                    child:
+                        state.imagePath == null
+                            ? ClipOval(
+                              child: Image.asset(
+                                'assets/images/profile/profile2.png',
+                                width: width * 0.38,
+                                height: width * 0.38,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                            : null,
                   ),
                 ),
                 Positioned(
@@ -56,7 +57,8 @@ class EditProfileHeader extends StatelessWidget {
                     onTap: () {
                       showModalBottomSheet(
                         context: context,
-                        builder: (context) => _imagePickerBottomSheetWidget(context),
+                        builder:
+                            (context) => _imagePickerBottomSheetWidget(context),
                       );
                     },
                     child: CircleAvatar(
@@ -110,7 +112,9 @@ class EditProfileHeader extends StatelessWidget {
             child: IconButton(
               onPressed: () async {
                 Navigator.pop(context);
-                await context.read<ProfileCubit>().pickImage(ImageSource.gallery);
+                await context.read<ProfileCubit>().pickImage(
+                  ImageSource.gallery,
+                );
               },
               icon: const Icon(Icons.image, color: Colors.blue, size: 50),
             ),
@@ -120,7 +124,9 @@ class EditProfileHeader extends StatelessWidget {
             child: IconButton(
               onPressed: () async {
                 Navigator.pop(context);
-                await context.read<ProfileCubit>().pickImage(ImageSource.camera);
+                await context.read<ProfileCubit>().pickImage(
+                  ImageSource.camera,
+                );
               },
               icon: const Icon(Icons.camera, color: Colors.blue, size: 50),
             ),

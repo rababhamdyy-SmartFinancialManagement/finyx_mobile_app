@@ -30,7 +30,7 @@ class AddDialog extends StatelessWidget {
     return BlocBuilder<PriceCubit, PriceState>(
       builder: (context, state) {
         return AlertDialog(
-          backgroundColor: theme.dialogBackgroundColor,
+          backgroundColor: theme.dialogTheme.backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -66,7 +66,7 @@ class AddDialog extends StatelessWidget {
                 style: TextStyle(color: iconColor),
                 decoration: InputDecoration(
                   hintText: loc.translate("item_name"),
-                  hintStyle: TextStyle(color: iconColor.withOpacity(0.6)),
+                  hintStyle: TextStyle(color: iconColor.withValues(alpha: 0.6)),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: iconColor),
                   ),
@@ -84,7 +84,7 @@ class AddDialog extends StatelessWidget {
                 style: TextStyle(color: iconColor),
                 decoration: InputDecoration(
                   hintText: loc.translate("price"),
-                  hintStyle: TextStyle(color: iconColor.withOpacity(0.6)),
+                  hintStyle: TextStyle(color: iconColor.withValues(alpha: 0.6)),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: iconColor),
                   ),

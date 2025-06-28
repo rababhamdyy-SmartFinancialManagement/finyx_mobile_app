@@ -1,23 +1,22 @@
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finyx_mobile_app/cubits/home/chart_cubit.dart';
+import 'package:finyx_mobile_app/cubits/home/chart_state.dart';
 import 'package:finyx_mobile_app/cubits/profile/profile_cubit.dart';
 import 'package:finyx_mobile_app/cubits/profile/profile_state.dart';
 import 'package:finyx_mobile_app/cubits/wallet/price_cubit.dart';
 import 'package:finyx_mobile_app/models/applocalization.dart';
 import 'package:finyx_mobile_app/models/chart_section.dart';
-import 'package:finyx_mobile_app/views/wallet/more_items.dart';
-import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../cubits/home/chart_state.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:finyx_mobile_app/views/wallet/more_items.dart';
 
 class PieChartWidget extends StatelessWidget {
   final UserType userType;
 
-  const PieChartWidget({Key? key, required this.userType}) : super(key: key);
+  const PieChartWidget({super.key, required this.userType});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,6 @@ class PieChartWidget extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final chartSize = screenWidth * 0.5;
     final loc = AppLocalizations.of(context)!;
-    final userId = FirebaseAuth.instance.currentUser?.uid ?? 'default_user';
 
     return BlocBuilder<ChartCubit, ChartState>(
       builder: (context, state) {
@@ -170,7 +168,9 @@ class PieChartWidget extends StatelessWidget {
                                                 horizontal: 4,
                                               ),
                                               decoration: BoxDecoration(
-                                                color: s.color.withOpacity(0.1),
+                                                color: s.color.withValues(
+                                                  alpha: 0.1,
+                                                ),
                                                 borderRadius:
                                                     BorderRadius.circular(20),
                                                 border: Border.all(
@@ -318,7 +318,7 @@ class PieChartWidget extends StatelessWidget {
                           ],
                         ),
                       );
-                    }).toList(),
+                    }),
                 ],
               ),
             ),

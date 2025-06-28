@@ -30,7 +30,7 @@ class PriceDialog extends StatelessWidget {
     return BlocBuilder<PriceCubit, PriceState>(
       builder: (context, state) {
         return AlertDialog(
-          backgroundColor: theme.dialogBackgroundColor,
+          backgroundColor: theme.dialogTheme.backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -57,7 +57,7 @@ class PriceDialog extends StatelessWidget {
         ),
         const SizedBox(width: 16),
         Text(
-          loc.translate(label) ?? label, // ترجمة النص هنا
+          loc.translate(label), // ترجمة النص هنا
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -82,9 +82,7 @@ class PriceDialog extends StatelessWidget {
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: iconColor),
             ),
-            errorText: state.showError
-                ? loc.translate("price_error")
-                : null,
+            errorText: state.showError ? loc.translate("price_error") : null,
           ),
         ),
         const SizedBox(height: 16),
@@ -93,7 +91,10 @@ class PriceDialog extends StatelessWidget {
   }
 
   List<Widget> _buildActions(
-      BuildContext context, AppLocalizations loc, PriceState state) {
+    BuildContext context,
+    AppLocalizations loc,
+    PriceState state,
+  ) {
     return [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,

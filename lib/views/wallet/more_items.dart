@@ -142,11 +142,11 @@ class MoreItems extends StatelessWidget {
     }
 
     return AlertDialog(
-      backgroundColor: theme.dialogBackgroundColor,
+      backgroundColor: theme.dialogTheme.backgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Center(
         child: Text(
-          loc.translate('add_new_bill') ?? 'Add New Bill',
+          loc.translate('add_new_bill'),
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -154,7 +154,7 @@ class MoreItems extends StatelessWidget {
           ),
         ),
       ),
-      content: Container(
+      content: SizedBox(
         width: double.maxFinite,
         child: Wrap(
           spacing: 20.0,
@@ -217,7 +217,7 @@ class MoreItems extends StatelessWidget {
                       future: translateSmart(
                         translationKey,
                         loc,
-                        loc.locale!.languageCode,
+                        loc.locale?.languageCode ?? 'en',
                       ),
                       builder: (context, snapshot) {
                         final translatedLabel = snapshot.data ?? item['label'];

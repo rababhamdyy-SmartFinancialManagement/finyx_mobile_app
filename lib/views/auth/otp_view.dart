@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/models/otp_model.dart';
 import 'package:finyx_mobile_app/widgets/shared/button_widget.dart';
 
-
 class OtpView extends StatefulWidget {
   final String email;
   const OtpView({super.key, required this.email});
@@ -39,25 +38,6 @@ class _OtpViewState extends State<OtpView> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to send OTP: ${e.toString()}')),
         );
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _verifyOtp() async {
-    if (!_formKey.currentState!.validate()) return;
-    setState(() => _isLoading = true);
-    try {
-      await _model.verifyOtp();
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/reset_password_view');
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);

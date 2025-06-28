@@ -1,4 +1,4 @@
-import 'package:finyx_mobile_app/models/PasswordPageType.dart';
+import 'package:finyx_mobile_app/models/password_page_type.dart';
 import 'package:finyx_mobile_app/models/user_type.dart';
 import 'package:finyx_mobile_app/views/home/home_page_view.dart';
 import 'package:finyx_mobile_app/views/profile/edit_profile_view.dart';

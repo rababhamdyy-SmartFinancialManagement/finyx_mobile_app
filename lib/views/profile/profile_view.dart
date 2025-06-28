@@ -1,5 +1,5 @@
 import 'package:finyx_mobile_app/cubits/profile/profile_cubit.dart';
-import 'package:finyx_mobile_app/models/PasswordPageType.dart';
+import 'package:finyx_mobile_app/models/password_page_type.dart';
 import 'package:finyx_mobile_app/views/auth/forget_password_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +16,8 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserver {
+class _ProfileScreenState extends State<ProfileScreen>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -77,7 +78,9 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
                   CustomContainerButton(
                     text: loc.translate("edit_profile"),
                     icon: Icons.edit,
-                    onPressed: () => Navigator.pushNamed(context, '/edit_profile_view'),
+                    onPressed:
+                        () =>
+                            Navigator.pushNamed(context, '/edit_profile_view'),
                   ),
                   const SizedBox(height: 16),
                   CustomContainerButton(
@@ -87,9 +90,10 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ForgetPasswordView(
-                            pageType: PasswordPageType.change,
-                          ),
+                          builder:
+                              (context) => ForgetPasswordView(
+                                pageType: PasswordPageType.change,
+                              ),
                         ),
                       );
                     },
@@ -101,10 +105,13 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (context) => Dialogue(
-                          message: loc.translate("delete_account_confirmation"),
-                          actionType: 'delete',
-                        ),
+                        builder:
+                            (context) => Dialogue(
+                              message: loc.translate(
+                                "delete_account_confirmation",
+                              ),
+                              actionType: 'delete',
+                            ),
                       );
                     },
                   ),
@@ -115,10 +122,11 @@ class _ProfileScreenState extends State<ProfileScreen> with WidgetsBindingObserv
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (context) => Dialogue(
-                          message: loc.translate("logout_confirmation"),
-                          actionType: 'logout',
-                        ),
+                        builder:
+                            (context) => Dialogue(
+                              message: loc.translate("logout_confirmation"),
+                              actionType: 'logout',
+                            ),
                       );
                     },
                   ),

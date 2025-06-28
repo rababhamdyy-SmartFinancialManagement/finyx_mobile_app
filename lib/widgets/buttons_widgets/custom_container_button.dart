@@ -80,7 +80,7 @@ class _CustomContainerButtonState extends State<CustomContainerButton> {
                           height: 35,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: Colors.grey.withOpacity(0.3),
+                            color: Colors.grey.withValues(alpha: 0.3),
                           ),
                           child: Stack(
                             children: [
@@ -164,7 +164,9 @@ class _CustomContainerButtonState extends State<CustomContainerButton> {
                                   ? const Color(0xFFDA9220)
                                   : const Color(0xFF3E0555),
                           inactiveThumbColor: Colors.white,
-                          inactiveTrackColor: Colors.grey.withOpacity(0.3),
+                          inactiveTrackColor: Colors.grey.withValues(
+                            alpha: 0.3,
+                          ),
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
                           onChanged: (bool value) {

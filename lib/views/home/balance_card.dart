@@ -59,11 +59,12 @@ class _BalanceCardState extends State<BalanceCard> {
                         const SizedBox(height: 6),
                         BlocBuilder<ProfileCubit, ProfileState>(
                           builder: (context, profileState) {
-                            final salary = profileState.salary.isNotEmpty
-                                ? profileState.salary
-                                : "\EGP 0.00";
+                            final salary =
+                                profileState.salary.isNotEmpty
+                                    ? profileState.salary
+                                    : "EGP 0.00";
                             return Text(
-                              "\EGP $salary",
+                              "EGP $salary",
                               style: const TextStyle(
                                 fontSize: 26,
                                 color: Colors.white,

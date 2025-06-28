@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:finyx_mobile_app/widgets/shared/greeting_widget.dart';
 import 'package:finyx_mobile_app/widgets/shared/button_widget.dart';
-import 'package:finyx_mobile_app/models/password_changed_model.dart';
 import 'package:finyx_mobile_app/models/applocalization.dart';
 
 class PasswordChangedView extends StatelessWidget {
-  final PasswordChangedModel _model = PasswordChangedModel();
+  const PasswordChangedView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +47,7 @@ class PasswordChangedView extends StatelessWidget {
                   Navigator.pushNamedAndRemoveUntil(
                     context,
                     '/login',
-                        (route) => false,
+                    (route) => false,
                   );
                 },
               ),

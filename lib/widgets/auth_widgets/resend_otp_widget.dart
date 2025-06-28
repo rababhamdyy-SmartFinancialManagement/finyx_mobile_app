@@ -8,8 +8,6 @@ class ResendOtp extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final double screenWidth = constraints.maxWidth;
-        // ignore: unused_local_variable
-        final double screenHeight = constraints.maxHeight;
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

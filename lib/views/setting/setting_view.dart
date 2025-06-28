@@ -7,7 +7,7 @@ import 'package:finyx_mobile_app/widgets/buttons_widgets/custom_container_button
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:finyx_mobile_app/models/langaugeEventType.dart';
+import 'package:finyx_mobile_app/models/language_event_type.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -17,20 +17,14 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  bool isDarkMode = false;
-  bool isLanguageArabic = false;
-  bool isNotificationsEnabled = true;
+  bool _isDarkMode = false;
+  bool _notificationsEnabled = true;
   @override
   void initState() {
     super.initState();
-    final theme = shared_preferences?.getString('theme') ?? 'light';
-    isDarkMode = theme == 'dark';
-    final lang = shared_preferences?.getString('lang') ?? 'en';
-    isLanguageArabic = lang == 'ar';
-
-    final notificationsEnabled =
-        shared_preferences?.getBool('notifications') ?? true;
-    isNotificationsEnabled = notificationsEnabled;
+    final theme = sharedPreferences?.getString('theme') ?? 'light';
+    _isDarkMode = theme == 'dark';
+    _notificationsEnabled = sharedPreferences?.getBool('notifications') ?? true;
   }
 
   @override
@@ -108,13 +102,13 @@ class _SettingScreenState extends State<SettingScreen> {
                   onPressed: () {},
                   icon: Icons.notifications_outlined,
                   isSwitch: true,
-                  initialSelected: isNotificationsEnabled,
+                  initialSelected: _notificationsEnabled,
                   onSwitchChanged: (enabled) async {
                     setState(() {
-                      isNotificationsEnabled = enabled;
+                      _notificationsEnabled = enabled;
                     });
 
-                    await shared_preferences?.setBool('notifications', enabled);
+                    await sharedPreferences?.setBool('notifications', enabled);
 
                     if (enabled) {
                       await FirebaseMessaging.instance.subscribeToTopic(
@@ -133,7 +127,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   onPressed: () {},
                   icon: Icons.dark_mode_outlined,
                   isSwitch: true,
-                  initialSelected: isDarkMode,
+                  initialSelected: _isDarkMode,
                   onSwitchChanged: (isDark) {
                     if (isDark) {
                       context.read<AppThemeCubit>().changeTheme(
